@@ -31,6 +31,11 @@ jobs:
       - name: make gradle wrapper executable
         if: ${{ runner.os != 'Windows' }}
         run: chmod +x ./gradlew
+      - name: copy deps
+        if: ${{ runner.os != 'Windows' }}
+        run: mkdir -p build/loom-cache && cp ./deps/* ./build/loom-cache/.
+        if: ${{ runner.os == 'Windows' }}
+        run: mkdir build\\loom-cache && copy .\deps\* .\\build\\loom-cache
       - name: build
         run: ./gradlew build
       - name: capture build artifacts
