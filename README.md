@@ -1,8 +1,21 @@
-# Fabric Example Mod
+# Oh My Minecraft Client
 
-## Setup
+我认为 Minecraft Client 应该长这样
 
-For setup instructions please see the [fabric wiki page](https://fabricmc.net/wiki/tutorial:setup) that relates to the IDE that you are using.
+## Command
+
+### switchHighlightLava
+
+高亮显示岩浆源
+
+效果如下：
+
+![highlightLavaSourceOn](./docs/img/highlightLavaSourceOn.png)
+
+![highlightLavaSourceOff](./docs/img/highlightLavaSourceOn.png)
+
+
+
 
 ## License
 

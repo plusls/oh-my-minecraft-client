@@ -1,34 +1,30 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "ommc",
   "version": "${version}",
-
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "Oh My Minecraft Client",
+  "description": "Oh My Minecraft Client",
   "authors": [
-    "Me!"
+    "plusls"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://blog.plusls.com/",
+    "sources": "https://github.com/plusls/oh-my-minecraft-client"
   },
-
   "license": "CC0-1.0",
-  "icon": "assets/modid/icon.png",
-
-  "environment": "*",
+  "icon": "assets/ommc/icon.png",
+  "environment": "client",
   "entrypoints": {
-    "main": [
-      "net.fabricmc.example.ExampleMod"
+    "client": [
+      "com.plusls.ommc.OhMyMinecraftClient"
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "ommc.mixins.json"
   ],
-
   "depends": {
     "fabricloader": ">=0.7.4",
-    "fabric": "*",
+    "fabric": ">=0.31.0",
     "minecraft": "1.16.x"
   },
   "suggests": {

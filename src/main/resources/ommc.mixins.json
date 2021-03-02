@@ -1,12 +1,12 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "net.fabricmc.example.mixin",
+  "package": "com.plusls.ommc.mixin",
   "compatibilityLevel": "JAVA_8",
-  "mixins": [
-  ],
+  "plugin": "com.plusls.ommc.OmmcMixinPlugin",
   "client": [
-    "ExampleMixin"
+    "MixinFluidRenderer",
+    "sodium.MixinFluidRenderer",
   ],
   "injectors": {
     "defaultRequire": 1
