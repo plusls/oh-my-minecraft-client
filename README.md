@@ -10,9 +10,9 @@
 
 效果如下：
 
-![highlightLavaSourceOn](./docs/img/highlightLavaSourceOn.png)
+![highlightLavaSourceOff](./docs/img/highlightLavaSourceOff.png)
 
-![highlightLavaSourceOff](./docs/img/highlightLavaSourceOn.png)
+![highlightLavaSourceOn](./docs/img/highlightLavaSourceOn.png)
 
 
 
