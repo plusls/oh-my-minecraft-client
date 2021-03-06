@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(ClientPlayerInteractionManager.class)
 public class MixinClientPlayerInteractionManager {
     @Inject(method = "attackBlock", at = @At(value = "HEAD"), cancellable = true)
-    private void fuck(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
+    private void checkScaffolding(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
         World world = MinecraftClient.getInstance().world;
         PlayerEntity player = MinecraftClient.getInstance().player;
         if (Configs.FeatureToggle.EMPTY_HAND_BREAK_SCAFFOLDING.getBooleanValue() &&
@@ -28,7 +28,7 @@ public class MixinClientPlayerInteractionManager {
     }
 
     @Inject(method = "updateBlockBreakingProgress", at = @At(value = "HEAD"), cancellable = true)
-    private void fuck1(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
+    private void checkScaffolding1(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
         World world = MinecraftClient.getInstance().world;
         PlayerEntity player = MinecraftClient.getInstance().player;
         if (Configs.FeatureToggle.EMPTY_HAND_BREAK_SCAFFOLDING.getBooleanValue() &&

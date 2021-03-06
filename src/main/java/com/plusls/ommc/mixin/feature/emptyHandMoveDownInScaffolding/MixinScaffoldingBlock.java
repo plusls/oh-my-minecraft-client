@@ -23,7 +23,7 @@ public class MixinScaffoldingBlock {
     private static VoxelShape NORMAL_OUTLINE_SHAPE;
 
     @Inject(method = "getCollisionShape", at=@At(value = "RETURN"), cancellable = true)
-    private void fuck(BlockState state, BlockView world, BlockPos pos, ShapeContext context, CallbackInfoReturnable<VoxelShape> cir) {
+    private void setNormalOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context, CallbackInfoReturnable<VoxelShape> cir) {
         if (cir.getReturnValue() != NORMAL_OUTLINE_SHAPE) {
             if (Configs.FeatureToggle.EMPTY_HAND_MOVE_DOWN_IN_SCAFFOLDING.getBooleanValue() &&
                     context.isDescending() && !context.isHolding(Items.AIR) &&
