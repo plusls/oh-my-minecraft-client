@@ -20,8 +20,10 @@ public class MixinClientPlayerInteractionManager {
     @Inject(method = "interactBlock",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;syncSelectedSlot()V",
-                    shift = At.Shift.AFTER), cancellable = true)
-    private void avoidBedExplosion(ClientPlayerEntity player, ClientWorld world, Hand hand, BlockHitResult hitResult, CallbackInfoReturnable<ActionResult> cir) {
+                    shift = At.Shift.AFTER,
+                    ordinal = 0),
+            cancellable = true)
+    private void preventExplodingBed(ClientPlayerEntity player, ClientWorld world, Hand hand, BlockHitResult hitResult, CallbackInfoReturnable<ActionResult> cir) {
         if (!Configs.FeatureToggle.PREVENT_EXPLODING_BED.getBooleanValue()) {
             return;
         }
