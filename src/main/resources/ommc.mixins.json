@@ -5,7 +5,6 @@
   "compatibilityLevel": "JAVA_8",
   "plugin": "com.plusls.ommc.OmmcMixinPlugin",
   "client": [
-    "feature.highlightLavaSource.MixinFluidRenderer",
     "feature.highlightLavaSource.sodium.MixinFluidRenderer",
     "feature.preventExplodingBed.MixinClientPlayerInteractionManager"
   ],
