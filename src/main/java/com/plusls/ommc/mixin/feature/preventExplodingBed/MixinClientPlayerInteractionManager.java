@@ -19,8 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class MixinClientPlayerInteractionManager {
     @Inject(method = "interactBlock",
             at = @At(value = "INVOKE",
-                    target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;syncSelectedSlot()V",
-                    shift = At.Shift.AFTER,
+                    target = "Lnet/minecraft/util/ActionResult;isAccepted()Z",
                     ordinal = 0),
             cancellable = true)
     private void preventExplodingBed(ClientPlayerEntity player, ClientWorld world, Hand hand, BlockHitResult hitResult, CallbackInfoReturnable<ActionResult> cir) {
