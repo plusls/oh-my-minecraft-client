@@ -14,6 +14,8 @@
   "ommc.config.feature_toggle.emptyHandBreakScaffolding.comment": "Player can only break the scaffolding when they are empty-handed.",
   "ommc.config.feature_toggle.emptyHandMoveDownInScaffolding.name": "emptyHandMoveDownInScaffolding",
   "ommc.config.feature_toggle.emptyHandMoveDownInScaffolding.comment": "Player can only move down in scaffolding when they are empty-handed.",
+  "ommc.config.feature_toggle.forceBreakingCooldown.name": "forceBreakingCooldown",
+  "ommc.config.feature_toggle.forceBreakingCooldown.comment": "Player will have 5 gt cooldown after instant breaking.",
   "ommc.config.feature_toggle.highlightLavaSource.name": "highlightLavaSource",
   "ommc.config.feature_toggle.highlightLavaSource.comment": "Highlight lava source",
   "ommc.config.feature_toggle.highlightWanderingTrader.name": "highlightWanderingTrader",

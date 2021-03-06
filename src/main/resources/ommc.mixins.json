@@ -14,6 +14,7 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "feature.emptyHandBreakScaffolding.MixinClientPlayerInteractionManager"
+    "feature.emptyHandBreakScaffolding.MixinClientPlayerInteractionManager",
+    "feature.forceBreakingCooldown.MixinClientPlayerInteractionManager"
   ]
 }
