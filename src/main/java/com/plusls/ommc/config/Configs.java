@@ -55,11 +55,15 @@ public class Configs implements IConfigHandler {
 
     public static class FeatureToggle {
         private static final String PREFIX = String.format("%s.config.feature_toggle", ModInfo.MOD_ID);
+        public static final ConfigBooleanHotkeyed EMPTY_HAND_BREAK_SCAFFOLDING = new TranslatableConfigBooleanHotkeyed(PREFIX, "emptyHandBreakScaffolding", false, "");
+        public static final ConfigBooleanHotkeyed EMPTY_HAND_MOVE_DOWN_IN_SCAFFOLDING = new TranslatableConfigBooleanHotkeyed(PREFIX, "emptyHandMoveDownInScaffolding", false, "");
         public static final ConfigBooleanHotkeyed HIGHLIGHT_LAVA_SOURCE = new TranslatableConfigBooleanHotkeyed(PREFIX, "highlightLavaSource", false, "");
         public static final ConfigBooleanHotkeyed HIGHLIGHT_WANDERING_TRADER = new TranslatableConfigBooleanHotkeyed(PREFIX, "highlightWanderingTrader", false, "");
         public static final ConfigBooleanHotkeyed PREVENT_EXPLODING_BED = new TranslatableConfigBooleanHotkeyed(PREFIX, "preventExplodingBed", false, "");
 
         public static final ImmutableList<ConfigBooleanHotkeyed> OPTIONS = ImmutableList.of(
+                EMPTY_HAND_BREAK_SCAFFOLDING,
+                EMPTY_HAND_MOVE_DOWN_IN_SCAFFOLDING,
                 HIGHLIGHT_LAVA_SOURCE,
                 HIGHLIGHT_WANDERING_TRADER,
                 PREVENT_EXPLODING_BED

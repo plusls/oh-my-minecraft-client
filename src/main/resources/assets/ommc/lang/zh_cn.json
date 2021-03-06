@@ -9,6 +9,10 @@
   "ommc.config.generic.debug.name": "调试模式",
   "ommc.config.generic.debug.comment": "开启后将会打印调试日志",
 
+  "ommc.config.feature_toggle.emptyHandBreakScaffolding.name": "空手破坏脚手架",
+  "ommc.config.feature_toggle.emptyHandBreakScaffolding.comment": "玩家只有在空手时才能破坏脚手架",
+  "ommc.config.feature_toggle.emptyHandMoveDownInScaffolding.name": "空手在脚手架中下降",
+  "ommc.config.feature_toggle.emptyHandMoveDownInScaffolding.comment": "玩家只有在空手时才能在脚手架下降",
   "ommc.config.feature_toggle.highlightLavaSource.name": "高亮岩浆源",
   "ommc.config.feature_toggle.highlightLavaSource.comment": "岩浆源将会使用特殊的贴图高亮",
   "ommc.config.feature_toggle.highlightWanderingTrader.name": "高亮流浪商人",

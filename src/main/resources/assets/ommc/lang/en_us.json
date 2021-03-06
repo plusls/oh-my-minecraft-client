@@ -10,6 +10,10 @@
   "ommc.config.generic.debug.name": "debug",
   "ommc.config.generic.debug.comment": "Display debug message",
 
+  "ommc.config.feature_toggle.emptyHandBreakScaffolding.name": "emptyHandBreakScaffolding",
+  "ommc.config.feature_toggle.emptyHandBreakScaffolding.comment": "Player can only break the scaffolding when they are empty-handed.",
+  "ommc.config.feature_toggle.emptyHandMoveDownInScaffolding.name": "emptyHandMoveDownInScaffolding",
+  "ommc.config.feature_toggle.emptyHandMoveDownInScaffolding.comment": "Player can only move down in scaffolding when they are empty-handed.",
   "ommc.config.feature_toggle.highlightLavaSource.name": "highlightLavaSource",
   "ommc.config.feature_toggle.highlightLavaSource.comment": "Highlight lava source",
   "ommc.config.feature_toggle.highlightWanderingTrader.name": "highlightWanderingTrader",

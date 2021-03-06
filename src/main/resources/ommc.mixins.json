@@ -5,11 +5,15 @@
   "compatibilityLevel": "JAVA_8",
   "plugin": "com.plusls.ommc.OmmcMixinPlugin",
   "client": [
+    "feature.emptyHandMoveDownInScaffolding.MixinScaffoldingBlock",
     "feature.highlightLavaSource.sodium.MixinFluidRenderer",
-    "feature.preventExplodingBed.MixinClientPlayerInteractionManager",
-    "feature.highlightWanderingTrader.MixinMinecraftClient"
+    "feature.highlightWanderingTrader.MixinMinecraftClient",
+    "feature.preventExplodingBed.MixinClientPlayerInteractionManager"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "mixins": [
+    "feature.emptyHandBreakScaffolding.MixinClientPlayerInteractionManager"
+  ]
 }
