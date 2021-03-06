@@ -1,11 +1,7 @@
 package com.plusls.ommc.mixin;
 
 import com.plusls.ommc.OhMyMinecraftClient;
-import com.plusls.ommc.OmmcConfig;
-import me.jellysquid.mods.sodium.client.model.quad.sink.ModelQuadSinkDelegate;
-import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
-import net.fabricmc.fabric.impl.client.rendering.fluid.FluidRenderHandlerRegistryImpl;
-import net.fabricmc.fabric.impl.client.rendering.fluid.FluidRendererHookContainer;
+import com.plusls.ommc.config.Configs;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.block.FluidRenderer;
@@ -19,7 +15,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -40,7 +35,7 @@ public class MixinFluidRenderer {
 
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
     public void modifyLavaSprites(BlockRenderView world, BlockPos pos, VertexConsumer vertexConsumer, FluidState state, CallbackInfoReturnable<Boolean> cir) {
-        if (OmmcConfig.highlightLava && state.isIn(FluidTags.LAVA) &&
+        if (Configs.FeatureToggle.HIGHLIGHT_LAVA_SOURCE.getBooleanValue() && state.isIn(FluidTags.LAVA) &&
                 world.getBlockState(pos).get(FluidBlock.LEVEL) == 0) {
             lavaSprites[0] = OhMyMinecraftClient.lavaSourceStillSprite;
             lavaSprites[1] = OhMyMinecraftClient.lavaSourceFlowSprite;

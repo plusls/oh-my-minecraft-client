@@ -1,0 +1,15 @@
+{
+  "ommc.gui.title.configs": "Oh My Minecraft Client 配置",
+  "ommc.gui.button.config_gui.generic": "通用",
+  "ommc.gui.button.config_gui.feature_toggle": "特性开关",
+  "ommc.gui.button.config_gui.feature_hotkey": "特性快捷键",
+
+  "ommc.config.generic.openConfigGui.name": "打开设置界面",
+  "ommc.config.generic.openConfigGui.comment": "打开设置界面的快捷键",
+  "ommc.config.generic.debug.name": "调试模式",
+  "ommc.config.generic.debug.comment": "开启后将会打印调试日志",
+
+  "ommc.config.feature_toggle.highlightLavaSource.name": "高亮岩浆源",
+  "ommc.config.feature_toggle.highlightLavaSource.comment": "岩浆源将会使用特殊的贴图高亮"
+
+}

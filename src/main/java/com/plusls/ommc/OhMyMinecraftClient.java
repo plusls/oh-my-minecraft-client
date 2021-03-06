@@ -1,8 +1,10 @@
 package com.plusls.ommc;
 
-import com.plusls.ommc.command.SwitchHighlightLavaCommand;
+import com.plusls.ommc.config.Configs;
+import com.plusls.ommc.event.InputHandler;
+import fi.dy.masa.malilib.config.ConfigManager;
+import fi.dy.masa.malilib.event.InputEventHandler;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
@@ -13,30 +15,26 @@ import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 
 import java.util.function.Function;
 
 public class OhMyMinecraftClient implements ClientModInitializer {
-    public static String MOD_ID = "ommc";
     public static Sprite lavaSourceFlowSprite;
     public static Sprite lavaSourceStillSprite;
-    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
-    public static String level = "INFO";
+
 
     @Override
     public void onInitializeClient() {
-        Configurator.setLevel(LOGGER.getName(), Level.toLevel(OhMyMinecraftClient.level));
+        Configurator.setLevel(ModInfo.LOGGER.getName(), Level.toLevel("DEBUG"));
         initLavaSourceFlowSprite();
-        ClientTickEvents.END_CLIENT_TICK.register(SwitchHighlightLavaCommand::updateHighlightLava);
-        SwitchHighlightLavaCommand.register();
+        ConfigManager.getInstance().registerConfigHandler(ModInfo.MOD_ID, new Configs());
+        InputEventHandler.getKeybindManager().registerKeybindProvider(InputHandler.getInstance());
     }
 
     private static void initLavaSourceFlowSprite() {
-        final Identifier flowingSpriteId = new Identifier(MOD_ID, "block/lava_flow");
-        final Identifier stillSpriteId = new Identifier(MOD_ID, "block/lava_still");
+        final Identifier flowingSpriteId = new Identifier(ModInfo.MOD_ID, "block/lava_flow");
+        final Identifier stillSpriteId = new Identifier(ModInfo.MOD_ID, "block/lava_still");
 
         ClientSpriteRegistryCallback.event(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE).register((atlasTexture, registry) ->
         {

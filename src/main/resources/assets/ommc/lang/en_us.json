@@ -1,0 +1,15 @@
+{
+  "ommc.gui.title.configs": "Oh My Minecraft Client Config",
+  "ommc.gui.button.config_gui.generic": "Generic",
+  "ommc.gui.button.config_gui.feature_toggle": "Feature Toggle",
+  "ommc.gui.button.config_gui.feature_hotkey": "Feature Hotkey",
+
+
+  "ommc.config.generic.openConfigGui.name": "openConfigGui",
+  "ommc.config.generic.openConfigGui.comment": "A hotkey to open the in-game Config GUI",
+  "ommc.config.generic.debug.name": "debug",
+  "ommc.config.generic.debug.comment": "Display debug message",
+
+  "ommc.config.feature_toggle.highlightLavaSource.name": "highlightLavaSource",
+  "ommc.config.feature_toggle.highlightLavaSource.comment": "Highlight lava source"
+}
