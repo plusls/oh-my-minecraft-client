@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class GuiConfigs extends GuiConfigsBase {
-    public static ConfigGuiTab tab = ConfigGuiTab.GENERIC;
+    public static ConfigGuiTab tab = ConfigGuiTab.FEATURE_TOGGLE;
 
     public GuiConfigs() {
         super(10, 50, ModInfo.MOD_ID, null, String.format("%s.gui.title.configs", ModInfo.MOD_ID));
