@@ -10,6 +10,7 @@
   "ommc.config.generic.debug.comment": "开启后将会打印调试日志",
 
   "ommc.config.feature_toggle.highlightLavaSource.name": "高亮岩浆源",
-  "ommc.config.feature_toggle.highlightLavaSource.comment": "岩浆源将会使用特殊的贴图高亮"
-
+  "ommc.config.feature_toggle.highlightLavaSource.comment": "岩浆源将会使用特殊的贴图高亮",
+  "ommc.config.feature_toggle.preventExplodingBed.name": "防止床爆炸",
+  "ommc.config.feature_toggle.preventExplodingBed.comment": "阻止玩家在下界或者末地使用床"
 }

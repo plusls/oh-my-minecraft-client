@@ -56,8 +56,11 @@ public class Configs implements IConfigHandler {
     public static class FeatureToggle {
         private static final String PREFIX = String.format("%s.config.feature_toggle", ModInfo.MOD_ID);
         public static final ConfigBooleanHotkeyed HIGHLIGHT_LAVA_SOURCE = new TranslatableConfigBooleanHotkeyed(PREFIX, "highlightLavaSource", false, "");
+        public static final ConfigBooleanHotkeyed PREVENT_EXPLODING_BED = new TranslatableConfigBooleanHotkeyed(PREFIX, "preventExplodingBed", false, "");
+
         public static final ImmutableList<ConfigBooleanHotkeyed> OPTIONS = ImmutableList.of(
-                HIGHLIGHT_LAVA_SOURCE
+                HIGHLIGHT_LAVA_SOURCE,
+                PREVENT_EXPLODING_BED
         );
 
         static {
@@ -92,7 +95,7 @@ public class Configs implements IConfigHandler {
             JsonObject root = new JsonObject();
 
             ConfigUtils.writeConfigBase(root, "Generic", Configs.Generic.OPTIONS);
-            ConfigUtils.writeConfigBase(root, "FeatureToggle", Configs.Generic.OPTIONS);
+            ConfigUtils.writeConfigBase(root, "FeatureToggle", Configs.FeatureToggle.OPTIONS);
             root.add("config_version", new JsonPrimitive(CONFIG_VERSION));
             JsonUtils.writeJsonToFile(root, new File(dir, CONFIG_FILE_NAME));
         }
