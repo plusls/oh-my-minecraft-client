@@ -11,6 +11,8 @@
 
   "ommc.config.feature_toggle.highlightLavaSource.name": "高亮岩浆源",
   "ommc.config.feature_toggle.highlightLavaSource.comment": "岩浆源将会使用特殊的贴图高亮",
+  "ommc.config.feature_toggle.highlightWanderingTrader.name": "高亮流浪商人",
+  "ommc.config.feature_toggle.highlightWanderingTrader.comment": "流浪商人会像被射了光灵箭一样高亮，隐身时同样也会高亮",
   "ommc.config.feature_toggle.preventExplodingBed.name": "防止床爆炸",
   "ommc.config.feature_toggle.preventExplodingBed.comment": "阻止玩家在下界或者末地使用床"
 }

@@ -12,7 +12,8 @@
 
   "ommc.config.feature_toggle.highlightLavaSource.name": "highlightLavaSource",
   "ommc.config.feature_toggle.highlightLavaSource.comment": "Highlight lava source",
-  "ommc.config.feature_toggle.preventExplodingBed.name": "prevent exploding beds",
+  "ommc.config.feature_toggle.highlightWanderingTrader.name": "highlightWanderingTrader",
+  "ommc.config.feature_toggle.highlightWanderingTrader.comment": "Highlight WanderingTrader like spectral arrow",
+  "ommc.config.feature_toggle.preventExplodingBed.name": "preventExplodingBed",
   "ommc.config.feature_toggle.preventExplodingBed.comment": "prevent player use bed in nether or the end"
-
 }

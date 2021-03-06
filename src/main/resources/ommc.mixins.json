@@ -6,7 +6,8 @@
   "plugin": "com.plusls.ommc.OmmcMixinPlugin",
   "client": [
     "feature.highlightLavaSource.sodium.MixinFluidRenderer",
-    "feature.preventExplodingBed.MixinClientPlayerInteractionManager"
+    "feature.preventExplodingBed.MixinClientPlayerInteractionManager",
+    "feature.highlightWanderingTrader.MixinMinecraftClient"
   ],
   "injectors": {
     "defaultRequire": 1
