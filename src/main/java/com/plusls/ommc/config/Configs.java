@@ -40,12 +40,10 @@ public class Configs implements IConfigHandler {
 
         static {
             OPEN_CONFIG_GUI.getKeybind().setCallback((keyAction, iKeybind) -> {
-                ModInfo.LOGGER.info("OPEN_CONFIG_GUI");
                 GuiBase.openGui(new GuiConfigs());
                 return true;
             });
             DEBUG.setValueChangeCallback(config -> {
-                ModInfo.LOGGER.info("DEBUG");
                 if (config.getBooleanValue()) {
                     Configurator.setLevel(ModInfo.LOGGER.getName(), Level.toLevel("DEBUG"));
                 } else {
@@ -63,9 +61,8 @@ public class Configs implements IConfigHandler {
         );
 
         static {
-            ModInfo.LOGGER.info("RRRRRRRRRRRRRRRRRRRRRRRRR");
             HIGHLIGHT_LAVA_SOURCE.setValueChangeCallback(config -> {
-                ModInfo.LOGGER.info("HIGHLIGHT_LAVA_SOURCE");
+                ModInfo.LOGGER.debug("set HIGHLIGHT_LAVA_SOURCE {}", config.getBooleanValue());
                 MinecraftClient.getInstance().worldRenderer.reload();
             });
         }

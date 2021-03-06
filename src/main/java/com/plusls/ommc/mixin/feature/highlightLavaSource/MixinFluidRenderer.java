@@ -1,7 +1,8 @@
-package com.plusls.ommc.mixin;
+package com.plusls.ommc.mixin.feature.highlightLavaSource;
 
 import com.plusls.ommc.OhMyMinecraftClient;
 import com.plusls.ommc.config.Configs;
+import com.plusls.ommc.feature.highlightLavaSource.LavaSourceTexture;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.block.FluidRenderer;
@@ -37,8 +38,8 @@ public class MixinFluidRenderer {
     public void modifyLavaSprites(BlockRenderView world, BlockPos pos, VertexConsumer vertexConsumer, FluidState state, CallbackInfoReturnable<Boolean> cir) {
         if (Configs.FeatureToggle.HIGHLIGHT_LAVA_SOURCE.getBooleanValue() && state.isIn(FluidTags.LAVA) &&
                 world.getBlockState(pos).get(FluidBlock.LEVEL) == 0) {
-            lavaSprites[0] = OhMyMinecraftClient.lavaSourceStillSprite;
-            lavaSprites[1] = OhMyMinecraftClient.lavaSourceFlowSprite;
+            lavaSprites[0] = LavaSourceTexture.lavaSourceStillSprite;
+            lavaSprites[1] = LavaSourceTexture.lavaSourceFlowSprite;
         }
     }
 

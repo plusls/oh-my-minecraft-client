@@ -5,8 +5,8 @@
   "compatibilityLevel": "JAVA_8",
   "plugin": "com.plusls.ommc.OmmcMixinPlugin",
   "client": [
-    "MixinFluidRenderer",
-    "sodium.MixinFluidRenderer",
+    "feature.highlightLavaSource.MixinFluidRenderer",
+    "feature.highlightLavaSource.sodium.MixinFluidRenderer"
   ],
   "injectors": {
     "defaultRequire": 1

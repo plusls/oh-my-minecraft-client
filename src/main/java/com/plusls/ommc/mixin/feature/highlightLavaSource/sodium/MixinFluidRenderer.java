@@ -1,7 +1,8 @@
-package com.plusls.ommc.mixin.sodium;
+package com.plusls.ommc.mixin.feature.highlightLavaSource.sodium;
 
 import com.plusls.ommc.OhMyMinecraftClient;
 import com.plusls.ommc.config.Configs;
+import com.plusls.ommc.feature.highlightLavaSource.LavaSourceTexture;
 import me.jellysquid.mods.sodium.client.model.light.LightPipelineProvider;
 import me.jellysquid.mods.sodium.client.model.quad.blender.BiomeColorBlender;
 import me.jellysquid.mods.sodium.client.render.pipeline.FluidRenderer;
@@ -42,8 +43,8 @@ public class MixinFluidRenderer {
     public void modifyLavaSprites(BlockRenderView view, FluidState state, BlockPos pos, @Coerce Object object, CallbackInfoReturnable<Boolean> info) {
         if (Configs.FeatureToggle.HIGHLIGHT_LAVA_SOURCE.getBooleanValue() && state.isIn(FluidTags.LAVA) &&
                 view.getBlockState(pos).get(FluidBlock.LEVEL) == 0) {
-            lavaSprites[0] = OhMyMinecraftClient.lavaSourceStillSprite;
-            lavaSprites[1] = OhMyMinecraftClient.lavaSourceFlowSprite;
+            lavaSprites[0] = LavaSourceTexture.lavaSourceStillSprite;
+            lavaSprites[1] = LavaSourceTexture.lavaSourceFlowSprite;
         }
     }
 
