@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class OmmcMixinPlugin implements IMixinConfigPlugin {
     public final static String SODIUM_MOD_ID = "sodium";
-    private static final String MIXIN_SODIUM = "com.plusls.ommc.mixin.feature.highlightLavaSource.sodium.";
+    private static final String MIXIN_SODIUM = ".sodium.";
     public static boolean isSodiumLoaded;
 
     @Override
@@ -28,7 +28,7 @@ public class OmmcMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        if (!isSodiumLoaded && mixinClassName.startsWith(MIXIN_SODIUM)) {
+        if (!isSodiumLoaded && mixinClassName.contains(MIXIN_SODIUM)) {
             return false;
         }
         return true;
