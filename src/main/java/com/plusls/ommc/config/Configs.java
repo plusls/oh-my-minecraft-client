@@ -61,6 +61,7 @@ public class Configs implements IConfigHandler {
         public static final ConfigBooleanHotkeyed HIGHLIGHT_LAVA_SOURCE = new TranslatableConfigBooleanHotkeyed(PREFIX, "highlightLavaSource", false, "");
         public static final ConfigBooleanHotkeyed HIGHLIGHT_WANDERING_TRADER = new TranslatableConfigBooleanHotkeyed(PREFIX, "highlightWanderingTrader", false, "");
         public static final ConfigBooleanHotkeyed PREVENT_EXPLODING_BED = new TranslatableConfigBooleanHotkeyed(PREFIX, "preventExplodingBed", false, "");
+        public static final ConfigBooleanHotkeyed WORLD_EATER_MINE_HELPER = new TranslatableConfigBooleanHotkeyed(PREFIX, "worldEaterMineHelper", false, "");
 
         public static final ImmutableList<ConfigBooleanHotkeyed> OPTIONS = ImmutableList.of(
                 EMPTY_HAND_BREAK_SCAFFOLDING,
@@ -68,11 +69,16 @@ public class Configs implements IConfigHandler {
                 FORCE_BREAKING_COOLDOWN,
                 HIGHLIGHT_LAVA_SOURCE,
                 HIGHLIGHT_WANDERING_TRADER,
-                PREVENT_EXPLODING_BED
+                PREVENT_EXPLODING_BED,
+                WORLD_EATER_MINE_HELPER
         );
 
         static {
             HIGHLIGHT_LAVA_SOURCE.setValueChangeCallback(config -> {
+                ModInfo.LOGGER.debug("set HIGHLIGHT_LAVA_SOURCE {}", config.getBooleanValue());
+                MinecraftClient.getInstance().worldRenderer.reload();
+            });
+            WORLD_EATER_MINE_HELPER.setValueChangeCallback(config -> {
                 ModInfo.LOGGER.debug("set HIGHLIGHT_LAVA_SOURCE {}", config.getBooleanValue());
                 MinecraftClient.getInstance().worldRenderer.reload();
             });

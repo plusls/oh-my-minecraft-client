@@ -21,5 +21,7 @@
   "ommc.config.feature_toggle.highlightWanderingTrader.name": "highlightWanderingTrader",
   "ommc.config.feature_toggle.highlightWanderingTrader.comment": "Highlight WanderingTrader like spectral arrow",
   "ommc.config.feature_toggle.preventExplodingBed.name": "preventExplodingBed",
-  "ommc.config.feature_toggle.preventExplodingBed.comment": "prevent player use bed in nether or the end"
+  "ommc.config.feature_toggle.preventExplodingBed.comment": "prevent player use bed in nether or the end",
+  "ommc.config.feature_toggle.worldEaterMineHelper.name": "worldEaterMineHelper",
+  "ommc.config.feature_toggle.worldEaterMineHelper.comment": "When ores and obsidian are exposed to the air, game will render their own mirror image above them, which is convenient for world eater maintenance and mining"
 }

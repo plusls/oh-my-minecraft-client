@@ -20,5 +20,7 @@
   "ommc.config.feature_toggle.highlightWanderingTrader.name": "高亮流浪商人",
   "ommc.config.feature_toggle.highlightWanderingTrader.comment": "流浪商人会像被射了光灵箭一样高亮，隐身时同样也会高亮",
   "ommc.config.feature_toggle.preventExplodingBed.name": "防止床爆炸",
-  "ommc.config.feature_toggle.preventExplodingBed.comment": "阻止玩家在下界或者末地使用床"
+  "ommc.config.feature_toggle.preventExplodingBed.comment": "阻止玩家在下界或者末地使用床",
+  "ommc.config.feature_toggle.worldEaterMineHelper.name": "世吞挖矿助手",
+  "ommc.config.feature_toggle.worldEaterMineHelper.comment": "当矿物以及黑曜石暴露在空气中时，会在它们上方渲染出自己的镜像，方便世吞运维以及挖矿"
 }

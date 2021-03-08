@@ -1,6 +1,7 @@
 package com.plusls.ommc.feature.worldEaterMineHelper;
 
 import com.plusls.ommc.ModInfo;
+import com.plusls.ommc.config.Configs;
 import com.plusls.ommc.mixin.feature.worldEaterMineHelper.JsonUnbakedModelInvoker;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -39,7 +40,7 @@ public class CustomBakedModels {
 
     public static boolean shouldUseCustomModel(Block block, BlockPos pos) {
         // ModInfo.LOGGER.debug("test model {} {}", pos, block);
-        if (CustomBakedModels.models.containsKey(block)) {
+        if (Configs.FeatureToggle.WORLD_EATER_MINE_HELPER.getBooleanValue() && CustomBakedModels.models.containsKey(block)) {
             ClientWorld world = MinecraftClient.getInstance().world;
             if (world != null) {
                 int x = pos.getX();
