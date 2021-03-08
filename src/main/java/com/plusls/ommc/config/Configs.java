@@ -88,11 +88,14 @@ public class Configs implements IConfigHandler {
 
             if (element != null && element.isJsonObject()) {
                 JsonObject root = element.getAsJsonObject();
-                ConfigUtils.readConfigBase(root, "Generic", Configs.Generic.OPTIONS);
-                ConfigUtils.readHotkeyToggleOptions(root, "FeatureHotkey", "FeatureToggle", Configs.FeatureToggle.OPTIONS);
+                ConfigUtils.readConfigBase(root, "Generic", Generic.OPTIONS);
+                ConfigUtils.readHotkeyToggleOptions(root, "FeatureHotkey", "FeatureToggle", FeatureToggle.OPTIONS);
 
                 int version = JsonUtils.getIntegerOrDefault(root, "config_version", 0);
             }
+        }
+        if (Generic.DEBUG.getBooleanValue()) {
+            Configurator.setLevel(ModInfo.LOGGER.getName(), Level.toLevel("DEBUG"));
         }
     }
 
@@ -101,8 +104,8 @@ public class Configs implements IConfigHandler {
 
         if ((dir.exists() && dir.isDirectory()) || dir.mkdirs()) {
             JsonObject root = new JsonObject();
-            ConfigUtils.writeConfigBase(root, "Generic", Configs.Generic.OPTIONS);
-            ConfigUtils.writeHotkeyToggleOptions(root, "FeatureHotkey", "FeatureToggle", Configs.FeatureToggle.OPTIONS);
+            ConfigUtils.writeConfigBase(root, "Generic", Generic.OPTIONS);
+            ConfigUtils.writeHotkeyToggleOptions(root, "FeatureHotkey", "FeatureToggle", FeatureToggle.OPTIONS);
             root.add("config_version", new JsonPrimitive(CONFIG_VERSION));
             JsonUtils.writeJsonToFile(root, new File(dir, CONFIG_FILE_NAME));
         }
