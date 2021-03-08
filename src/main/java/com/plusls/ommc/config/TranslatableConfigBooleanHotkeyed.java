@@ -6,6 +6,7 @@ import fi.dy.masa.malilib.util.StringUtils;
 
 public class TranslatableConfigBooleanHotkeyed extends ConfigBooleanHotkeyed {
     private final String guiDisplayName;
+
     public TranslatableConfigBooleanHotkeyed(String prefix, String name, boolean defaultValue, String defaultHotkey) {
         super(name, defaultValue, defaultHotkey, String.format("%s.%s.comment", prefix, name),
                 String.format("%s.%s.pretty_name", prefix, name));
