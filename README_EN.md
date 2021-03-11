@@ -22,7 +22,7 @@ Players can only descend on scaffolding whth empty hand.
 
 ### Forced break cooling
 
-Players will have a 5gt cooldown after breaking the block instantaneously, which prevent you from accidently destroying components in Haste 2 effect.
+Players will have a 5gt cooldown after breaking the block instantaneously, which prevent you from accidentally destroying components in Haste 2 effect.
 
 ### Highlight lava source
 
