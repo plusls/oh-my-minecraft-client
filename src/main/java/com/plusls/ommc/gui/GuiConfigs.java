@@ -70,6 +70,8 @@ public class GuiConfigs extends GuiConfigsBase {
             configs = Configs.FeatureToggle.OPTIONS;
         } else if (tab == ConfigGuiTab.FEATURE_HOTKEY) {
             configs = ConfigUtils.createConfigWrapperForType(ConfigType.HOTKEY, Configs.FeatureToggle.OPTIONS);
+        } else if (tab == ConfigGuiTab.LISTS) {
+            configs = Configs.Lists.OPTIONS;
         } else {
             return Collections.emptyList();
         }
@@ -98,7 +100,8 @@ public class GuiConfigs extends GuiConfigsBase {
     public enum ConfigGuiTab {
         GENERIC("generic"),
         FEATURE_TOGGLE("feature_toggle"),
-        FEATURE_HOTKEY("feature_hotkey");
+        FEATURE_HOTKEY("feature_hotkey"),
+        LISTS("lists");
 
         private final String name;
 

@@ -5,7 +5,7 @@
   "compatibilityLevel": "JAVA_8",
   "plugin": "com.plusls.ommc.OmmcMixinPlugin",
   "client": [
-    "feature.emptyHandBreakScaffolding.MixinClientPlayerInteractionManager",
+    "feature.disableBreakScaffolding.MixinClientPlayerInteractionManager",
     "feature.emptyHandMoveDownInScaffolding.MixinScaffoldingBlock",
     "feature.forceBreakingCooldown.MixinClientPlayerInteractionManager",
     "feature.highlightLavaSource.sodium.MixinFluidRenderer",

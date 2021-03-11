@@ -12,6 +12,7 @@ import fi.dy.masa.malilib.config.IConfigHandler;
 import fi.dy.masa.malilib.config.options.ConfigBoolean;
 import fi.dy.masa.malilib.config.options.ConfigBooleanHotkeyed;
 import fi.dy.masa.malilib.config.options.ConfigHotkey;
+import fi.dy.masa.malilib.config.options.ConfigStringList;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.util.FileUtils;
 import fi.dy.masa.malilib.util.JsonUtils;
@@ -55,7 +56,7 @@ public class Configs implements IConfigHandler {
 
     public static class FeatureToggle {
         private static final String PREFIX = String.format("%s.config.feature_toggle", ModInfo.MOD_ID);
-        public static final ConfigBooleanHotkeyed EMPTY_HAND_BREAK_SCAFFOLDING = new TranslatableConfigBooleanHotkeyed(PREFIX, "emptyHandBreakScaffolding", false, "");
+        public static final ConfigBooleanHotkeyed DISABLE_BREAK_SCAFFOLDING = new TranslatableConfigBooleanHotkeyed(PREFIX, "disableBreakScaffolding", false, "");
         public static final ConfigBooleanHotkeyed EMPTY_HAND_MOVE_DOWN_IN_SCAFFOLDING = new TranslatableConfigBooleanHotkeyed(PREFIX, "emptyHandMoveDownInScaffolding", false, "");
         public static final ConfigBooleanHotkeyed FORCE_BREAKING_COOLDOWN = new TranslatableConfigBooleanHotkeyed(PREFIX, "forceBreakingCooldown", false, "");
         public static final ConfigBooleanHotkeyed HIGHLIGHT_LAVA_SOURCE = new TranslatableConfigBooleanHotkeyed(PREFIX, "highlightLavaSource", false, "");
@@ -64,7 +65,7 @@ public class Configs implements IConfigHandler {
         public static final ConfigBooleanHotkeyed WORLD_EATER_MINE_HELPER = new TranslatableConfigBooleanHotkeyed(PREFIX, "worldEaterMineHelper", false, "");
 
         public static final ImmutableList<ConfigBooleanHotkeyed> OPTIONS = ImmutableList.of(
-                EMPTY_HAND_BREAK_SCAFFOLDING,
+                DISABLE_BREAK_SCAFFOLDING,
                 EMPTY_HAND_MOVE_DOWN_IN_SCAFFOLDING,
                 FORCE_BREAKING_COOLDOWN,
                 HIGHLIGHT_LAVA_SOURCE,
@@ -85,6 +86,16 @@ public class Configs implements IConfigHandler {
         }
     }
 
+    public static class Lists {
+        private static final String PREFIX = String.format("%s.config.lists", ModInfo.MOD_ID);
+        public static final ConfigStringList BREAK_SCAFFOLDING_WHITELIST =
+                new TranslatableConfigStringList(PREFIX, "breakScaffoldingWhiteList", ImmutableList.of("minecraft:air", "minecraft:scaffolding"));
+        public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
+                BREAK_SCAFFOLDING_WHITELIST
+        );
+
+    }
+
 
     public static void loadFromFile() {
         File configFile = new File(FileUtils.getConfigDirectory(), CONFIG_FILE_NAME);
@@ -96,6 +107,7 @@ public class Configs implements IConfigHandler {
                 JsonObject root = element.getAsJsonObject();
                 ConfigUtils.readConfigBase(root, "Generic", Generic.OPTIONS);
                 ConfigUtils.readHotkeyToggleOptions(root, "FeatureHotkey", "FeatureToggle", FeatureToggle.OPTIONS);
+                ConfigUtils.readConfigBase(root, "Lists", Configs.Lists.OPTIONS);
 
                 int version = JsonUtils.getIntegerOrDefault(root, "config_version", 0);
             }
@@ -112,6 +124,7 @@ public class Configs implements IConfigHandler {
             JsonObject root = new JsonObject();
             ConfigUtils.writeConfigBase(root, "Generic", Generic.OPTIONS);
             ConfigUtils.writeHotkeyToggleOptions(root, "FeatureHotkey", "FeatureToggle", FeatureToggle.OPTIONS);
+            ConfigUtils.writeConfigBase(root, "Lists", Configs.Lists.OPTIONS);
             root.add("config_version", new JsonPrimitive(CONFIG_VERSION));
             JsonUtils.writeJsonToFile(root, new File(dir, CONFIG_FILE_NAME));
         }
