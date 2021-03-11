@@ -11,12 +11,18 @@ import java.util.Set;
 public class OmmcMixinPlugin implements IMixinConfigPlugin {
     public final static String SODIUM_MOD_ID = "sodium";
     private static final String MIXIN_SODIUM = ".sodium.";
+    public final static String CANVAS_MOD_ID = "canvas";
+    private static final String MIXIN_CANVAS = ".canvas.";
     public static boolean isSodiumLoaded;
+    public static boolean isCanvasLoaded;
 
     @Override
     public void onLoad(String mixinPackage) {
         if (FabricLoader.getInstance().isModLoaded(SODIUM_MOD_ID)) {
             isSodiumLoaded = true;
+        }
+        if (FabricLoader.getInstance().isModLoaded(CANVAS_MOD_ID)) {
+            isCanvasLoaded = true;
         }
     }
 
@@ -30,8 +36,11 @@ public class OmmcMixinPlugin implements IMixinConfigPlugin {
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         if (!isSodiumLoaded && mixinClassName.contains(MIXIN_SODIUM)) {
             return false;
+        } else if (!isCanvasLoaded && mixinClassName.contains(MIXIN_CANVAS)) {
+            return false;
+        } else {
+            return true;
         }
-        return true;
     }
 
     @Override
