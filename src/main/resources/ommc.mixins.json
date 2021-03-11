@@ -15,12 +15,11 @@
     "feature.worldEaterMineHelper.MixinBlockRenderManager",
     "feature.worldEaterMineHelper.MixinJsonUnbakedModel",
     "feature.worldEaterMineHelper.fabric.MixinTerrainRenderContext",
-    "feature.worldEaterMineHelper.sodium.MixinBlockRenderer"
+    "feature.worldEaterMineHelper.sodium.MixinBlockRenderer",
+    "feature.highlightLavaSource.canvas.MixinLavaFluidModel",
+    "feature.worldEaterMineHelper.canvas.MixinTerrainRenderContext"
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "mixins": [
-    "feature.highlightLavaSource.canvas.MixinLavaFluidModel"
-  ]
+  }
 }

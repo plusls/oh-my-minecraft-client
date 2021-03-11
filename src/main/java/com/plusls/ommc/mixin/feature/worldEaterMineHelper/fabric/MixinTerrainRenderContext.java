@@ -2,30 +2,32 @@ package com.plusls.ommc.mixin.feature.worldEaterMineHelper.fabric;
 
 import com.plusls.ommc.feature.worldEaterMineHelper.CustomBakedModels;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
-import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+import net.fabricmc.fabric.impl.client.indigo.renderer.render.TerrainBlockRenderInfo;
 import net.fabricmc.fabric.impl.client.indigo.renderer.render.TerrainRenderContext;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.render.model.BakedModel;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockRenderView;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Random;
-import java.util.function.Supplier;
-
-@Mixin(TerrainRenderContext.class)
+@Mixin(value = TerrainRenderContext.class, remap = false)
 public class MixinTerrainRenderContext {
-    @Redirect(method = "tesselateBlock", at = @At(value = "INVOKE",
-            //target = "Lnet/fabricmc/fabric/api/renderer/v1/model/FabricBakedModel;emitBlockQuads(Lnet/minecraft/world/BlockRenderView;Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;Ljava/util/function/Supplier;Lnet/fabricmc/fabric/api/renderer/v1/render/RenderContext;)V", ordinal = 0,remap = true), remap = false)
-            target = "Lnet/fabricmc/fabric/api/renderer/v1/model/FabricBakedModel;emitBlockQuads(Lnet/minecraft/class_1920;Lnet/minecraft/class_2680;Lnet/minecraft/class_2338;Ljava/util/function/Supplier;Lnet/fabricmc/fabric/api/renderer/v1/render/RenderContext;)V", ordinal = 0), remap = false)
-    private void redirectEmitBlockQuads(FabricBakedModel fabricBakedModel, BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
-        Block block = state.getBlock();
-        if (CustomBakedModels.shouldUseCustomModel(block, pos)) {
-            ((FabricBakedModel) CustomBakedModels.models.get(block)).emitBlockQuads(blockView, state, pos, randomSupplier, context);
-        } else {
-            fabricBakedModel.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+    @Final
+    @Shadow
+    private TerrainBlockRenderInfo blockInfo;
+
+    @Inject(method = "tesselateBlock", at = @At(value = "INVOKE",
+            target = "Lnet/fabricmc/fabric/api/renderer/v1/model/FabricBakedModel;emitBlockQuads", ordinal = 0))
+    private void emitCustomBlockQuads(BlockState state, BlockPos pos, BakedModel model, MatrixStack matrixStack, CallbackInfoReturnable<Boolean> cir) {
+        Block block = blockInfo.blockState.getBlock();
+        if (CustomBakedModels.shouldUseCustomModel(block, blockInfo.blockPos)) {
+            ((FabricBakedModel) CustomBakedModels.models.get(block)).emitBlockQuads(blockInfo.blockView, blockInfo.blockState, blockInfo.blockPos, blockInfo.randomSupplier, (TerrainRenderContext) (Object) this);
         }
     }
 }

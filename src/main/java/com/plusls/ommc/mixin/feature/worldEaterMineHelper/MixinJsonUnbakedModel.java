@@ -17,15 +17,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.function.Function;
 
-@Mixin(JsonUnbakedModel.class)
+@Mixin(value = JsonUnbakedModel.class, priority = 999)
 public abstract class MixinJsonUnbakedModel implements UnbakedModel {
     @Inject(method = "bake(Lnet/minecraft/client/render/model/ModelLoader;Lnet/minecraft/client/render/model/json/JsonUnbakedModel;Ljava/util/function/Function;Lnet/minecraft/client/render/model/ModelBakeSettings;Lnet/minecraft/util/Identifier;Z)Lnet/minecraft/client/render/model/BakedModel;",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/model/BasicBakedModel$Builder;build()Lnet/minecraft/client/render/model/BakedModel;", ordinal = 0), cancellable = true)
+            at = @At(value = "HEAD"))
     private void generateCustomBakedModel(ModelLoader loader, JsonUnbakedModel parent,
                                           Function<SpriteIdentifier, Sprite> textureGetter,
                                           ModelBakeSettings settings, Identifier id, boolean hasDepth,
                                           CallbackInfoReturnable<BakedModel> cir) {
-        if (CustomBakedModels.needBuildCustomBakedModel(id)) {
+        if (((JsonUnbakedModel) (Object) this).getRootModel() != ModelLoader.BLOCK_ENTITY_MARKER && CustomBakedModels.needBuildCustomBakedModel(id)) {
             ModInfo.LOGGER.debug("add id {} {}", id.toString(), id);
             CustomBakedModels.addCustomBakedModle((JsonUnbakedModel) (Object) this, loader, parent, textureGetter, settings, id, hasDepth);
         }
