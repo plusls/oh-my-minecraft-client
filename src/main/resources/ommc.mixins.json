@@ -6,7 +6,7 @@
   "plugin": "com.plusls.ommc.OmmcMixinPlugin",
   "client": [
     "feature.disableBreakScaffolding.MixinClientPlayerInteractionManager",
-    "feature.emptyHandMoveDownInScaffolding.MixinScaffoldingBlock",
+    "feature.disableMoveDownInScaffolding.MixinScaffoldingBlock",
     "feature.forceBreakingCooldown.MixinClientPlayerInteractionManager",
     "feature.highlightLavaSource.sodium.MixinFluidRenderer",
     "feature.highlightWanderingTrader.MixinMinecraftClient",

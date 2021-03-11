@@ -57,7 +57,7 @@ public class Configs implements IConfigHandler {
     public static class FeatureToggle {
         private static final String PREFIX = String.format("%s.config.feature_toggle", ModInfo.MOD_ID);
         public static final ConfigBooleanHotkeyed DISABLE_BREAK_SCAFFOLDING = new TranslatableConfigBooleanHotkeyed(PREFIX, "disableBreakScaffolding", false, "");
-        public static final ConfigBooleanHotkeyed EMPTY_HAND_MOVE_DOWN_IN_SCAFFOLDING = new TranslatableConfigBooleanHotkeyed(PREFIX, "emptyHandMoveDownInScaffolding", false, "");
+        public static final ConfigBooleanHotkeyed DISABLE_MOVE_DOWN_IN_SCAFFOLDING = new TranslatableConfigBooleanHotkeyed(PREFIX, "disableMoveDownInScaffolding", false, "");
         public static final ConfigBooleanHotkeyed FORCE_BREAKING_COOLDOWN = new TranslatableConfigBooleanHotkeyed(PREFIX, "forceBreakingCooldown", false, "");
         public static final ConfigBooleanHotkeyed HIGHLIGHT_LAVA_SOURCE = new TranslatableConfigBooleanHotkeyed(PREFIX, "highlightLavaSource", false, "");
         public static final ConfigBooleanHotkeyed HIGHLIGHT_WANDERING_TRADER = new TranslatableConfigBooleanHotkeyed(PREFIX, "highlightWanderingTrader", false, "");
@@ -66,7 +66,7 @@ public class Configs implements IConfigHandler {
 
         public static final ImmutableList<ConfigBooleanHotkeyed> OPTIONS = ImmutableList.of(
                 DISABLE_BREAK_SCAFFOLDING,
-                EMPTY_HAND_MOVE_DOWN_IN_SCAFFOLDING,
+                DISABLE_MOVE_DOWN_IN_SCAFFOLDING,
                 FORCE_BREAKING_COOLDOWN,
                 HIGHLIGHT_LAVA_SOURCE,
                 HIGHLIGHT_WANDERING_TRADER,
@@ -88,10 +88,13 @@ public class Configs implements IConfigHandler {
 
     public static class Lists {
         private static final String PREFIX = String.format("%s.config.lists", ModInfo.MOD_ID);
-        public static final ConfigStringList BREAK_SCAFFOLDING_WHITELIST =
-                new TranslatableConfigStringList(PREFIX, "breakScaffoldingWhiteList", ImmutableList.of("minecraft:air", "minecraft:scaffolding"));
+        public static final ConfigStringList BREAK_SCAFFOLDING_WHITELIST = new TranslatableConfigStringList(PREFIX,
+                "breakScaffoldingWhiteList", ImmutableList.of("minecraft:air", "minecraft:scaffolding"));
+        public static final ConfigStringList MOVE_DOWN_IN_SCAFFOLDING_WHITELIST = new TranslatableConfigStringList(PREFIX,
+                "moveDownInScaffoldingWhiteList", ImmutableList.of("minecraft:air", "minecraft:scaffolding"));
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
-                BREAK_SCAFFOLDING_WHITELIST
+                BREAK_SCAFFOLDING_WHITELIST,
+                MOVE_DOWN_IN_SCAFFOLDING_WHITELIST
         );
 
     }

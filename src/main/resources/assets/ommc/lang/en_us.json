@@ -12,9 +12,9 @@
   "ommc.config.generic.debug.comment": "Display debug message",
 
   "ommc.config.feature_toggle.disableBreakScaffolding.name": "disableBreakScaffolding",
-  "ommc.config.feature_toggle.disableBreakScaffolding.comment": "Player can only break the scaffolding with the items in §breakScaffoldingWhiteList§r",
-  "ommc.config.feature_toggle.emptyHandMoveDownInScaffolding.name": "emptyHandMoveDownInScaffolding",
-  "ommc.config.feature_toggle.emptyHandMoveDownInScaffolding.comment": "Player can only move down in scaffolding when they are empty-handed.",
+  "ommc.config.feature_toggle.disableBreakScaffolding.comment": "Player can only break the scaffolding with the items in §6breakScaffoldingWhiteList§r",
+  "ommc.config.feature_toggle.disableMoveDownInScaffolding.name": "disableMoveDownInScaffolding",
+  "ommc.config.feature_toggle.disableMoveDownInScaffolding.comment": "Player can only move down in scaffolding when the item of §6moveDownInScaffoldingWhiteList§r in hand",
   "ommc.config.feature_toggle.forceBreakingCooldown.name": "forceBreakingCooldown",
   "ommc.config.feature_toggle.forceBreakingCooldown.comment": "Player will have 5 gt cooldown after instant breaking.",
   "ommc.config.feature_toggle.highlightLavaSource.name": "highlightLavaSource",
@@ -27,5 +27,8 @@
   "ommc.config.feature_toggle.worldEaterMineHelper.comment": "When ores and obsidian are exposed to the air, game will render their own mirror image above them, which is convenient for world eater maintenance and mining",
 
   "ommc.config.lists.breakScaffoldingWhiteList.name": "breakScaffoldingWhiteList",
-  "ommc.config.lists.breakScaffoldingWhiteList.comment": "If enable §bdisableBreakScaffolding§r, player can only break the scaffolding with the items in §breakScaffoldingWhiteList§r"
+  "ommc.config.lists.breakScaffoldingWhiteList.comment": "If enable §6disableBreakScaffolding§r, player can only break the scaffolding with the items in §6breakScaffoldingWhiteList§r",
+  "ommc.config.lists.moveDownInScaffoldingWhiteList.name": "moveDownInScaffoldingWhiteList",
+  "ommc.config.lists.moveDownInScaffoldingWhiteList.comment": "If enable §6disableMoveDownInScaffolding§r, player can only move down in scaffolding when the item of §6moveDownInScaffoldingWhiteList§r in hand"
+
 }

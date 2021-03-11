@@ -12,8 +12,8 @@
 
   "ommc.config.feature_toggle.disableBreakScaffolding.name": "禁止破坏脚手架",
   "ommc.config.feature_toggle.disableBreakScaffolding.comment": "玩家只有在使用 §6破坏脚手架白名单§r 中的物品时才能破坏脚手架",
-  "ommc.config.feature_toggle.emptyHandMoveDownInScaffolding.name": "空手在脚手架中下降",
-  "ommc.config.feature_toggle.emptyHandMoveDownInScaffolding.comment": "玩家只有在空手时才能在脚手架下降",
+  "ommc.config.feature_toggle.disableMoveDownInScaffolding.name": "禁止在脚手架中下降",
+  "ommc.config.feature_toggle.disableMoveDownInScaffolding.comment": "玩家手中拿着 §6在脚手架中下降白名单§r 中的物品时才能在脚手架下降",
   "ommc.config.feature_toggle.forceBreakingCooldown.name": "强制添加破坏冷却",
   "ommc.config.feature_toggle.forceBreakingCooldown.comment": "玩家在秒破方块后会有 5gt 的破坏冷却时间",
   "ommc.config.feature_toggle.highlightLavaSource.name": "高亮岩浆源",
@@ -26,6 +26,7 @@
   "ommc.config.feature_toggle.worldEaterMineHelper.comment": "当矿物以及黑曜石暴露在空气中时，会在它们上方渲染出自己的镜像，方便世吞运维以及挖矿",
 
   "ommc.config.lists.breakScaffoldingWhiteList.name": "破坏脚手架白名单",
-  "ommc.config.lists.breakScaffoldingWhiteList.comment": "如果开启 §6禁止破坏脚手架§r， 玩家只有在使用 §6破坏脚手架白名单§r 中的物品时才能破坏脚手架"
-
+  "ommc.config.lists.breakScaffoldingWhiteList.comment": "如果开启 §6禁止破坏脚手架§r， 玩家只有在使用 §6破坏脚手架白名单§r 中的物品时才能破坏脚手架",
+  "ommc.config.lists.moveDownInScaffoldingWhiteList.name": "在脚手架中下降白名单",
+  "ommc.config.lists.moveDownInScaffoldingWhiteList.comment": "如果开启 §6禁止在脚手架中下降§r, 玩家手中拿着 §6在脚手架中下降白名单§r 中的物品时才能在脚手架下降"
 }
