@@ -17,6 +17,15 @@ repositories {
 	maven {
 		url 'https://maven.terraformersmc.com/releases'
 	}
+	maven {
+		name = "dblsaiko"
+		url = "https://maven.dblsaiko.net/"
+	}
+	maven {
+		name = "Cotton"
+		url = "https://server.bbkr.space/artifactory/libs-release/"
+	}
+	jcenter()
 }
 
 dependencies {
@@ -30,6 +39,7 @@ dependencies {
 	modImplementation "me.jellysquid.mods.sodium:sodium-fabric-mc1.16.3-0.1.0"
 	modImplementation "fi.dy.masa.malilib:malilib-fabric-${project.minecraft_version}:${project.malilib_version}"
 	modImplementation "com.terraformersmc:modmenu:${project.mod_menu_version}"
+	modImplementation "grondag:canvas-mc116:${project.canvas_version}"
 
 	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
 	// You may need to force-disable transitiveness on them.
