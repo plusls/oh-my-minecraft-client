@@ -24,11 +24,12 @@
   "ommc.config.feature_toggle.preventExplodingBed.name": "preventExplodingBed",
   "ommc.config.feature_toggle.preventExplodingBed.comment": "prevent player use bed in nether or the end",
   "ommc.config.feature_toggle.worldEaterMineHelper.name": "worldEaterMineHelper",
-  "ommc.config.feature_toggle.worldEaterMineHelper.comment": "When ores and obsidian are exposed to the air, game will render their own mirror image above them, which is convenient for world eater maintenance and mining",
+  "ommc.config.feature_toggle.worldEaterMineHelper.comment": "When the blocks in §6worldEaterMineHelperWhitelist§r are exposed to the air, game will render their own mirror image above them, which is convenient for world eater maintenance and mining",
 
   "ommc.config.lists.breakScaffoldingWhiteList.name": "breakScaffoldingWhiteList",
   "ommc.config.lists.breakScaffoldingWhiteList.comment": "If enable §6disableBreakScaffolding§r, player can only break the scaffolding with the items in §6breakScaffoldingWhiteList§r",
   "ommc.config.lists.moveDownInScaffoldingWhiteList.name": "moveDownInScaffoldingWhiteList",
-  "ommc.config.lists.moveDownInScaffoldingWhiteList.comment": "If enable §6disableMoveDownInScaffolding§r, player can only move down in scaffolding when the item of §6moveDownInScaffoldingWhiteList§r in hand"
-
+  "ommc.config.lists.moveDownInScaffoldingWhiteList.comment": "If enable §6disableMoveDownInScaffolding§r, player can only move down in scaffolding when the item of §6moveDownInScaffoldingWhiteList§r in hand",
+  "ommc.config.lists.worldEaterMineHelperWhitelist.name": "worldEaterMineHelperWhitelist",
+  "ommc.config.lists.worldEaterMineHelperWhitelist.comment": "If enable §6worldEaterMineHelper§r, when the blocks in §6worldEaterMineHelperWhitelist§r are exposed to the air, game will render their own mirror image above them, which is convenient for world eater maintenance and mining"
 }

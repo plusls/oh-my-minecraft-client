@@ -9,6 +9,7 @@ import fi.dy.masa.malilib.gui.GuiConfigsBase;
 import fi.dy.masa.malilib.gui.button.ButtonBase;
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.gui.button.IButtonActionListener;
+import fi.dy.masa.malilib.util.KeyCodes;
 import fi.dy.masa.malilib.util.StringUtils;
 
 import java.util.Collections;
@@ -60,10 +61,17 @@ public class GuiConfigs extends GuiConfigsBase {
     }
 
     @Override
+    public boolean onKeyTyped(int keyCode, int scanCode, int modifiers) {
+        if (keyCode == KeyCodes.KEY_ESCAPE) {
+            Configs.checkIsStringListChanged();
+        }
+        return super.onKeyTyped(keyCode, scanCode, modifiers);
+    }
+
+    @Override
     public List<ConfigOptionWrapper> getConfigs() {
         List<? extends IConfigBase> configs;
         ConfigGuiTab tab = GuiConfigs.tab;
-
         if (tab == ConfigGuiTab.GENERIC) {
             configs = Configs.Generic.OPTIONS;
         } else if (tab == ConfigGuiTab.FEATURE_TOGGLE) {
@@ -76,6 +84,7 @@ public class GuiConfigs extends GuiConfigsBase {
             return Collections.emptyList();
         }
 
+        Configs.checkIsStringListChanged();
         return ConfigOptionWrapper.createFor(configs);
     }
 

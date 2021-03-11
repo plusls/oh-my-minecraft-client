@@ -25,7 +25,7 @@ public abstract class MixinJsonUnbakedModel implements UnbakedModel {
                                           Function<SpriteIdentifier, Sprite> textureGetter,
                                           ModelBakeSettings settings, Identifier id, boolean hasDepth,
                                           CallbackInfoReturnable<BakedModel> cir) {
-        if (((JsonUnbakedModel) (Object) this).getRootModel() != ModelLoader.BLOCK_ENTITY_MARKER && CustomBakedModels.needBuildCustomBakedModel(id)) {
+        if (((JsonUnbakedModel) (Object) this).getRootModel() != ModelLoader.BLOCK_ENTITY_MARKER) {
             ModInfo.LOGGER.debug("add id {} {}", id.toString(), id);
             CustomBakedModels.addCustomBakedModle((JsonUnbakedModel) (Object) this, loader, parent, textureGetter, settings, id, hasDepth);
         }

@@ -23,10 +23,12 @@
   "ommc.config.feature_toggle.preventExplodingBed.name": "防止床爆炸",
   "ommc.config.feature_toggle.preventExplodingBed.comment": "阻止玩家在下界或者末地使用床",
   "ommc.config.feature_toggle.worldEaterMineHelper.name": "世吞挖矿助手",
-  "ommc.config.feature_toggle.worldEaterMineHelper.comment": "当矿物以及黑曜石暴露在空气中时，会在它们上方渲染出自己的镜像，方便世吞运维以及挖矿",
+  "ommc.config.feature_toggle.worldEaterMineHelper.comment": "当 §6世吞挖矿助手白名单§r 中的方块暴露在空气中时，客户端会在它们上方渲染出自己的镜像，方便世吞运维以及挖矿",
 
   "ommc.config.lists.breakScaffoldingWhiteList.name": "破坏脚手架白名单",
   "ommc.config.lists.breakScaffoldingWhiteList.comment": "如果开启 §6禁止破坏脚手架§r， 玩家只有在使用 §6破坏脚手架白名单§r 中的物品时才能破坏脚手架",
   "ommc.config.lists.moveDownInScaffoldingWhiteList.name": "在脚手架中下降白名单",
-  "ommc.config.lists.moveDownInScaffoldingWhiteList.comment": "如果开启 §6禁止在脚手架中下降§r, 玩家手中拿着 §6在脚手架中下降白名单§r 中的物品时才能在脚手架下降"
+  "ommc.config.lists.moveDownInScaffoldingWhiteList.comment": "如果开启 §6禁止在脚手架中下降§r, 玩家手中拿着 §6在脚手架中下降白名单§r 中的物品时才能在脚手架下降",
+  "ommc.config.lists.worldEaterMineHelperWhitelist.name": "世吞挖矿助手白名单",
+  "ommc.config.lists.worldEaterMineHelperWhitelist.comment": "如果开启 §6世吞挖矿助手白名单§r, 当 §6世吞挖矿助手白名单§r 中的方块暴露在空气中时，客户端会在它们上方渲染出自己的镜像，方便世吞运维以及挖矿"
 }

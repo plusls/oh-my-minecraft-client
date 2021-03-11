@@ -27,11 +27,10 @@ import java.util.function.Function;
 
 public class CustomBakedModels {
     public static final Map<Block, BakedModel> models = new HashMap<>();
-    public static String[] customArray = {"_ore", "ancient_debris", "obsidian"};
 
     public static boolean needBuildCustomBakedModel(Identifier id) {
-        for (String blockName : customArray) {
-            if (id.toString().endsWith(blockName)) {
+        for (String blockName : Configs.Lists.WORLD_EATER_MINE_HELPER_WHITELIST.getStrings()) {
+            if (id.toString().contains(blockName)) {
                 return true;
             }
         }
@@ -40,7 +39,7 @@ public class CustomBakedModels {
 
     public static boolean shouldUseCustomModel(Block block, BlockPos pos) {
         // ModInfo.LOGGER.debug("test model {} {}", pos, block);
-        if (Configs.FeatureToggle.WORLD_EATER_MINE_HELPER.getBooleanValue() && CustomBakedModels.models.containsKey(block)) {
+        if (Configs.FeatureToggle.WORLD_EATER_MINE_HELPER.getBooleanValue() && needBuildCustomBakedModel(Registry.BLOCK.getId(block))) {
             ClientWorld world = MinecraftClient.getInstance().world;
             if (world != null) {
                 int x = pos.getX();
@@ -56,7 +55,7 @@ public class CustomBakedModels {
                         ++j;
                     }
                 }
-                ModInfo.LOGGER.debug("update model! {} {}", pos, block);
+                // ModInfo.LOGGER.debug("update model! {} {}", pos, block);
                 return true;
             }
         }
