@@ -11,9 +11,9 @@
   "ommc.config.generic.debug.comment": "开启后将会打印调试日志",
 
   "ommc.config.feature_toggle.disableBreakScaffolding.name": "禁止破坏脚手架",
-  "ommc.config.feature_toggle.disableBreakScaffolding.comment": "玩家只有在使用 §6破坏脚手架白名单§r 中的物品时才能破坏脚手架",
+  "ommc.config.feature_toggle.disableBreakScaffolding.comment": "玩家只有在手持 §6破坏脚手架白名单§r 中的物品时才能破坏脚手架",
   "ommc.config.feature_toggle.disableMoveDownInScaffolding.name": "禁止在脚手架中下降",
-  "ommc.config.feature_toggle.disableMoveDownInScaffolding.comment": "玩家手中拿着 §6在脚手架中下降白名单§r 中的物品时才能在脚手架下降",
+  "ommc.config.feature_toggle.disableMoveDownInScaffolding.comment": "玩家只有在手持 §6在脚手架中下降白名单§r 中的物品时才能在脚手架下降",
   "ommc.config.feature_toggle.forceBreakingCooldown.name": "强制添加破坏冷却",
   "ommc.config.feature_toggle.forceBreakingCooldown.comment": "玩家在秒破方块后会有 5gt 的破坏冷却时间",
   "ommc.config.feature_toggle.highlightLavaSource.name": "高亮岩浆源",

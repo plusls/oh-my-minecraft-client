@@ -12,13 +12,13 @@ The default hotkey to open the in-game config GUI is O + C
 
 ## Feature
 
-### Only empty hands destroyed the scaffold
+### Disable Break Scaffolding
 
-Players can only break scaffolding whth empty hand.
+Player can only break the scaffolding with the items in **breakScaffoldingWhiteList**.
 
-### Only empty hands descend in the scaffold
+### Disable Move Down In Scaffolding
 
-Players can only descend on scaffolding whth empty hand.
+Player can only move down in scaffolding when the item of **moveDownInScaffoldingWhiteList** in hand
 
 ### Forced break cooling
 
@@ -46,14 +46,14 @@ Prevent players from using the bed in the The Nether or The End. (Not Included R
 
 ### worldEaterMineHelper
 
-When ores and obsidian are exposed to the air, game will render their own mirror image above them, which is convenient for world eater maintenance and mining
+When the blocks in **worldEaterMineHelperWhitelist** are exposed to the air, game will render their own mirror image above them, which is convenient for world eater maintenance and mining.
 
 ![worldEaterMineHelper](./docs/img/worldEaterMineHelper.png)
 
 ## Acknowledgements
 
-+ Thanks to [XeKr](https://space.bilibili.com/5930630) for the magma eye protection texture
-+ Thanks to [NextPage](https://github.com/Next-Page-Vi) for providing English translation, magma material modification and testing work
++ Thanks to [XeKr](https://space.bilibili.com/5930630) for the lava eye protection texture
++ Thanks to [NextPage](https://github.com/Next-Page-Vi) for providing English translation, lava source texture modification and testing work
 + Thanks to [水星嗷](https://space.bilibili.com/18525909) for providing [the idea of highlighting ores and resourcepack](https://www.bilibili.com/video/BV1w64y1D7wP)
 
 
