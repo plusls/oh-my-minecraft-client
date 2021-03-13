@@ -37,7 +37,12 @@ public class MixinBlockRenderer {
         BlockModelRendererContext context = ommcRenderContext.get();
         Block block = context.state.getBlock();
         if (CustomBakedModels.shouldUseCustomModel(block, context.pos)) {
-            return CustomBakedModels.models.get(block);
+            BakedModel customModel = CustomBakedModels.models.get(block);
+            if (customModel != null) {
+                return CustomBakedModels.models.get(block);
+            } else {
+                return bakedModel;
+            }
         } else {
             return bakedModel;
         }

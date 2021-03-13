@@ -1,6 +1,5 @@
 package com.plusls.ommc.mixin.feature.worldEaterMineHelper.canvas;
 
-import com.plusls.ommc.ModInfo;
 import com.plusls.ommc.feature.worldEaterMineHelper.CustomBakedModels;
 import grondag.canvas.apiimpl.rendercontext.AbstractBlockRenderContext;
 import grondag.canvas.apiimpl.rendercontext.TerrainRenderContext;
@@ -26,7 +25,10 @@ public abstract class MixinTerrainRenderContext extends AbstractBlockRenderConte
     private void emitCustomBlockQuads(BlockState blockState, BlockPos blockPos, boolean defaultAo, FabricBakedModel model, MatrixStack matrixStack, CallbackInfo ci) {
         Block block = blockState.getBlock();
         if (CustomBakedModels.shouldUseCustomModel(block, blockPos)) {
-            ((FabricBakedModel) CustomBakedModels.models.get(block)).emitBlockQuads(region, blockState, blockPos, randomSupplier, this);
+            FabricBakedModel customModel = (FabricBakedModel) CustomBakedModels.models.get(block);
+            if (customModel != null) {
+                customModel.emitBlockQuads(region, blockState, blockPos, randomSupplier, this);
+            }
         }
     }
 }

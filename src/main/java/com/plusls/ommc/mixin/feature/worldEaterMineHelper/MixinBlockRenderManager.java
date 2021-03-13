@@ -61,7 +61,10 @@ public class MixinBlockRenderManager {
         }
         Block block = context.state.getBlock();
         if (CustomBakedModels.shouldUseCustomModel(block, context.pos)) {
-            cir.setReturnValue(CustomBakedModels.models.get(block));
+            BakedModel model = CustomBakedModels.models.get(block);
+            if (model != null) {
+                cir.setReturnValue(model);
+            }
         }
     }
 }

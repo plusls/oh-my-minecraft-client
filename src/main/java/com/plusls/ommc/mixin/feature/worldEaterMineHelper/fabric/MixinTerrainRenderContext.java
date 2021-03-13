@@ -27,7 +27,10 @@ public class MixinTerrainRenderContext {
     private void emitCustomBlockQuads(BlockState state, BlockPos pos, BakedModel model, MatrixStack matrixStack, CallbackInfoReturnable<Boolean> cir) {
         Block block = blockInfo.blockState.getBlock();
         if (CustomBakedModels.shouldUseCustomModel(block, blockInfo.blockPos)) {
-            ((FabricBakedModel) CustomBakedModels.models.get(block)).emitBlockQuads(blockInfo.blockView, blockInfo.blockState, blockInfo.blockPos, blockInfo.randomSupplier, (TerrainRenderContext) (Object) this);
+            FabricBakedModel customModel = (FabricBakedModel) CustomBakedModels.models.get(block);
+            if (customModel != null) {
+                customModel.emitBlockQuads(blockInfo.blockView, blockInfo.blockState, blockInfo.blockPos, blockInfo.randomSupplier, (TerrainRenderContext) (Object) this);
+            }
         }
     }
 }
