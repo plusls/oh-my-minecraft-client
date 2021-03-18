@@ -25,6 +25,8 @@
   "ommc.config.feature_toggle.preventExplodingBed.comment": "prevent player use bed in nether or the end",
   "ommc.config.feature_toggle.worldEaterMineHelper.name": "worldEaterMineHelper",
   "ommc.config.feature_toggle.worldEaterMineHelper.comment": "When the blocks in §6worldEaterMineHelperWhitelist§r are exposed to the air, game will render their own mirror image above them, which is convenient for world eater maintenance and mining",
+  "ommc.config.feature_toggle.realSneaking.name": "realSneaking",
+  "ommc.config.feature_toggle.realSneaking.comment": "Players cannot ascend or descend when sneaking, such as walking to a carpet.",
 
   "ommc.config.lists.breakScaffoldingWhiteList.name": "breakScaffoldingWhiteList",
   "ommc.config.lists.breakScaffoldingWhiteList.comment": "If enable §6disableBreakScaffolding§r, player can only break the scaffolding with the items in §6breakScaffoldingWhiteList§r",

@@ -44,7 +44,11 @@ The Wandering Trader will be glowed with the effect of Glowing, so it in Invisib
 
 Prevent players from using the bed in the The Nether or The End. (Not Included Respawn anchor in Overworld!)
 
-### worldEaterMineHelper
+### Real sneaking
+
+Players cannot ascend or descend when sneaking, such as walking to a carpet.
+
+### World Eater Mine Helper
 
 When the blocks in **worldEaterMineHelperWhitelist** are exposed to the air, game will render their own mirror image above them, which is convenient for world eater maintenance and mining.
 

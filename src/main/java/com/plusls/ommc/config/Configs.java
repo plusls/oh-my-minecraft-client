@@ -6,7 +6,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.plusls.ommc.ModInfo;
 import com.plusls.ommc.gui.GuiConfigs;
-import com.terraformersmc.modmenu.util.mod.Mod;
 import fi.dy.masa.malilib.config.ConfigUtils;
 import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.config.IConfigHandler;
@@ -30,6 +29,7 @@ public class Configs implements IConfigHandler {
     private static final int CONFIG_VERSION = 1;
     private static final List<String> OLD_WORLD_EATER_MINE_HELPER_WHITELIST = new ArrayList<>();
     private static boolean firstLoadConfig = true;
+
     public static class Generic {
         private static final String PREFIX = String.format("%s.config.generic", ModInfo.MOD_ID);
         public static final ConfigHotkey OPEN_CONFIG_GUI = new TranslatableConfigHotkey(PREFIX, "openConfigGui", "O,C");
@@ -66,6 +66,7 @@ public class Configs implements IConfigHandler {
         public static final ConfigBooleanHotkeyed HIGHLIGHT_LAVA_SOURCE = new TranslatableConfigBooleanHotkeyed(PREFIX, "highlightLavaSource", false, "");
         public static final ConfigBooleanHotkeyed HIGHLIGHT_WANDERING_TRADER = new TranslatableConfigBooleanHotkeyed(PREFIX, "highlightWanderingTrader", false, "");
         public static final ConfigBooleanHotkeyed PREVENT_EXPLODING_BED = new TranslatableConfigBooleanHotkeyed(PREFIX, "preventExplodingBed", false, "");
+        public static final ConfigBooleanHotkeyed REAL_SNEAKING = new TranslatableConfigBooleanHotkeyed(PREFIX, "realSneaking", false, "");
         public static final ConfigBooleanHotkeyed WORLD_EATER_MINE_HELPER = new TranslatableConfigBooleanHotkeyed(PREFIX, "worldEaterMineHelper", false, "");
 
         public static final ImmutableList<ConfigBooleanHotkeyed> OPTIONS = ImmutableList.of(
@@ -75,6 +76,7 @@ public class Configs implements IConfigHandler {
                 HIGHLIGHT_LAVA_SOURCE,
                 HIGHLIGHT_WANDERING_TRADER,
                 PREVENT_EXPLODING_BED,
+                REAL_SNEAKING,
                 WORLD_EATER_MINE_HELPER
         );
 
@@ -117,7 +119,7 @@ public class Configs implements IConfigHandler {
             updateOldStringList();
             return;
         }
-        for (String string: Configs.Lists.WORLD_EATER_MINE_HELPER_WHITELIST.getStrings()) {
+        for (String string : Configs.Lists.WORLD_EATER_MINE_HELPER_WHITELIST.getStrings()) {
             if (!OLD_WORLD_EATER_MINE_HELPER_WHITELIST.contains(string)) {
                 MinecraftClient.getInstance().worldRenderer.reload();
                 updateOldStringList();
