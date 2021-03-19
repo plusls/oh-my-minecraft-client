@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.client.MinecraftClient;
@@ -63,9 +64,12 @@ public class LavaSourceResourceLoader implements SimpleSynchronousResourceReload
         FluidRenderHandler lavaSourceRenderHandler = new FluidRenderHandler() {
             @Override
             public Sprite[] getFluidSprites(BlockRenderView extendedBlockView, BlockPos blockPos, FluidState fluidState) {
-                if (Configs.FeatureToggle.HIGHLIGHT_LAVA_SOURCE.getBooleanValue() &&
-                        extendedBlockView.getBlockState(blockPos).get(FluidBlock.LEVEL) == 0) {
-                    return lavaSourceSpites;
+
+                if (Configs.FeatureToggle.HIGHLIGHT_LAVA_SOURCE.getBooleanValue()) {
+                    BlockState blockState = extendedBlockView.getBlockState(blockPos);
+                    if (blockState.contains(FluidBlock.LEVEL) && blockState.get(FluidBlock.LEVEL) == 0) {
+                        return lavaSourceSpites;
+                    }
                 }
                 return defaultLavaSourceSpites;
             }
