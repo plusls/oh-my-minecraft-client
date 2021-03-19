@@ -1,5 +1,9 @@
 # Oh My Minecraft Client
 
+[![Issues](https://img.shields.io/github/issues/plusls/oh-my-minecraft-client.svg)](https://github.com/plusls/oh-my-minecraft-client/issues)
+[![MC Versions](https://cf.way2muchnoise.eu/versions/For%20MC_454900_all.svg)](https://www.curseforge.com/minecraft/mc-mods/oh-my-minecraft-client)
+[![CurseForge](https://cf.way2muchnoise.eu/full_454900_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/oh-my-minecraft-client)
+
 [>>> English <<<](./README_EN.md)
 
 Make Minecraft Client Great Again!
