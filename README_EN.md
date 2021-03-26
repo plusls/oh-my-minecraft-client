@@ -3,30 +3,30 @@
 Make Minecraft Client Great Again!
 
 ## Description
-Oh My Minecraft Client is a client-side mod, which helps you manage your hands. It's written for only Fabric loader.
+Oh My Minecraft Client is a client-side mod, which helps you manage your hands. The mod is written for the Fabric Loader.
 
 ## NOTE: My Minecraft Client also requires the MaLiLib library mod by masady:
 https://www.curseforge.com/minecraft/mc-mods/malilib
 
 The default hotkey to open the in-game config GUI is O + C
 
-## Feature
+## Features
 
 ### Disable Break Scaffolding
 
-Player can only break the scaffolding with the items in **breakScaffoldingWhiteList**.
+You can break the scaffolding with the items in **breakScaffoldingWhiteList**.
 
 ### Disable Move Down In Scaffolding
 
-Player can only move down in scaffolding when the item of **moveDownInScaffoldingWhiteList** in hand
+You can move down in scaffolding when the item of **moveDownInScaffoldingWhiteList** in your hand.
 
-### Forced break cooling
+### Forced Break Cooling
 
-Players will have a 5gt cooldown after breaking the block instantaneously, which prevent you from accidentally destroying components in Haste 2 effect.
+Players will have a 5GT cooldown after breaking the block instantaneously, which will prevent you from accidentally destroying components with the Haste 2 effect.
 
-### Highlight lava source
+### Highlight Lava Sources
 
-Lava source will be highlighted with a special textures.
+Any lava source will be highlighted with a special texture.
 
 It looks like:
 
@@ -34,31 +34,31 @@ It looks like:
 
 ![highlightLavaSourceOn](./docs/img/highlightLavaSourceOn.png)
 
-### Wandering Trader Glowing
+### Wandering Trader Glow
 
-The Wandering Trader will be glowed with the effect of Glowing, so it in Invisibility.
+The Wandering Trader will have the glowing affect, so it in Invisibility.
 
 ![highlightLavaSourceOn](./docs/img/highlightWanderingTrader.png)
 
-### Prevention of bed explosion
+### Bed Explosion Prevention
 
-Prevent players from using the bed in the The Nether or The End. (Not Included Respawn anchor in Overworld!)
+You can prevent breaking beds in The Nether or The End. (Not included with the respawn anchor in Overworld).
 
-### Real sneaking
+### Real Sneaking
 
-Players cannot ascend or descend when sneaking, such as walking to a carpet.
+Players cannot ascend or descend when sneaking.
 
-### World Eater Mine Helper
+### World Eater And Mine Helper
 
-When the blocks in **worldEaterMineHelperWhitelist** are exposed to the air, game will render their own mirror image above them, which is convenient for world eater maintenance and mining.
+When the blocks in **worldEaterMineHelperWhitelist** are exposed to the air, the game will render their own mirror image above them, which is convenient for world eater maintenance and mining.
 
 ![worldEaterMineHelper](./docs/img/worldEaterMineHelper.png)
 
 ## Acknowledgements
 
-+ Thanks to [XeKr](https://space.bilibili.com/5930630) for the lava eye protection texture
-+ Thanks to [NextPage](https://github.com/Next-Page-Vi) for providing English translation, lava source texture modification and testing work
-+ Thanks to [水星嗷](https://space.bilibili.com/18525909) for providing [the idea of highlighting ores and resourcepack](https://www.bilibili.com/video/BV1w64y1D7wP)
++ Thanks to [XeKr](https://space.bilibili.com/5930630) for the lava eye protection texture.
++ Thanks to [NextPage](https://github.com/Next-Page-Vi) for providing the English translation, lava source texture modification and testing work.
++ Thanks to [水星嗷](https://space.bilibili.com/18525909) for providing [the idea of highlighting ores and resourcepack](https://www.bilibili.com/video/BV1w64y1D7wP).
 
 
 ## License
