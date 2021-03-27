@@ -9,7 +9,8 @@
   ],
   "contact": {
     "homepage": "https://blog.plusls.com/",
-    "sources": "https://github.com/plusls/oh-my-minecraft-client"
+    "sources": "https://github.com/plusls/oh-my-minecraft-client",
+    "issues": "https://github.com/plusls/oh-my-minecraft-client/issues"
   },
   "license": "CC0-1.0",
   "icon": "assets/ommc/icon.png",
@@ -28,8 +29,5 @@
     "fabric": "*",
     "minecraft": "1.16.x",
     "malilib": ">=0.10.0-dev.21"
-  },
-  "suggests": {
-    "another-mod": "*"
   }
 }
