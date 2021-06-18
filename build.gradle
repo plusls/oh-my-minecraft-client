@@ -17,6 +17,7 @@ repositories {
 	maven {
 		url 'https://maven.terraformersmc.com/releases'
 	}
+	maven { url "https://maven.shedaniel.me/" }
 	maven {
 		name = "dblsaiko"
 		url = "https://maven.dblsaiko.net/"
@@ -36,7 +37,7 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	modImplementation "me.jellysquid.mods.sodium:sodium-fabric-mc1.16.3-0.1.0"
+	modImplementation "me.jellysquid.mods.sodium:sodium-fabric-mc1.16.5-0.2.0+build.4"
 	modImplementation "fi.dy.masa.malilib:malilib-fabric-${project.minecraft_version}:${project.malilib_version}"
 	modImplementation "com.terraformersmc:modmenu:${project.mod_menu_version}"
 	modImplementation "grondag:canvas-mc116:${project.canvas_version}"

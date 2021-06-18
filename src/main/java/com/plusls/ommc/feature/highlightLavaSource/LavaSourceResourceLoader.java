@@ -51,7 +51,7 @@ public class LavaSourceResourceLoader implements SimpleSynchronousResourceReload
     }
 
     @Override
-    public void apply(ResourceManager manager) {
+    public void reload(ResourceManager manager) {
         final Function<Identifier, Sprite> atlas = MinecraftClient.getInstance().getSpriteAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE);
         lavaSourceStillSprite = atlas.apply(stillSpriteId);
         lavaSourceFlowSprite = atlas.apply(flowingSpriteId);

@@ -2,6 +2,7 @@ package com.plusls.ommc.mixin.feature.worldEaterMineHelper.sodium;
 
 import com.plusls.ommc.feature.worldEaterMineHelper.BlockModelRendererContext;
 import com.plusls.ommc.feature.worldEaterMineHelper.CustomBakedModels;
+import me.jellysquid.mods.sodium.client.render.chunk.compile.buffers.ChunkModelBuffers;
 import me.jellysquid.mods.sodium.client.render.pipeline.BlockRenderer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -25,7 +26,7 @@ public class MixinBlockRenderer {
 
     @Inject(method = "renderModel",
             at = @At(value = "HEAD"))
-    private void initRenderContext(BlockRenderView world, BlockState state, BlockPos pos, BakedModel model, @Coerce Object object, boolean cull, long seed, CallbackInfoReturnable<Boolean> cir) {
+    private void initRenderContext(BlockRenderView world, BlockState state, BlockPos pos, BakedModel model, ChunkModelBuffers buffers, boolean cull, long seed, CallbackInfoReturnable<Boolean> cir) {
         BlockModelRendererContext context = ommcRenderContext.get();
         context.pos = pos;
         context.state = state;

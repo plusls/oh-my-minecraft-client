@@ -20,7 +20,7 @@ public abstract class MixinTerrainRenderContext extends AbstractBlockRenderConte
         super(name);
     }
 
-    @Inject(method = "rebnderInner", at = @At(value = "INVOKE",
+    @Inject(method = "renderInner", at = @At(value = "INVOKE",
             target = "Lnet/fabricmc/fabric/api/renderer/v1/model/FabricBakedModel;emitBlockQuads", ordinal = 0))
     private void emitCustomBlockQuads(BlockState blockState, BlockPos blockPos, boolean defaultAo, FabricBakedModel model, MatrixStack matrixStack, CallbackInfo ci) {
         Block block = blockState.getBlock();

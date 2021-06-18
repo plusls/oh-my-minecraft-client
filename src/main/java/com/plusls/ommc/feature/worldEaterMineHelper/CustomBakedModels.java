@@ -13,7 +13,7 @@ import net.minecraft.client.render.model.json.ModelElementFace;
 import net.minecraft.client.render.model.json.ModelRotation;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.client.util.math.Vector3f;
+import net.minecraft.util.math.Vec3f;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -80,7 +80,7 @@ public class CustomBakedModels {
             for (Direction direction : modelElement.faces.keySet()) {
                 ModelElementFace modelElementFace = modelElement.faces.get(direction);
                 Sprite sprite2 = textureGetter.apply(jsonUnbakedModel.resolveSprite(modelElementFace.textureId));
-                Vector3f origin = new Vector3f(8f, 80f, 178.4f);
+                Vec3f origin = new Vec3f(8f, 80f, 178.4f);
                 origin.scale(0.0625F);
                 ModelRotation newModelRotation = new ModelRotation(origin, Direction.Axis.X, 45, false);
                 if (modelElementFace.cullFace == null) {
