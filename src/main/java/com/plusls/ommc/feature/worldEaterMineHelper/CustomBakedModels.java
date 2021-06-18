@@ -1,6 +1,5 @@
 package com.plusls.ommc.feature.worldEaterMineHelper;
 
-import com.plusls.ommc.ModInfo;
 import com.plusls.ommc.config.Configs;
 import com.plusls.ommc.mixin.feature.worldEaterMineHelper.JsonUnbakedModelInvoker;
 import net.minecraft.block.Block;
@@ -13,11 +12,11 @@ import net.minecraft.client.render.model.json.ModelElementFace;
 import net.minecraft.client.render.model.json.ModelRotation;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.util.math.Vec3f;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.Heightmap;
 

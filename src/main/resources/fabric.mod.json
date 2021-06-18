@@ -19,7 +19,9 @@
     "client": [
       "com.plusls.ommc.OhMyMinecraftClient"
     ],
-    "modmenu": [ "com.plusls.ommc.compat.modmenu.ModMenuApiImpl" ]
+    "modmenu": [
+      "com.plusls.ommc.compat.modmenu.ModMenuApiImpl"
+    ]
   },
   "mixins": [
     "ommc.mixins.json"
@@ -27,7 +29,7 @@
   "depends": {
     "fabricloader": ">=0.7.4",
     "fabric": ">=0.35.1",
-    "minecraft": "1.16.x",
+    "minecraft": "1.17.x",
     "malilib": ">=0.10.0-dev.21"
   }
 }
