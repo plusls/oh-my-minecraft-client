@@ -11,7 +11,7 @@ jobs:
         java: [
           1.8,  # Minimum supported by Minecraft
           11,   # Current Java LTS
-          15    # Latest version
+          16    # Latest version
         ]
         # and run on both Linux and Windows
         os: [ubuntu-20.04, windows-latest]
@@ -38,7 +38,7 @@ jobs:
         run: ./gradlew build
       - name: Upload assets to GitHub
         uses: AButler/upload-release-assets@v2.0
-        if: ${{ runner.os == 'Linux' && matrix.java == '11' }} # Only upload artifacts built from LTS java on one OS
+        if: ${{ runner.os == 'Linux' && matrix.java == '16' }}
         with:
           files: 'build/libs/*;LICENSE'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
