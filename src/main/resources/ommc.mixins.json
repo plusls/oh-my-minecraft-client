@@ -21,5 +21,9 @@
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "mixins": [
+    "feature.dontClearChatHistory.MixinChatHud",
+    "feature.malilib.MixinKeybindMulti"
+  ]
 }

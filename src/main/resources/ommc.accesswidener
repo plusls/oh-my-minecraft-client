@@ -1,0 +1,4 @@
+accessWidener v1 named
+accessible method net/minecraft/item/BundleItem addToBundle (Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ItemStack;)I
+accessible method net/minecraft/item/BundleItem canMergeStack (Lnet/minecraft/item/ItemStack;Lnet/minecraft/nbt/NbtList;)Ljava/util/Optional;
+

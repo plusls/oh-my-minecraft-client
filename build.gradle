@@ -27,7 +27,9 @@ repositories {
 		url = "https://server.bbkr.space/artifactory/libs-release/"
 	}
 }
-
+loom {
+	accessWidener "src/main/resources/ommc.accesswidener"
+}
 dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
