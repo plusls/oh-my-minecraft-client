@@ -19,10 +19,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class MixinBlockRenderer {
     private final ThreadLocal<BlockModelRendererContext> ommcRenderContext = ThreadLocal.withInitial(BlockModelRendererContext::new);
 
-    // @Coerce Object
-    // stable -> ModelQuadSinkDelegate builder
-    // next -> ChunkModelBuffers buffers
-
     @Inject(method = "renderModel",
             at = @At(value = "HEAD"))
     private void initRenderContext(BlockRenderView world, BlockState state, BlockPos pos, BakedModel model, ChunkModelBuffers buffers, boolean cull, long seed, CallbackInfoReturnable<Boolean> cir) {

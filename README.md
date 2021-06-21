@@ -15,6 +15,20 @@ Make Minecraft Client Great Again!
 + [malilib](https://www.curseforge.com/minecraft/mc-mods/malilib)
 + [fabric-api](https://www.curseforge.com/minecraft/mc-mods/fabric-api)
 
+## Generic
+
+### 不清空聊天历史记录
+
+不清空聊天历史记录
+
+### 整理仓库
+
+按下快捷键后可以自动整理仓库（R 键整理的替代品）
+
+### 整理仓库时支持空潜影盒堆叠
+
+在自动整理时会将空盒视作可堆叠的
+
 ## Feature
 
 ### 禁止破坏脚手架

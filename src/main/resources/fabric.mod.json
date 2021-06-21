@@ -15,6 +15,7 @@
   "license": "CC0-1.0",
   "icon": "assets/ommc/icon.png",
   "environment": "client",
+  "accessWidener": "ommc.accesswidener",
   "entrypoints": {
     "client": [
       "com.plusls.ommc.OhMyMinecraftClient"

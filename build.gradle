@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.6-SNAPSHOT'
+    id 'fabric-loom' version '0.8-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -28,7 +28,9 @@ repositories {
     }
     jcenter()
 }
-
+loom {
+    accessWidener "src/main/resources/ommc.accesswidener"
+}
 dependencies {
     // To change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -69,7 +71,6 @@ tasks.withType(JavaCompile).configureEach {
         it.options.release = targetVersion
     }
 }
-
 java {
     // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
     // if it is present.

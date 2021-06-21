@@ -11,13 +11,9 @@ jobs:
     strategy:
       matrix:
         # Use these Java versions
-        java: [
-            1.8,  # Minimum supported by Minecraft
-            11,   # Current Java LTS
-            16    # Latest version
-        ]
+        java: [ 16 ]
         # and run on both Linux and Windows
-        os: [ ubuntu-20.04, windows-latest ]
+        os: [ ubuntu-20.04 ]
     runs-on: ${{ matrix.os }}
     steps:
       - name: checkout repository

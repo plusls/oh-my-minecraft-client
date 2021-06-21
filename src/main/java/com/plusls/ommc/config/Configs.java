@@ -6,6 +6,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.plusls.ommc.ModInfo;
 import com.plusls.ommc.gui.GuiConfigs;
+import com.plusls.ommc.util.MyKeybindMulti;
+import com.plusls.ommc.util.SortInventoryUtil;
 import fi.dy.masa.malilib.config.ConfigUtils;
 import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.config.IConfigHandler;
@@ -34,18 +36,31 @@ public class Configs implements IConfigHandler {
         private static final String PREFIX = String.format("%s.config.generic", ModInfo.MOD_ID);
         public static final ConfigHotkey OPEN_CONFIG_GUI = new TranslatableConfigHotkey(PREFIX, "openConfigGui", "O,C");
         public static final ConfigBoolean DEBUG = new TranslatableConfigBoolean(PREFIX, "debug", false);
+        public static final ConfigBoolean DONT_CLEAR_CHAT_HISTORY = new TranslatableConfigBoolean(PREFIX, "dontClearChatHistory", false);
+        public static final ConfigHotkey SORT_INVENTORY = new TranslatableConfigHotkey(PREFIX, "sortInventory", "R");
+        public static final ConfigBoolean SORT_INVENTORY_SUPPORT_EMPTY_SHULKER_BOX_STACK = new TranslatableConfigBoolean(PREFIX, "sortInventorySupportEmptyShulkerBoxStack", false);
+
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
                 OPEN_CONFIG_GUI,
-                DEBUG
+                DEBUG,
+                DONT_CLEAR_CHAT_HISTORY,
+                SORT_INVENTORY,
+                SORT_INVENTORY_SUPPORT_EMPTY_SHULKER_BOX_STACK
         );
 
         public static final ImmutableList<ConfigHotkey> HOTKEYS = ImmutableList.of(
-                OPEN_CONFIG_GUI
+                OPEN_CONFIG_GUI,
+                SORT_INVENTORY
         );
 
         static {
             OPEN_CONFIG_GUI.getKeybind().setCallback((keyAction, iKeybind) -> {
                 GuiBase.openGui(new GuiConfigs());
+                return true;
+            });
+            ((MyKeybindMulti) SORT_INVENTORY.getKeybind()).allowInScreen();
+            SORT_INVENTORY.getKeybind().setCallback((keyAction, iKeybind) -> {
+                SortInventoryUtil.sort();
                 return true;
             });
             DEBUG.setValueChangeCallback(config -> {

@@ -13,6 +13,20 @@ https://www.curseforge.com/minecraft/mc-mods/malilib
 
 The default hotkey to open the in-game config GUI is O + C
 
+## Generic
+
+### Don't clear chat history.
+
+Minecraft client will not to clear chat history.
+
+### Sort Inventory
+
+Press hotkey to sort inventory.
+
+### Sort Inventory Support Empty ShulkerBox Stack
+
+Support empty shulker box stack when sort inventory.
+
 ## Features
 
 ### Disable Break Scaffolding
