@@ -11,10 +11,13 @@ jobs:
         java: [ 16 ]
         # and run on both Linux and Windows
         os: [ ubuntu-20.04 ]
+        branch: [master, 1.16.x]
     runs-on: ${{ matrix.os }}
     steps:
       - name: checkout repository
         uses: actions/checkout@v2
+        with:
+          ref: ${{ matrix.branch }}
       - name: validate gradle wrapper
         uses: gradle/wrapper-validation-action@v1
       - name: setup jdk ${{ matrix.java }}
@@ -24,12 +27,6 @@ jobs:
       - name: make gradle wrapper executable
         if: ${{ runner.os != 'Windows' }}
         run: chmod +x ./gradlew
-      - name: copy linux deps
-        if: ${{ runner.os != 'Windows' }}
-        run: mkdir -p build/loom-cache && cp ./deps/* ./build/loom-cache/.
-      - name: copy windows deps
-        if: ${{ runner.os == 'Windows' }}
-        run: mkdir build\\loom-cache && copy .\deps\* .\\build\\loom-cache
       - name: build
         run: ./gradlew build
       - name: Upload assets to GitHub
