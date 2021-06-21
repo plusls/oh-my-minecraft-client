@@ -1,18 +1,14 @@
 package com.plusls.ommc.util;
 
 import net.minecraft.block.Blocks;
-import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.item.BundleItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.screen.*;
 import net.minecraft.screen.slot.SlotActionType;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -40,6 +36,7 @@ public class SortInventoryUtil {
         }
         return -1;
     }
+
     public static void sort() {
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity player = client.player;
@@ -92,7 +89,7 @@ public class SortInventoryUtil {
         return !existingStack.isEmpty() &&
                 ItemStack.canCombine(existingStack, stack) &&
                 ShulkerBoxItemUtil.isStackable(existingStack) &&
-                existingStack.getCount() < ShulkerBoxItemUtil.getMaxCount(existingStack)&&
+                existingStack.getCount() < ShulkerBoxItemUtil.getMaxCount(existingStack) &&
                 existingStack.getCount() < 64;
     }
 
@@ -135,6 +132,7 @@ public class SortInventoryUtil {
         }
         return ret;
     }
+
     private static ArrayList<Integer> sortInventory(ArrayList<ItemStack> itemStacks, int l, int r) {
         ArrayList<Integer> ret = new ArrayList<>();
         for (int i = r - 1; i >= l; --i) {

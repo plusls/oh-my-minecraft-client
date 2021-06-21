@@ -4,16 +4,16 @@
 # against bad commits.
 
 name: build
-on: [pull_request, push]
+on: [ pull_request, push ]
 
 jobs:
   build:
     strategy:
       matrix:
         # Use these Java versions
-        java: [16]
+        java: [ 16 ]
         # and run on both Linux and Windows
-        os: [ubuntu-20.04]
+        os: [ ubuntu-20.04 ]
     runs-on: ${{ matrix.os }}
     steps:
       - name: checkout repository

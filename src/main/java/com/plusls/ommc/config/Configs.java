@@ -58,7 +58,7 @@ public class Configs implements IConfigHandler {
                 GuiBase.openGui(new GuiConfigs());
                 return true;
             });
-            ((MyKeybindMulti)SORT_INVENTORY.getKeybind()).allowInScreen();
+            ((MyKeybindMulti) SORT_INVENTORY.getKeybind()).allowInScreen();
             SORT_INVENTORY.getKeybind().setCallback((keyAction, iKeybind) -> {
                 SortInventoryUtil.sort();
                 return true;

@@ -3,9 +3,12 @@
 Make Minecraft Client Great Again!
 
 ## Description
-Oh My Minecraft Client is a client-side mod, which helps you manage your hands. The mod is written for the Fabric Loader.
+
+Oh My Minecraft Client is a client-side mod, which helps you manage your hands. The mod is written for the Fabric
+Loader.
 
 ## NOTE: My Minecraft Client also requires the MaLiLib library mod by masady:
+
 https://www.curseforge.com/minecraft/mc-mods/malilib
 
 The default hotkey to open the in-game config GUI is O + C
@@ -36,7 +39,8 @@ You can move down in scaffolding when the item of **moveDownInScaffoldingWhiteLi
 
 ### Forced Break Cooling
 
-Players will have a 5GT cooldown after breaking the block instantaneously, which will prevent you from accidentally destroying components with the Haste 2 effect.
+Players will have a 5GT cooldown after breaking the block instantaneously, which will prevent you from accidentally
+destroying components with the Haste 2 effect.
 
 ### Highlight Lava Sources
 
@@ -64,16 +68,18 @@ Players cannot ascend or descend when sneaking.
 
 ### World Eater And Mine Helper
 
-When the blocks in **worldEaterMineHelperWhitelist** are exposed to the air, the game will render their own mirror image above them, which is convenient for world eater maintenance and mining.
+When the blocks in **worldEaterMineHelperWhitelist** are exposed to the air, the game will render their own mirror image
+above them, which is convenient for world eater maintenance and mining.
 
 ![worldEaterMineHelper](./docs/img/worldEaterMineHelper.png)
 
 ## Acknowledgements
 
 + Thanks to [XeKr](https://space.bilibili.com/5930630) for the lava eye protection texture.
-+ Thanks to [NextPage](https://github.com/Next-Page-Vi) for providing the English translation, lava source texture modification and testing work.
-+ Thanks to [水星嗷](https://space.bilibili.com/18525909) for providing [the idea of highlighting ores and resourcepack](https://www.bilibili.com/video/BV1w64y1D7wP).
-
++ Thanks to [NextPage](https://github.com/Next-Page-Vi) for providing the English translation, lava source texture
+  modification and testing work.
++ Thanks to [水星嗷](https://space.bilibili.com/18525909) for
+  providing [the idea of highlighting ores and resourcepack](https://www.bilibili.com/video/BV1w64y1D7wP).
 
 ## License
 

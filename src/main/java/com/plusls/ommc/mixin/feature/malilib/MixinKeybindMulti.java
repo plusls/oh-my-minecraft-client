@@ -12,7 +12,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(KeybindMulti.class)
 public class MixinKeybindMulti implements MyKeybindMulti {
     boolean allowInScreen;
-    @Redirect(method = "updateIsPressed", at=@At(value = "INVOKE", target = "Lfi/dy/masa/malilib/util/GuiUtils;getCurrentScreen()Lnet/minecraft/class_437;", remap = false), remap = false)
+
+    @Redirect(method = "updateIsPressed", at = @At(value = "INVOKE", target = "Lfi/dy/masa/malilib/util/GuiUtils;getCurrentScreen()Lnet/minecraft/class_437;", remap = false), remap = false)
     private Screen allowDetectKeyInScreen() {
         Screen ret = GuiUtils.getCurrentScreen();
         if (allowInScreen) {
