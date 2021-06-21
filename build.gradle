@@ -62,15 +62,9 @@ tasks.withType(JavaCompile).configureEach {
     // If Javadoc is generated, this must be specified in that task too.
     it.options.encoding = "UTF-8"
 
-    // The Minecraft launcher currently installs Java 8 for users, so your mod probably wants to target Java 8 too
-    // JDK 9 introduced a new way of specifying this that will make sure no newer classes or methods are used.
-    // We'll use that if it's available, but otherwise we'll use the older option.
-    def targetVersion = 8
-    if (JavaVersion.current().isJava9Compatible()) {
-        it.options.release = targetVersion
-    }
+    // Minecraft 1.17 (21w19a) upwards uses Java 16.
+    it.options.release = 16
 }
-
 java {
     // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
     // if it is present.
