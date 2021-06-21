@@ -2,7 +2,6 @@ package com.plusls.ommc;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.fabricmc.loader.api.VersionParsingException;
 import net.fabricmc.loader.discovery.ModResolutionException;
 import net.fabricmc.loader.gui.FabricGuiEntry;
 import org.objectweb.asm.tree.ClassNode;
@@ -43,14 +42,14 @@ public class OmmcMixinPlugin implements IMixinConfigPlugin {
         String[] version1Parts = version1.split("\\.");
         String[] version2Parts = version2.split("\\.");
         int length = Math.max(version1Parts.length, version2Parts.length);
-        for(int i = 0; i < length; i++) {
+        for (int i = 0; i < length; i++) {
             int version1Part = i < version1Parts.length ?
                     Integer.parseInt(version1Parts[i]) : 0;
             int version2Part = i < version2Parts.length ?
                     Integer.parseInt(version2Parts[i]) : 0;
-            if(version1Part < version2Part)
+            if (version1Part < version2Part)
                 return -1;
-            if(version1Part > version2Part)
+            if (version1Part > version2Part)
                 return 1;
         }
         return 0;

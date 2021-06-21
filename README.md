@@ -65,7 +65,6 @@ Make Minecraft Client Great Again!
 + 感谢 [NextPage](https://github.com/Next-Page-Vi) 提供的英文翻译，岩浆材质修改以及测试工作
 + 感谢 [水星嗷](https://space.bilibili.com/18525909) 提供的[矿物高亮的灵感以及样例](https://www.bilibili.com/video/BV1w64y1D7wP)
 
-
 ## License
 
 This template is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.

@@ -8,16 +8,16 @@
     "feature.disableBreakScaffolding.MixinClientPlayerInteractionManager",
     "feature.disableMoveDownInScaffolding.MixinScaffoldingBlock",
     "feature.forceBreakingCooldown.MixinClientPlayerInteractionManager",
+    "feature.highlightLavaSource.canvas.MixinLavaFluidModel",
     "feature.highlightLavaSource.sodium.MixinFluidRenderer",
     "feature.highlightWanderingTrader.MixinMinecraftClient",
     "feature.preventExplodingBed.MixinClientPlayerInteractionManager",
     "feature.worldEaterMineHelper.JsonUnbakedModelInvoker",
     "feature.worldEaterMineHelper.MixinBlockRenderManager",
     "feature.worldEaterMineHelper.MixinJsonUnbakedModel",
+    "feature.worldEaterMineHelper.canvas.MixinTerrainRenderContext",
     "feature.worldEaterMineHelper.fabric.MixinTerrainRenderContext",
-    "feature.worldEaterMineHelper.sodium.MixinBlockRenderer",
-    "feature.highlightLavaSource.canvas.MixinLavaFluidModel",
-    "feature.worldEaterMineHelper.canvas.MixinTerrainRenderContext"
+    "feature.worldEaterMineHelper.sodium.MixinBlockRenderer"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = LavaFluidModel.class, remap = false)
 public class MixinLavaFluidModel {
-    @Inject(method = "getFluidSprites", at=@At(value = "HEAD"), cancellable = true)
+    @Inject(method = "getFluidSprites", at = @At(value = "HEAD"), cancellable = true)
     private void modifyLavaSprites(BlockRenderView view, BlockPos pos, FluidState state, CallbackInfoReturnable<Sprite[]> cir) {
         if (Configs.FeatureToggle.HIGHLIGHT_LAVA_SOURCE.getBooleanValue() && state.isIn(FluidTags.LAVA) &&
                 view.getBlockState(pos).get(FluidBlock.LEVEL) == 0) {
