@@ -21,6 +21,7 @@ import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockRenderView;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
@@ -63,10 +64,10 @@ public class LavaSourceResourceLoader implements SimpleSynchronousResourceReload
         defaultLavaSourceSpites[1] = defaultLavaSourceFlowSprite;
         FluidRenderHandler lavaSourceRenderHandler = new FluidRenderHandler() {
             @Override
-            public Sprite[] getFluidSprites(BlockRenderView extendedBlockView, BlockPos blockPos, FluidState fluidState) {
+            public Sprite[] getFluidSprites(@Nullable BlockRenderView view, @Nullable BlockPos pos, FluidState state) {
 
-                if (Configs.FeatureToggle.HIGHLIGHT_LAVA_SOURCE.getBooleanValue()) {
-                    BlockState blockState = extendedBlockView.getBlockState(blockPos);
+                if (view != null && pos != null && Configs.FeatureToggle.HIGHLIGHT_LAVA_SOURCE.getBooleanValue()) {
+                    BlockState blockState = view.getBlockState(pos);
                     if (blockState.contains(FluidBlock.LEVEL) && blockState.get(FluidBlock.LEVEL) == 0) {
                         return lavaSourceSpites;
                     }
