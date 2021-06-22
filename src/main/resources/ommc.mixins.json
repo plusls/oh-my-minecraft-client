@@ -7,19 +7,19 @@
   "client": [
     "feature.disableBreakScaffolding.MixinClientPlayerInteractionManager",
     "feature.disableMoveDownInScaffolding.MixinScaffoldingBlock",
+    "feature.dontClearChatHistory.MixinChatHud",
     "feature.forceBreakingCooldown.MixinClientPlayerInteractionManager",
     "feature.highlightLavaSource.canvas.MixinLavaFluidModel",
     "feature.highlightLavaSource.sodium.MixinFluidRenderer",
     "feature.highlightWanderingTrader.MixinMinecraftClient",
+    "feature.malilib.MixinKeybindMulti",
     "feature.preventExplodingBed.MixinClientPlayerInteractionManager",
     "feature.worldEaterMineHelper.JsonUnbakedModelInvoker",
     "feature.worldEaterMineHelper.MixinBlockRenderManager",
     "feature.worldEaterMineHelper.MixinJsonUnbakedModel",
     "feature.worldEaterMineHelper.canvas.MixinTerrainRenderContext",
     "feature.worldEaterMineHelper.fabric.MixinTerrainRenderContext",
-    "feature.worldEaterMineHelper.sodium.MixinBlockRenderer",
-    "feature.dontClearChatHistory.MixinChatHud",
-    "feature.malilib.MixinKeybindMulti"
+    "feature.worldEaterMineHelper.sodium.MixinBlockRenderer"
   ],
   "injectors": {
     "defaultRequire": 1
