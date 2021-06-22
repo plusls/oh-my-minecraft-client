@@ -9,12 +9,18 @@ public class RealSneakingEventHandler {
         ClientTickEvents.START_CLIENT_TICK.register(RealSneakingEventHandler::preClientTick);
     }
 
+    final private static float MIN_STEP_HEIGHT = 0.001f;
+    private static float prevStepHeight;
+
     private static void preClientTick(MinecraftClient minecraftClient) {
         if (minecraftClient.player != null) {
+            if (minecraftClient.player.stepHeight - MIN_STEP_HEIGHT >= 0.00001) {
+                prevStepHeight = minecraftClient.player.stepHeight;
+            }
             if (Configs.FeatureToggle.REAL_SNEAKING.getBooleanValue() && minecraftClient.player.isSneaking()) {
-                minecraftClient.player.stepHeight = 0.001f;
+                minecraftClient.player.stepHeight = MIN_STEP_HEIGHT;
             } else {
-                minecraftClient.player.stepHeight = 0.6f;
+                minecraftClient.player.stepHeight = prevStepHeight;
             }
         }
     }
