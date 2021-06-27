@@ -19,13 +19,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Pseudo
 @Mixin(targets = "me.jellysquid.mods.sodium.client.render.pipeline.FluidRenderer", remap = false)
-public class MixinFluidRenderer {
+public class MixinFluidRendererOld {
     @Shadow
     @Final
     private Sprite[] lavaSprites;
 
     @Inject(method = "render", at = @At("HEAD"), require = 0)
-    public void modifyLavaSprites(BlockRenderView world, FluidState fluidState, BlockPos pos, BlockPos offset, @Coerce Object buffers, CallbackInfoReturnable<Boolean> info) {
+    public void modifyLavaSprites(BlockRenderView world, FluidState fluidState, BlockPos pos, @Coerce Object buffers, CallbackInfoReturnable<Boolean> info) {
         if (Configs.FeatureToggle.HIGHLIGHT_LAVA_SOURCE.getBooleanValue() && fluidState.isIn(FluidTags.LAVA) &&
                 world.getBlockState(pos).get(FluidBlock.LEVEL) == 0) {
             lavaSprites[0] = LavaSourceResourceLoader.lavaSourceStillSprite;
@@ -34,7 +34,7 @@ public class MixinFluidRenderer {
     }
 
     @Inject(method = "render", at = @At("RETURN"), require = 0)
-    public void restoreLavaSprites(BlockRenderView world, FluidState fluidState, BlockPos pos, BlockPos offset, @Coerce Object buffers, CallbackInfoReturnable<Boolean> info) {
+    public void restoreLavaSprites(BlockRenderView world, FluidState fluidState, BlockPos pos, @Coerce Object buffers, CallbackInfoReturnable<Boolean> info) {
         lavaSprites[0] = LavaSourceResourceLoader.defaultLavaSourceStillSprite;
         lavaSprites[1] = LavaSourceResourceLoader.defaultLavaSourceFlowSprite;
     }
