@@ -17,12 +17,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Pseudo
 @Mixin(targets = "me.jellysquid.mods.sodium.client.render.pipeline.BlockRenderer", remap = false)
-public class MixinBlockRenderer {
+public class MixinBlockRendererOld {
     private final ThreadLocal<BlockModelRendererContext> ommcRenderContext = ThreadLocal.withInitial(BlockModelRendererContext::new);
 
     @Inject(method = "renderModel",
             at = @At(value = "HEAD"), require = 0)
-    private void initRenderContext(BlockRenderView world, BlockState state, BlockPos pos, BlockPos origin, BakedModel model, @Coerce Object buffers, boolean cull, long seed, CallbackInfoReturnable<Boolean> cir) {
+    private void initRenderContext(BlockRenderView world, BlockState state, BlockPos pos, BakedModel model, @Coerce Object buffers, boolean cull, long seed, CallbackInfoReturnable<Boolean> cir) {
         BlockModelRendererContext context = ommcRenderContext.get();
         context.pos = pos;
         context.state = state;

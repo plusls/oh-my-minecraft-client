@@ -5,9 +5,12 @@ import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.discovery.ModResolutionException;
 import net.fabricmc.loader.gui.FabricGuiEntry;
 import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.MethodNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
+import org.spongepowered.asm.service.MixinService;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -91,8 +94,43 @@ public class OmmcMixinPlugin implements IMixinConfigPlugin {
         } else if (!isCanvasLoaded && mixinClassName.contains(MIXIN_CANVAS)) {
             return false;
         } else {
+            if (mixinClassName.contains(MIXIN_SODIUM)) {
+                try {
+                    ClassNode targetClass = MixinService.getService().getBytecodeProvider().getClassNode(targetClassName, false);
+                    for (MethodNode method : targetClass.methods) {
+                        if (mixinClassName.endsWith("MixinFluidRenderer")) {
+                            if (method.name.equals("render") && method.desc.contains("Lnet/minecraft/class_2338;Lnet/minecraft/class_2338;")) {
+                                return true;
+                            }
+                        } else if (mixinClassName.endsWith("MixinFluidRendererOld")) {
+                            if (method.name.equals("render") && method.desc.contains("Lnet/minecraft/class_2338;Lnet/minecraft/class_2338;")) {
+                                return false;
+                            }
+                        } else if (mixinClassName.endsWith("MixinBlockRenderer")) {
+                            if (method.name.equals("renderModel") && method.desc.contains("Lnet/minecraft/class_2338;Lnet/minecraft/class_2338;")) {
+                                return true;
+                            }
+                        } else if (mixinClassName.endsWith("MixinBlockRendererOld")) {
+                            if (method.name.equals("renderModel") && method.desc.contains("Lnet/minecraft/class_2338;Lnet/minecraft/class_2338;")) {
+                                return false;
+                            }
+                        }
+                    }
+                    return false;
+                } catch (ClassNotFoundException | IOException e) {
+                    System.err.println("Error fetching " + mixinClassName + " transforming " + targetClassName);
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+
+
             return true;
         }
+    }
+
+    @Override
+    public void preApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
     }
 
     @Override
@@ -103,11 +141,6 @@ public class OmmcMixinPlugin implements IMixinConfigPlugin {
     @Override
     public List<String> getMixins() {
         return null;
-    }
-
-    @Override
-    public void preApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
-
     }
 
     @Override

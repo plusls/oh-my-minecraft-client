@@ -10,6 +10,7 @@
     "feature.forceBreakingCooldown.MixinClientPlayerInteractionManager",
     "feature.highlightLavaSource.canvas.MixinLavaFluidModel",
     "feature.highlightLavaSource.sodium.MixinFluidRenderer",
+    "feature.highlightLavaSource.sodium.MixinFluidRendererOld",
     "feature.highlightWanderingTrader.MixinMinecraftClient",
     "feature.preventExplodingBed.MixinClientPlayerInteractionManager",
     "feature.worldEaterMineHelper.JsonUnbakedModelInvoker",
@@ -17,7 +18,8 @@
     "feature.worldEaterMineHelper.MixinJsonUnbakedModel",
     "feature.worldEaterMineHelper.canvas.MixinTerrainRenderContext",
     "feature.worldEaterMineHelper.fabric.MixinTerrainRenderContext",
-    "feature.worldEaterMineHelper.sodium.MixinBlockRenderer"
+    "feature.worldEaterMineHelper.sodium.MixinBlockRenderer",
+    "feature.worldEaterMineHelper.sodium.MixinBlockRendererOld"
   ],
   "injectors": {
     "defaultRequire": 1
