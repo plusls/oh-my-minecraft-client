@@ -103,16 +103,16 @@ public class OmmcMixinPlugin implements IMixinConfigPlugin {
                                 return true;
                             }
                         } else if (mixinClassName.endsWith("MixinFluidRendererOld")) {
-                            if (method.name.equals("render") && method.desc.contains("Lnet/minecraft/class_2338;Lnet/minecraft/class_2338;")) {
-                                return false;
+                            if (method.name.equals("render") && !method.desc.contains("Lnet/minecraft/class_2338;Lnet/minecraft/class_2338;")) {
+                                return true;
                             }
                         } else if (mixinClassName.endsWith("MixinBlockRenderer")) {
                             if (method.name.equals("renderModel") && method.desc.contains("Lnet/minecraft/class_2338;Lnet/minecraft/class_2338;")) {
                                 return true;
                             }
                         } else if (mixinClassName.endsWith("MixinBlockRendererOld")) {
-                            if (method.name.equals("renderModel") && method.desc.contains("Lnet/minecraft/class_2338;Lnet/minecraft/class_2338;")) {
-                                return false;
+                            if (method.name.equals("renderModel") && !method.desc.contains("Lnet/minecraft/class_2338;Lnet/minecraft/class_2338;")) {
+                                return true;
                             }
                         }
                     }

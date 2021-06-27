@@ -24,7 +24,7 @@ public class MixinFluidRenderer {
     @Final
     private Sprite[] lavaSprites;
 
-    @Inject(method = "render", at = @At("HEAD"), require = 0)
+    @Inject(method = "render", at = @At("HEAD"))
     public void modifyLavaSprites(BlockRenderView world, FluidState fluidState, BlockPos pos, BlockPos offset, @Coerce Object buffers, CallbackInfoReturnable<Boolean> info) {
         if (Configs.FeatureToggle.HIGHLIGHT_LAVA_SOURCE.getBooleanValue() && fluidState.isIn(FluidTags.LAVA) &&
                 world.getBlockState(pos).get(FluidBlock.LEVEL) == 0) {
@@ -33,7 +33,7 @@ public class MixinFluidRenderer {
         }
     }
 
-    @Inject(method = "render", at = @At("RETURN"), require = 0)
+    @Inject(method = "render", at = @At("RETURN"))
     public void restoreLavaSprites(BlockRenderView world, FluidState fluidState, BlockPos pos, BlockPos offset, @Coerce Object buffers, CallbackInfoReturnable<Boolean> info) {
         lavaSprites[0] = LavaSourceResourceLoader.defaultLavaSourceStillSprite;
         lavaSprites[1] = LavaSourceResourceLoader.defaultLavaSourceFlowSprite;

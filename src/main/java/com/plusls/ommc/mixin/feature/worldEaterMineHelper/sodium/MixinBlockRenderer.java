@@ -20,16 +20,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class MixinBlockRenderer {
     private final ThreadLocal<BlockModelRendererContext> ommcRenderContext = ThreadLocal.withInitial(BlockModelRendererContext::new);
 
-    @Inject(method = "renderModel",
-            at = @At(value = "HEAD"), require = 0)
+    @Inject(method = "renderModel", at = @At(value = "HEAD"))
     private void initRenderContext(BlockRenderView world, BlockState state, BlockPos pos, BlockPos origin, BakedModel model, @Coerce Object buffers, boolean cull, long seed, CallbackInfoReturnable<Boolean> cir) {
         BlockModelRendererContext context = ommcRenderContext.get();
         context.pos = pos;
         context.state = state;
     }
 
-    @ModifyVariable(method = "renderModel",
-            at = @At(value = "HEAD"), ordinal = 0)
+    @ModifyVariable(method = "renderModel", at = @At(value = "HEAD"), ordinal = 0)
     private BakedModel modifyBakedModel(BakedModel bakedModel) {
         BlockModelRendererContext context = ommcRenderContext.get();
         Block block = context.state.getBlock();
