@@ -19,7 +19,7 @@ Make Minecraft Client Great Again!
 
 ### 不清空聊天历史记录
 
-不清空聊天历史记录
+不清空聊天历史记录，不清空输入历史记录
 
 ### 整理仓库
 

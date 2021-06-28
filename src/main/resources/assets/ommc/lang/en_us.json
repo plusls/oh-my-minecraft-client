@@ -9,7 +9,7 @@
   "ommc.config.generic.debug.name": "debug",
   "ommc.config.generic.debug.comment": "Display debug message",
   "ommc.config.generic.dontClearChatHistory.name": "dontClearChatHistory",
-  "ommc.config.generic.dontClearChatHistory.comment": "Don't clear chat history.",
+  "ommc.config.generic.dontClearChatHistory.comment": "Don't clear chat history and input history.",
   "ommc.config.generic.sortInventory.name": "sortInventory",
   "ommc.config.generic.sortInventory.comment": "A hotkey to sort inventory.",
   "ommc.config.generic.sortInventorySupportEmptyShulkerBoxStack.name": "sortInventorySupportEmptyShulkerBoxStack",

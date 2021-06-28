@@ -17,7 +17,7 @@ The default hotkey to open the in-game config GUI is O + C
 
 ### Don't clear chat history.
 
-Minecraft client will not to clear chat history.
+Minecraft client will not to clear chat history and input history.
 
 ### Sort Inventory
 
