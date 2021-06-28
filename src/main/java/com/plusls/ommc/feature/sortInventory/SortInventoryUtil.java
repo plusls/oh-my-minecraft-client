@@ -4,6 +4,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.item.BundleItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
@@ -37,16 +38,16 @@ public class SortInventoryUtil {
         return -1;
     }
 
-    public static void sort() {
+    public static boolean sort() {
         MinecraftClient client = MinecraftClient.getInstance();
         ClientPlayerEntity player = client.player;
         if (client.interactionManager == null || player == null) {
-            return;
+            return false;
         }
         ScreenHandler screenHandler = player.currentScreenHandler;
         int playerInventoryStartIdx = getPlayerInventoryStartIdx(screenHandler);
         if (playerInventoryStartIdx == -1) {
-            return;
+            return false;
         }
 
         ArrayList<Integer> clickQueue = new ArrayList<>();
@@ -70,12 +71,29 @@ public class SortInventoryUtil {
             clickQueue.add(ScreenHandler.EMPTY_SPACE_SLOT_INDEX);
         }
         // 执行两次，第一次合并同类项，第二次去除空位
+        int r;
         if (containerInventorySize != -1) {
-            clickQueue.addAll(sortInventory(itemStacks, 0, containerInventorySize));
-            clickQueue.addAll(sortInventory(itemStacks, 0, containerInventorySize));
+            clickQueue.addAll(mergeItems(itemStacks, 0, containerInventorySize));
+            clickQueue.addAll(mergeItems(itemStacks, 0, containerInventorySize));
+            r = 0;
+            for (int i = containerInventorySize - 1; i >= 0; --i) {
+                if (!itemStacks.get(i).isEmpty()) {
+                    r = i + 1;
+                    break;
+                }
+            }
+            clickQueue.addAll(quickSort(itemStacks, 0, r));
         }
-        clickQueue.addAll(sortInventory(itemStacks, playerInventoryStartIdx, playerInventoryStartIdx + 27));
-        clickQueue.addAll(sortInventory(itemStacks, playerInventoryStartIdx, playerInventoryStartIdx + 27));
+        clickQueue.addAll(mergeItems(itemStacks, playerInventoryStartIdx, playerInventoryStartIdx + 27));
+        clickQueue.addAll(mergeItems(itemStacks, playerInventoryStartIdx, playerInventoryStartIdx + 27));
+        r = playerInventoryStartIdx;
+        for (int i = playerInventoryStartIdx + 26; i >= playerInventoryStartIdx; --i) {
+            if (!itemStacks.get(i).isEmpty()) {
+                r = i + 1;
+                break;
+            }
+        }
+        clickQueue.addAll(quickSort(itemStacks, playerInventoryStartIdx, r));
         for (Integer slotId : clickQueue) {
             if (slotId < 0 && slotId != ScreenHandler.EMPTY_SPACE_SLOT_INDEX) {
                 client.interactionManager.clickSlot(screenHandler.syncId, -slotId, 1, SlotActionType.PICKUP, player);
@@ -83,6 +101,7 @@ public class SortInventoryUtil {
                 client.interactionManager.clickSlot(screenHandler.syncId, slotId, 0, SlotActionType.PICKUP, player);
             }
         }
+        return !clickQueue.isEmpty();
     }
 
     private static boolean canStackAddMore(ItemStack existingStack, ItemStack stack) {
@@ -133,7 +152,69 @@ public class SortInventoryUtil {
         return ret;
     }
 
-    private static ArrayList<Integer> sortInventory(ArrayList<ItemStack> itemStacks, int l, int r) {
+    private static int getItemId(ItemStack itemStack) {
+        return Item.getRawId(itemStack.getItem());
+    }
+
+
+    private static int cmp(ItemStack a, ItemStack b) {
+        int aId = getItemId(a);
+        int bId = getItemId(b);
+        if (ShulkerBoxItemUtil.isShulkerBoxBlockItem(a) && !ShulkerBoxItemUtil.isShulkerBoxBlockItem(b)) {
+            return 1;
+        } else if (!ShulkerBoxItemUtil.isShulkerBoxBlockItem(a) && ShulkerBoxItemUtil.isShulkerBoxBlockItem(b)) {
+            return -1;
+        } else if (ShulkerBoxItemUtil.isShulkerBoxBlockItem(a) && ShulkerBoxItemUtil.isShulkerBoxBlockItem(b)) {
+            return ShulkerBoxItemUtil.cmpShulkerBox(a.getTag(), b.getTag());
+        }
+        if (aId == bId) {
+            return a.getCount() - b.getCount();
+        }
+        return aId - bId;
+    }
+
+    private static ArrayList<Integer> quickSort(ArrayList<ItemStack> itemStacks, int l, int r) {
+        ArrayList<Integer> ret = new ArrayList<>();
+        int i, j;
+        ItemStack p;
+        ItemStack temp;
+
+        if (l >= r - 1) {
+            return ret;
+        }
+        p = itemStacks.get(l);
+        i = l;
+        j = r - 1;
+        while (i < j) {
+            while (cmp(itemStacks.get(j), p) >= 0 && i < j) {
+                j--;
+            }
+            while (cmp(itemStacks.get(i), p) <= 0 && i < j) {
+                i++;
+            }
+            if (i < j) {
+                temp = itemStacks.get(i);
+                itemStacks.set(i, itemStacks.get(j));
+                itemStacks.set(j, temp);
+                ret.add(i);
+                ret.add(j);
+                ret.add(i);
+            }
+        }
+        if (l != i) {
+            itemStacks.set(l, itemStacks.get(i));
+            itemStacks.set(i, p);
+            ret.add(l);
+            ret.add(i);
+            ret.add(l);
+        }
+        ret.addAll(quickSort(itemStacks, l, j));
+        ret.addAll(quickSort(itemStacks, j + 1, r));
+        return ret;
+    }
+
+
+    private static ArrayList<Integer> mergeItems(ArrayList<ItemStack> itemStacks, int l, int r) {
         ArrayList<Integer> ret = new ArrayList<>();
         for (int i = r - 1; i >= l; --i) {
             ItemStack stack = itemStacks.get(i);
