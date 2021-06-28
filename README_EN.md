@@ -17,7 +17,7 @@ The default hotkey to open the in-game config GUI is O + C
 
 ### Don't clear chat history.
 
-Minecraft client will not to clear chat history.
+Minecraft client will not to clear chat history and input history.
 
 ### Sort Inventory
 
@@ -72,6 +72,26 @@ When the blocks in **worldEaterMineHelperWhitelist** are exposed to the air, the
 above them, which is convenient for world eater maintenance and mining.
 
 ![worldEaterMineHelper](./docs/img/worldEaterMineHelper.png)
+
+## Advanced Integrated Server
+
+Now allow user to change some integrated server setting.
+
+### Online Mode
+
+Integrated server use online mode.
+
+### pvp
+
+Integrated server enable pvp.
+
+### flight
+
+Integrated server enable flight.
+
+### port
+
+Integrated server lan port, 0 to use default port.
 
 ## Acknowledgements
 

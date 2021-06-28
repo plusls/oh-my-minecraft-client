@@ -5,6 +5,8 @@
   "compatibilityLevel": "JAVA_8",
   "plugin": "com.plusls.ommc.OmmcMixinPlugin",
   "client": [
+    "advancedIntegratedServer.MixinIntegratedServer",
+    "advancedIntegratedServer.MixinOpenToLanScreen",
     "feature.disableBreakScaffolding.MixinClientPlayerInteractionManager",
     "feature.disableMoveDownInScaffolding.MixinScaffoldingBlock",
     "feature.dontClearChatHistory.MixinChatHud",
