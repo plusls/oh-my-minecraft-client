@@ -97,6 +97,15 @@ public class OmmcMixinPlugin implements IMixinConfigPlugin {
             if (mixinClassName.contains(MIXIN_SODIUM)) {
                 try {
                     ClassNode targetClass = MixinService.getService().getBytecodeProvider().getClassNode(targetClassName, false);
+                    if (mixinClassName.contains("MixinFluidRenderer")) {
+                        for (int i = 0; i < targetClass.fields.size(); ++i) {
+                            if (targetClass.fields.get(i).name.equals("lavaSprites")) {
+                                break;
+                            } else if (i == targetClass.fields.size() - 1) {
+                                return false;
+                            }
+                        }
+                    }
                     for (MethodNode method : targetClass.methods) {
                         if (mixinClassName.endsWith("MixinFluidRenderer")) {
                             if (method.name.equals("render") && method.desc.contains("Lnet/minecraft/class_2338;Lnet/minecraft/class_2338;")) {
