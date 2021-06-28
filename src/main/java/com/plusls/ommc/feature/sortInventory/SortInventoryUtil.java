@@ -168,7 +168,8 @@ public class SortInventoryUtil {
             return ShulkerBoxItemUtil.cmpShulkerBox(a.getTag(), b.getTag());
         }
         if (aId == bId) {
-            return a.getCount() - b.getCount();
+            // 物品少的排在后面
+            return b.getCount() - a.getCount();
         }
         return aId - bId;
     }
