@@ -5,13 +5,17 @@
   "compatibilityLevel": "JAVA_8",
   "plugin": "com.plusls.ommc.OmmcMixinPlugin",
   "client": [
+    "advancedIntegratedServer.MixinIntegratedServer",
+    "advancedIntegratedServer.MixinOpenToLanScreen",
     "feature.disableBreakScaffolding.MixinClientPlayerInteractionManager",
     "feature.disableMoveDownInScaffolding.MixinScaffoldingBlock",
+    "feature.dontClearChatHistory.MixinChatHud",
     "feature.forceBreakingCooldown.MixinClientPlayerInteractionManager",
     "feature.highlightLavaSource.canvas.MixinLavaFluidModel",
     "feature.highlightLavaSource.sodium.MixinFluidRenderer",
     "feature.highlightLavaSource.sodium.MixinFluidRendererOld",
     "feature.highlightWanderingTrader.MixinMinecraftClient",
+    "feature.malilib.MixinKeybindMulti",
     "feature.preventExplodingBed.MixinClientPlayerInteractionManager",
     "feature.worldEaterMineHelper.JsonUnbakedModelInvoker",
     "feature.worldEaterMineHelper.MixinBlockRenderManager",
@@ -23,9 +27,5 @@
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "mixins": [
-    "feature.dontClearChatHistory.MixinChatHud",
-    "feature.malilib.MixinKeybindMulti"
-  ]
+  }
 }

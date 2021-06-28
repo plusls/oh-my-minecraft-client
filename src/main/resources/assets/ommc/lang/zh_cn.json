@@ -4,6 +4,7 @@
   "ommc.gui.button.config_gui.feature_toggle": "特性开关",
   "ommc.gui.button.config_gui.feature_hotkey": "特性快捷键",
   "ommc.gui.button.config_gui.lists": "列表",
+  "ommc.gui.button.config_gui.advanced_integrated_server": "本地服务器设置",
   "ommc.config.generic.openConfigGui.name": "打开设置界面",
   "ommc.config.generic.openConfigGui.comment": "打开设置界面的快捷键",
   "ommc.config.generic.debug.name": "调试模式",
@@ -35,5 +36,13 @@
   "ommc.config.lists.moveDownInScaffoldingWhiteList.name": "在脚手架中下降白名单",
   "ommc.config.lists.moveDownInScaffoldingWhiteList.comment": "如果开启 §6禁止在脚手架中下降§r, 玩家手中拿着 §6在脚手架中下降白名单§r 中的物品时才能在脚手架下降",
   "ommc.config.lists.worldEaterMineHelperWhitelist.name": "世吞挖矿助手白名单",
-  "ommc.config.lists.worldEaterMineHelperWhitelist.comment": "如果开启 §6世吞挖矿助手白名单§r, 当 §6世吞挖矿助手白名单§r 中的方块暴露在空气中时，客户端会在它们上方渲染出自己的镜像，方便世吞运维以及挖矿"
+  "ommc.config.lists.worldEaterMineHelperWhitelist.comment": "如果开启 §6世吞挖矿助手白名单§r, 当 §6世吞挖矿助手白名单§r 中的方块暴露在空气中时，客户端会在它们上方渲染出自己的镜像，方便世吞运维以及挖矿",
+  "ommc.config.advanced_integrated_server.onlineMode.name": "正版验证",
+  "ommc.config.advanced_integrated_server.onlineMode.comment": "本地服务器开启正版验证",
+  "ommc.config.advanced_integrated_server.pvp.name": "pvp",
+  "ommc.config.advanced_integrated_server.pvp.comment": "本地服务器开启 PVP",
+  "ommc.config.advanced_integrated_server.flight.name": "允许飞行",
+  "ommc.config.advanced_integrated_server.flight.comment": "本地服务器允许飞行.",
+  "ommc.config.advanced_integrated_server.port.name": "局域网端口",
+  "ommc.config.advanced_integrated_server.port.comment": "本地服务器的局域网端口"
 }

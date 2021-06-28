@@ -11,6 +11,7 @@ import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.gui.button.IButtonActionListener;
 import fi.dy.masa.malilib.util.KeyCodes;
 import fi.dy.masa.malilib.util.StringUtils;
+import net.minecraft.client.MinecraftClient;
 
 import java.util.Collections;
 import java.util.List;
@@ -33,8 +34,10 @@ public class GuiConfigs extends GuiConfigsBase {
         int rows = 1;
 
         for (ConfigGuiTab tab : ConfigGuiTab.values()) {
+            if (tab == ConfigGuiTab.AdvancedIntegratedServer && !MinecraftClient.getInstance().isIntegratedServerRunning()) {
+                continue;
+            }
             int width = this.getStringWidth(tab.getDisplayName()) + 10;
-
             if (x >= this.width - width - 10) {
                 x = 10;
                 y += 22;
@@ -80,6 +83,8 @@ public class GuiConfigs extends GuiConfigsBase {
             configs = ConfigUtils.createConfigWrapperForType(ConfigType.HOTKEY, Configs.FeatureToggle.OPTIONS);
         } else if (tab == ConfigGuiTab.LISTS) {
             configs = Configs.Lists.OPTIONS;
+        } else if (tab == ConfigGuiTab.AdvancedIntegratedServer) {
+            configs = Configs.AdvancedIntegratedServer.OPTIONS;
         } else {
             return Collections.emptyList();
         }
@@ -110,7 +115,8 @@ public class GuiConfigs extends GuiConfigsBase {
         GENERIC("generic"),
         FEATURE_TOGGLE("feature_toggle"),
         FEATURE_HOTKEY("feature_hotkey"),
-        LISTS("lists");
+        LISTS("lists"),
+        AdvancedIntegratedServer("advanced_integrated_server");
 
         private final String name;
 
