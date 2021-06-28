@@ -32,7 +32,9 @@ public class GuiConfigs extends GuiConfigsBase {
         int x = 10;
         int y = 26;
         int rows = 1;
-
+        if (tab == ConfigGuiTab.AdvancedIntegratedServer && !MinecraftClient.getInstance().isIntegratedServerRunning()) {
+            tab = ConfigGuiTab.FEATURE_TOGGLE;
+        }
         for (ConfigGuiTab tab : ConfigGuiTab.values()) {
             if (tab == ConfigGuiTab.AdvancedIntegratedServer && !MinecraftClient.getInstance().isIntegratedServerRunning()) {
                 continue;
