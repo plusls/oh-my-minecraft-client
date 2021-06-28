@@ -22,7 +22,7 @@ public class MixinChatHud {
         }
     }
 
-    @Redirect(method = "addMessage(Lnet/minecraft/text/Text;IIZ)V", at = @At(value = "INVOKE", target = "Ljava/util/List;size()I"))
+    @Redirect(method = "addMessage(Lnet/minecraft/text/Text;IIZ)V", at = @At(value = "INVOKE", target = "Ljava/util/List;size()I", ordinal = 0))
     private int modifySize(List<ChatHudLine<OrderedText>> list) {
         if (Configs.Generic.DONT_CLEAR_CHAT_HISTORY.getBooleanValue()) {
             return 1;
