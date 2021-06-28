@@ -73,6 +73,26 @@ Make Minecraft Client Great Again!
 
 ![worldEaterMineHelper](./docs/img/worldEaterMineHelper.png)
 
+## 本地服务器设置
+
+现在可以调节如下的本地服务器设置
+
+### 正版验证
+
+本地服务器是否开启正版验证
+
+### pvp
+
+本地服务器是否允许 PVP
+
+### 飞行
+
+本地服务器是否允许飞行
+
+### 局域网端口
+
+本地服务器的局域网端口，0 表示使用随机端口
+
 ## 致谢
 
 + 感谢 [XeKr](https://space.bilibili.com/5930630) 的岩浆护眼材质

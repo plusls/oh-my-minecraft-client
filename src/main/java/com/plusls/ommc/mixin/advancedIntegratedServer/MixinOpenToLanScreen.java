@@ -12,7 +12,7 @@ public class MixinOpenToLanScreen {
     @ModifyVariable(method = "method_19851", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/client/util/NetworkUtils;findLocalPort()I", ordinal = 0), ordinal = 0)
     private int modifyPort(int port) {
         int ret = Configs.AdvancedIntegratedServer.PORT.getIntegerValue();
-        if (ret < 1024) {
+        if (ret == 0) {
             ret = port;
         }
         return ret;

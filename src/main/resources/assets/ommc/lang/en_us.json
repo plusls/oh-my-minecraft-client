@@ -44,5 +44,5 @@
   "ommc.config.advanced_integrated_server.flight.name": "flight",
   "ommc.config.advanced_integrated_server.flight.comment": "Integrated server enable flight.",
   "ommc.config.advanced_integrated_server.port.name": "port",
-  "ommc.config.advanced_integrated_server.port.comment": "Integrated server lan port."
+  "ommc.config.advanced_integrated_server.port.comment": "Integrated server lan port, 0 to use default port."
 }

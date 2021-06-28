@@ -73,6 +73,26 @@ above them, which is convenient for world eater maintenance and mining.
 
 ![worldEaterMineHelper](./docs/img/worldEaterMineHelper.png)
 
+## Advanced Integrated Server
+
+Now allow user to change some integrated server setting.
+
+### Online Mode
+
+Integrated server use online mode.
+
+### pvp
+
+Integrated server enable pvp.
+
+### flight
+
+Integrated server enable flight.
+
+### port
+
+Integrated server lan port, 0 to use default port.
+
 ## Acknowledgements
 
 + Thanks to [XeKr](https://space.bilibili.com/5930630) for the lava eye protection texture.

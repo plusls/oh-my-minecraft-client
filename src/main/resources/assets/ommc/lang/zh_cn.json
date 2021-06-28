@@ -42,7 +42,7 @@
   "ommc.config.advanced_integrated_server.pvp.name": "pvp",
   "ommc.config.advanced_integrated_server.pvp.comment": "本地服务器开启 PVP",
   "ommc.config.advanced_integrated_server.flight.name": "允许飞行",
-  "ommc.config.advanced_integrated_server.flight.comment": "本地服务器允许飞行.",
+  "ommc.config.advanced_integrated_server.flight.comment": "本地服务器允许飞行",
   "ommc.config.advanced_integrated_server.port.name": "局域网端口",
-  "ommc.config.advanced_integrated_server.port.comment": "本地服务器的局域网端口"
+  "ommc.config.advanced_integrated_server.port.comment": "本地服务器的局域网端口，0 表示使用随机端口"
 }
