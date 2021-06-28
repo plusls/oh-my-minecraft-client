@@ -5,9 +5,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.plusls.ommc.ModInfo;
-import com.plusls.ommc.gui.GuiConfigs;
 import com.plusls.ommc.feature.sortInventory.MyKeybindMulti;
 import com.plusls.ommc.feature.sortInventory.SortInventoryUtil;
+import com.plusls.ommc.gui.GuiConfigs;
 import fi.dy.masa.malilib.config.ConfigUtils;
 import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.config.IConfigHandler;
@@ -19,6 +19,8 @@ import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.util.FileUtils;
 import fi.dy.masa.malilib.util.JsonUtils;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.sound.SoundEvents;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 
@@ -53,6 +55,7 @@ public class Configs implements IConfigHandler {
                 SORT_INVENTORY
         );
 
+
         static {
             OPEN_CONFIG_GUI.getKeybind().setCallback((keyAction, iKeybind) -> {
                 GuiBase.openGui(new GuiConfigs());
@@ -61,6 +64,7 @@ public class Configs implements IConfigHandler {
             ((MyKeybindMulti) SORT_INVENTORY.getKeybind()).allowInScreen();
             SORT_INVENTORY.getKeybind().setCallback((keyAction, iKeybind) -> {
                 SortInventoryUtil.sort();
+                MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                 return true;
             });
             DEBUG.setValueChangeCallback(config -> {
