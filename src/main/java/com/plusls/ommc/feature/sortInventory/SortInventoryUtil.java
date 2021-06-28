@@ -1,4 +1,4 @@
-package com.plusls.ommc.util;
+package com.plusls.ommc.feature.sortInventory;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;

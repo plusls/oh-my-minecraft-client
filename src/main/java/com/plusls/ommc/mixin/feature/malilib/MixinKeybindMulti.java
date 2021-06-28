@@ -1,6 +1,6 @@
 package com.plusls.ommc.mixin.feature.malilib;
 
-import com.plusls.ommc.util.MyKeybindMulti;
+import com.plusls.ommc.feature.sortInventory.MyKeybindMulti;
 import fi.dy.masa.malilib.hotkeys.KeybindMulti;
 import fi.dy.masa.malilib.util.GuiUtils;
 import net.minecraft.client.gui.screen.ChatScreen;

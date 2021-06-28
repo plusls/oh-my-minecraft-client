@@ -1,4 +1,4 @@
-package com.plusls.ommc.util;
+package com.plusls.ommc.feature.sortInventory;
 
 import com.plusls.ommc.config.Configs;
 import net.minecraft.block.ShulkerBoxBlock;
