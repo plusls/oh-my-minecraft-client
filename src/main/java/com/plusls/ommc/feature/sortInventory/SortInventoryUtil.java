@@ -19,7 +19,7 @@ public class SortInventoryUtil {
         if (screenHandler instanceof PlayerScreenHandler) {
             return 9;
         } else if (screenHandler instanceof CraftingScreenHandler) {
-            return -1;
+            return 10;
         } else {
             return getContainerInventorySize(screenHandler);
         }
