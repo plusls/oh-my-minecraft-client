@@ -1,0 +1,9 @@
+{
+  "parent": "ommc.mixins.json",
+  "package": "com.plusls.ommc.compat.canvas.mixin",
+  "plugin": "com.plusls.ommc.OmmcCompatMixinPlugin",
+  "client": [
+    "MixinLavaFluidModel",
+    "MixinTerrainRenderContext"
+  ]
+}
