@@ -17,7 +17,7 @@ import java.util.Map;
 // Code from https://github.com/TISUnion/Carpet-TIS-Addition/blob/master/src/main/java/carpettisaddition/utils/deobfuscator/StackTraceDeobfuscator.java
 public class YarnUtil {
 
-    private static final String MAPPING_NAME = "yarn-1.17+build.13-v2";
+    private static final String MAPPING_NAME = "yarn-1.16.5+build.10-v2";
     private static final Map<String, String> obfuscateMappings = Maps.newHashMap();
     private static final Map<String, String> deobfuscateMappings = Maps.newHashMap();
 
