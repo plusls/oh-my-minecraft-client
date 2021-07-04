@@ -20,9 +20,11 @@ public class YarnUtil {
     private static final String MAPPING_NAME = "yarn-1.17+build.13-v2";
     private static final Map<String, String> obfuscateMappings = Maps.newHashMap();
     private static final Map<String, String> deobfuscateMappings = Maps.newHashMap();
+
     static {
         loadMapping();
     }
+
     public static void loadMapping() {
         InputStream inputStream = YarnUtil.class.getClassLoader().getResourceAsStream(String.format("assets/%s/%s.tiny", ModInfo.MOD_ID, MAPPING_NAME));
         if (inputStream == null) {

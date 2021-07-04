@@ -1,18 +1,10 @@
 package com.plusls.ommc;
 
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.ModContainer;
-import net.fabricmc.loader.discovery.ModResolutionException;
-import net.fabricmc.loader.gui.FabricGuiEntry;
 import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.MethodNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
-import org.spongepowered.asm.service.MixinService;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 public class OmmcMixinPlugin implements IMixinConfigPlugin {
