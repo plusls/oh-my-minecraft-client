@@ -25,12 +25,15 @@
     ]
   },
   "mixins": [
-    "ommc.mixins.json"
+    "ommc.mixins.json",
+    "ommc.compat.canvas.mixins.json",
+    "ommc.compat.malilib.mixins.json",
+    "ommc.compat.sodium.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.7.4",
     "fabric": ">=0.35.1",
-    "minecraft": "1.17.x",
+    "minecraft": ">=1.17",
     "malilib": ">=0.10.0-dev.21"
   }
 }
