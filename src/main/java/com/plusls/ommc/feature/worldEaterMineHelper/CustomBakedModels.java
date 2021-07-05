@@ -27,18 +27,15 @@ import java.util.function.Function;
 public class CustomBakedModels {
     public static final Map<Block, BakedModel> models = new HashMap<>();
 
-    public static boolean needBuildCustomBakedModel(Identifier id) {
-        for (String blockName : Configs.Lists.WORLD_EATER_MINE_HELPER_WHITELIST.getStrings()) {
-            if (id.toString().contains(blockName)) {
-                return true;
-            }
-        }
-        return false;
+    public static boolean needBuildCustomBakedModel(Block block) {
+        String blockName = block.getName().getString();
+        String blockId = Registry.BLOCK.getId(block).toString();
+        return Configs.Lists.WORLD_EATER_MINE_HELPER_WHITELIST.getStrings().stream().anyMatch(s -> blockId.contains(s) || blockName.contains(s));
     }
 
     public static boolean shouldUseCustomModel(Block block, BlockPos pos) {
         // ModInfo.LOGGER.debug("test model {} {}", pos, block);
-        if (Configs.FeatureToggle.WORLD_EATER_MINE_HELPER.getBooleanValue() && needBuildCustomBakedModel(Registry.BLOCK.getId(block))) {
+        if (Configs.FeatureToggle.WORLD_EATER_MINE_HELPER.getBooleanValue() && needBuildCustomBakedModel(block)) {
             ClientWorld world = MinecraftClient.getInstance().world;
             if (world != null) {
                 int x = pos.getX();

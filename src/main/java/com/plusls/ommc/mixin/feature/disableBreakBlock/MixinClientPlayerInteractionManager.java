@@ -1,7 +1,6 @@
-package com.plusls.ommc.mixin.feature.disableBreakScaffolding;
+package com.plusls.ommc.mixin.feature.disableBreakBlock;
 
 import com.plusls.ommc.config.Configs;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,29 +18,29 @@ public class MixinClientPlayerInteractionManager {
 
     @Inject(method = "attackBlock", at = @At(value = "HEAD"), cancellable = true)
     private void disableBreakScaffolding(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
-        if (shouldDisableBreakScaffolding(pos)) {
+        if (shouldDisableBreakBlock(pos)) {
             cir.setReturnValue(false);
         }
     }
 
     @Inject(method = "updateBlockBreakingProgress", at = @At(value = "HEAD"), cancellable = true)
     private void disableBreakScaffolding1(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
-        if (shouldDisableBreakScaffolding(pos)) {
+        if (shouldDisableBreakBlock(pos)) {
             cir.setReturnValue(false);
         }
     }
 
-    private boolean shouldDisableBreakScaffolding(BlockPos pos) {
+    private boolean shouldDisableBreakBlock(BlockPos pos) {
         World world = MinecraftClient.getInstance().world;
         PlayerEntity player = MinecraftClient.getInstance().player;
-        if (Configs.FeatureToggle.DISABLE_BREAK_SCAFFOLDING.getBooleanValue() &&
-                world != null && world.getBlockState(pos).isOf(Blocks.SCAFFOLDING) &&
-                player != null) {
-            String itemId = Registry.ITEM.getId(player.getMainHandStack().getItem()).toString();
-            String itemName = player.getMainHandStack().getItem().getName().getString();
-            return Configs.Lists.BREAK_SCAFFOLDING_WHITELIST.getStrings().stream().noneMatch(s -> itemId.contains(s) || itemName.contains(s));
+        if (Configs.FeatureToggle.DISABLE_BREAK_BLOCK.getBooleanValue() &&
+                world != null && player != null) {
+            String blockId = Registry.BLOCK.getId(world.getBlockState(pos).getBlock()).toString();
+            String blockName = world.getBlockState(pos).getBlock().getName().getString();
+            return Configs.Lists.BREAK_BLOCK_BLACKLIST.getStrings().stream().anyMatch(s -> blockId.contains(s) || blockName.contains(s));
         }
         return false;
     }
 
 }
+

@@ -4,8 +4,8 @@ import com.plusls.ommc.config.Configs;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ScaffoldingBlock;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.Item;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
@@ -29,11 +29,12 @@ public class MixinScaffoldingBlock {
         if (cir.getReturnValue() != NORMAL_OUTLINE_SHAPE) {
             if (Configs.FeatureToggle.DISABLE_MOVE_DOWN_IN_SCAFFOLDING.getBooleanValue() &&
                     context.isDescending() && context.isAbove(VoxelShapes.fullCube(), pos, true)) {
-                for (String whitelistId : Configs.Lists.MOVE_DOWN_IN_SCAFFOLDING_WHITELIST.getStrings()) {
-                    Item item = Registry.ITEM.get(new Identifier(whitelistId));
-                    if (Registry.ITEM.getId(item).toString().equals(whitelistId) && context.isHolding(item)) {
-                        return;
-                    }
+                assert MinecraftClient.getInstance().player != null;
+                Item item = MinecraftClient.getInstance().player.getMainHandStack().getItem();
+                String itemId = Registry.ITEM.getId(item).toString();
+                String itemName = item.getName().getString();
+                if (Configs.Lists.MOVE_DOWN_IN_SCAFFOLDING_WHITELIST.getStrings().stream().anyMatch(s -> itemId.contains(s) || itemName.contains(s))) {
+                    return;
                 }
                 cir.setReturnValue(NORMAL_OUTLINE_SHAPE);
             }
