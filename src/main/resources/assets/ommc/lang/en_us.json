@@ -21,6 +21,8 @@
   "ommc.config.feature_toggle.disableBreakScaffolding.comment": "You can only break scaffolding with the items in §6breakScaffoldingWhiteList§r.",
   "ommc.config.feature_toggle.disableMoveDownInScaffolding.name": "disableMoveDownInScaffolding",
   "ommc.config.feature_toggle.disableMoveDownInScaffolding.comment": "You can only move down scaffolding with the items inside §6moveDownInScaffoldingWhiteList§r in your hand.",
+  "ommc.config.feature_toggle.flatDigger.name": "flatDigger",
+  "ommc.config.feature_toggle.flatDigger.comment": "Which allowed you mine a flat road while digging stone by preventing digging of blocks under your feet while standing，sneak to dig blocks under you.",
   "ommc.config.feature_toggle.forceBreakingCooldown.name": "forceBreakingCooldown",
   "ommc.config.feature_toggle.forceBreakingCooldown.comment": "You will have 5gt cooldown after instant breaking.",
   "ommc.config.feature_toggle.highlightPersistentMob.name": "highlightPersistentMob",

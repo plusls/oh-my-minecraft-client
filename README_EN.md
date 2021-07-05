@@ -70,6 +70,10 @@ Prevent Intentional Game Design (Bed and Respawn Anchor).
 
 Highlight persistent mobs (Mob have item in hand or mob have custom name).
 
+### Flat Digger
+
+Which allowed you mine a flat road while digging stone by preventing digging of blocks under your feet while standing，sneak to dig blocks under you.
+
 ### Real Sneaking
 
 Players cannot ascend or descend when sneaking.

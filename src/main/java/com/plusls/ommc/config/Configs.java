@@ -80,6 +80,7 @@ public class Configs implements IConfigHandler {
         public static final ConfigBooleanHotkeyed DISABLE_BREAK_BLOCK = new TranslatableConfigBooleanHotkeyed(PREFIX, "disableBreakBlock", false, "");
         public static final ConfigBooleanHotkeyed DISABLE_BREAK_SCAFFOLDING = new TranslatableConfigBooleanHotkeyed(PREFIX, "disableBreakScaffolding", false, "");
         public static final ConfigBooleanHotkeyed DISABLE_MOVE_DOWN_IN_SCAFFOLDING = new TranslatableConfigBooleanHotkeyed(PREFIX, "disableMoveDownInScaffolding", false, "");
+        public static final ConfigBooleanHotkeyed FLAT_DIGGER = new TranslatableConfigBooleanHotkeyed(PREFIX, "flatDigger", false, "");
         public static final ConfigBooleanHotkeyed FORCE_BREAKING_COOLDOWN = new TranslatableConfigBooleanHotkeyed(PREFIX, "forceBreakingCooldown", false, "");
         public static final ConfigBooleanHotkeyed HIGHLIGHT_LAVA_SOURCE = new TranslatableConfigBooleanHotkeyed(PREFIX, "highlightLavaSource", false, "");
         public static final ConfigBooleanHotkeyed HIGHLIGHT_WANDERING_TRADER = new TranslatableConfigBooleanHotkeyed(PREFIX, "highlightWanderingTrader", false, "");
@@ -92,6 +93,7 @@ public class Configs implements IConfigHandler {
                 DISABLE_BREAK_BLOCK,
                 DISABLE_BREAK_SCAFFOLDING,
                 DISABLE_MOVE_DOWN_IN_SCAFFOLDING,
+                FLAT_DIGGER,
                 FORCE_BREAKING_COOLDOWN,
                 HIGHLIGHT_LAVA_SOURCE,
                 HIGHLIGHT_WANDERING_TRADER,

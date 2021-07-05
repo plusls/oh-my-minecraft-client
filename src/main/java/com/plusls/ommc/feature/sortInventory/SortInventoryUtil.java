@@ -2,6 +2,7 @@ package com.plusls.ommc.feature.sortInventory;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.item.BundleItem;
 import net.minecraft.item.Item;
@@ -9,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.screen.*;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 
 import java.util.ArrayList;
@@ -40,6 +42,18 @@ public class SortInventoryUtil {
 
     public static boolean sort() {
         MinecraftClient client = MinecraftClient.getInstance();
+        if (!(client.currentScreen instanceof HandledScreen)) {
+            return false;
+        }
+        HandledScreen<?> handledScreen = (HandledScreen<?>) client.currentScreen;
+
+        double x = client.mouse.getX() * client.getWindow().getScaledWidth() / client.getWindow().getWidth();
+        double y = client.mouse.getY() * client.getWindow().getScaledHeight() / client.getWindow().getHeight();
+        Slot mouseSlot = handledScreen.getSlotAt(x, y);
+        if (mouseSlot == null) {
+            return false;
+        }
+
         ClientPlayerEntity player = client.player;
         if (client.interactionManager == null || player == null) {
             return false;
@@ -72,7 +86,7 @@ public class SortInventoryUtil {
         }
         // 执行两次，第一次合并同类项，第二次去除空位
         int r;
-        if (containerInventorySize != -1) {
+        if (containerInventorySize != -1 && mouseSlot.id < containerInventorySize) {
             clickQueue.addAll(mergeItems(itemStacks, 0, containerInventorySize));
             clickQueue.addAll(mergeItems(itemStacks, 0, containerInventorySize));
             r = 0;
@@ -83,17 +97,30 @@ public class SortInventoryUtil {
                 }
             }
             clickQueue.addAll(quickSort(itemStacks, 0, r));
-        }
-        clickQueue.addAll(mergeItems(itemStacks, playerInventoryStartIdx, playerInventoryStartIdx + 27));
-        clickQueue.addAll(mergeItems(itemStacks, playerInventoryStartIdx, playerInventoryStartIdx + 27));
-        r = playerInventoryStartIdx;
-        for (int i = playerInventoryStartIdx + 26; i >= playerInventoryStartIdx; --i) {
-            if (!itemStacks.get(i).isEmpty()) {
-                r = i + 1;
-                break;
+        } else if (mouseSlot.id >= playerInventoryStartIdx  && mouseSlot.id < playerInventoryStartIdx + 27) {
+            clickQueue.addAll(mergeItems(itemStacks, playerInventoryStartIdx, playerInventoryStartIdx + 27));
+            clickQueue.addAll(mergeItems(itemStacks, playerInventoryStartIdx, playerInventoryStartIdx + 27));
+            r = playerInventoryStartIdx;
+            for (int i = playerInventoryStartIdx + 26; i >= playerInventoryStartIdx; --i) {
+                if (!itemStacks.get(i).isEmpty()) {
+                    r = i + 1;
+                    break;
+                }
             }
+            clickQueue.addAll(quickSort(itemStacks, playerInventoryStartIdx, r));
+        } else if (mouseSlot.id >= playerInventoryStartIdx + 27  && mouseSlot.id < playerInventoryStartIdx + 36) {
+            clickQueue.addAll(mergeItems(itemStacks, playerInventoryStartIdx + 27, playerInventoryStartIdx + 36));
+            clickQueue.addAll(mergeItems(itemStacks, playerInventoryStartIdx + 27, playerInventoryStartIdx + 36));
+            r = playerInventoryStartIdx + 27;
+            for (int i = playerInventoryStartIdx + 35; i >= playerInventoryStartIdx + 27; --i) {
+                if (!itemStacks.get(i).isEmpty()) {
+                    r = i + 1;
+                    break;
+                }
+            }
+            clickQueue.addAll(quickSort(itemStacks, playerInventoryStartIdx + 27, r));
         }
-        clickQueue.addAll(quickSort(itemStacks, playerInventoryStartIdx, r));
+
         for (Integer slotId : clickQueue) {
             if (slotId < 0 && slotId != ScreenHandler.EMPTY_SPACE_SLOT_INDEX) {
                 client.interactionManager.clickSlot(screenHandler.syncId, -slotId, 1, SlotActionType.PICKUP, player);

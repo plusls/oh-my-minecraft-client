@@ -11,6 +11,7 @@
     "feature.disableBreakScaffolding.MixinClientPlayerInteractionManager",
     "feature.disableMoveDownInScaffolding.MixinScaffoldingBlock",
     "feature.dontClearChatHistory.MixinChatHud",
+    "feature.flatDigger.MixinClientPlayerInteractionManager",
     "feature.forceBreakingCooldown.MixinClientPlayerInteractionManager",
     "feature.highlightPersistentMob.MixinMinecraftClient",
     "feature.highlightWanderingTrader.MixinMinecraftClient",
