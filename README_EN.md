@@ -29,7 +29,7 @@ Support empty shulker box stack when sort inventory.
 
 ## Features
 
-## Disable Break Block
+### Disable Break Block
 
 You can't break blocks in **breakBlockBlackList**.
 
