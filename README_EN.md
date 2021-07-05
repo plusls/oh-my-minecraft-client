@@ -29,6 +29,10 @@ Support empty shulker box stack when sort inventory.
 
 ## Features
 
+## Disable Break Block
+
+You can't break blocks in **breakBlockBlackList**.
+
 ### Disable Break Scaffolding
 
 You can break the scaffolding with the items in **breakScaffoldingWhiteList**.
@@ -58,9 +62,13 @@ The Wandering Trader will have the glowing affect, so it in Invisibility.
 
 ![highlightLavaSourceOn](./docs/img/highlightWanderingTrader.png)
 
-### Bed Explosion Prevention
+### Prevent Intentional Game Design
 
-You can prevent breaking beds in The Nether or The End. (Not included with the respawn anchor in Overworld).
+Prevent Intentional Game Design (Bed and Respawn Anchor).
+
+### High Light Persistent Mob
+
+Highlight persistent mobs (Mob have item in hand or mob have custom name).
 
 ### Real Sneaking
 

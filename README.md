@@ -31,6 +31,10 @@ Make Minecraft Client Great Again!
 
 ## Feature
 
+### 禁止破坏特定方块
+
+玩家无法破坏在 **破坏方块黑名单** 中的方块
+
 ### 禁止破坏脚手架
 
 玩家只有在手持 **破坏脚手架白名单** 中的物品时才能破坏脚手架
@@ -59,9 +63,13 @@ Make Minecraft Client Great Again!
 
 ![highlightLavaSourceOn](./docs/img/highlightWanderingTrader.png)
 
-### 防止床爆炸
+### 防止刻意的游戏设计
 
-阻止玩家在下界或者末地使用床
+防止刻意的游戏设计（床或者重生锚爆炸）
+
+### 高亮不会消失的实体
+
+高亮不会消失的怪物（受到客户端的限制，现在只能高亮手里有特殊物品或者被命名的怪物）
 
 ### 真潜行
 
