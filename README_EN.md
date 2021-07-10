@@ -78,6 +78,11 @@ Which allowed you mine a flat road while digging stone by preventing digging of 
 
 Players cannot ascend or descend when sneaking.
 
+### Remove Breaking Cooldown
+
+Remove cooldown after break block (default is 5gt), it will not work when enable **forceBreakingCooldown§r**.
+
+
 ### World Eater And Mine Helper
 
 When the blocks in **worldEaterMineHelperWhitelist** are exposed to the air, the game will render their own mirror image

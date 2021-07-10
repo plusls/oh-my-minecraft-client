@@ -37,6 +37,8 @@
   "ommc.config.feature_toggle.worldEaterMineHelper.comment": "When the blocks in §6worldEaterMineHelperWhitelist§r are exposed to the air, the game will render a mirror image above them, which is convenient for world eater maintenance and mining.",
   "ommc.config.feature_toggle.realSneaking.name": "realSneaking",
   "ommc.config.feature_toggle.realSneaking.comment": "You cannot ascend or descend non-full blocks when sneaking, e.g. carpets.",
+  "ommc.config.feature_toggle.removeBreakingCooldown.name": "removeBreakingCooldown",
+  "ommc.config.feature_toggle.removeBreakingCooldown.comment": "Remove cooldown after break block (default is 5gt), it will not work when enable §6forceBreakingCooldown§r.",
   "ommc.config.lists.breakBlockBlackList.name": "breakBlockBlackList",
   "ommc.config.lists.breakBlockBlackList.comment": "If §6disableBreakScaffolding§r is enabled, you can't break blocks in §6breakBlockBlackList§r.",
   "ommc.config.lists.breakScaffoldingWhiteList.name": "breakScaffoldingWhiteList",

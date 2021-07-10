@@ -37,6 +37,8 @@
   "ommc.config.feature_toggle.worldEaterMineHelper.comment": "当 §6世吞挖矿助手白名单§r 中的方块暴露在空气中时，客户端会在它们上方渲染出自己的镜像，方便世吞运维以及挖矿",
   "ommc.config.feature_toggle.realSneaking.name": "真潜行",
   "ommc.config.feature_toggle.realSneaking.comment": "玩家在潜行时无法上升或者下降，比如走上或者离开地毯，半砖，台阶这类方块",
+  "ommc.config.feature_toggle.removeBreakingCooldown.name": "移除挖掘冷却",
+  "ommc.config.feature_toggle.removeBreakingCooldown.comment": "移除在非秒破方块后的挖掘冷却（默认是 5gt），该功能在开启 §6强制添加破坏冷却§r 时不会生效",
   "ommc.config.lists.breakBlockBlackList.name": "破坏方块黑名单",
   "ommc.config.lists.breakBlockBlackList.comment": "如果开启 §6禁止破坏特定方块§r，玩家无法破坏在 §6破坏方块黑名单§r 中的方块",
   "ommc.config.lists.breakScaffoldingWhiteList.name": "破坏脚手架白名单",

@@ -87,6 +87,7 @@ public class Configs implements IConfigHandler {
         public static final ConfigBooleanHotkeyed HIGHLIGHT_PERSISTENT_MOB = new TranslatableConfigBooleanHotkeyed(PREFIX, "highlightPersistentMob", false, "");
         public static final ConfigBooleanHotkeyed PREVENT_INTENTIONAL_GAME_DESIGN = new TranslatableConfigBooleanHotkeyed(PREFIX, "preventIntentionalGameDesign", false, "");
         public static final ConfigBooleanHotkeyed REAL_SNEAKING = new TranslatableConfigBooleanHotkeyed(PREFIX, "realSneaking", false, "");
+        public static final ConfigBooleanHotkeyed REMOVE_BREAKING_COOLDOWN = new TranslatableConfigBooleanHotkeyed(PREFIX, "removeBreakingCooldown", false, "");
         public static final ConfigBooleanHotkeyed WORLD_EATER_MINE_HELPER = new TranslatableConfigBooleanHotkeyed(PREFIX, "worldEaterMineHelper", false, "");
 
         public static final ImmutableList<ConfigBooleanHotkeyed> OPTIONS = ImmutableList.of(
@@ -100,6 +101,7 @@ public class Configs implements IConfigHandler {
                 HIGHLIGHT_PERSISTENT_MOB,
                 PREVENT_INTENTIONAL_GAME_DESIGN,
                 REAL_SNEAKING,
+                REMOVE_BREAKING_COOLDOWN,
                 WORLD_EATER_MINE_HELPER
         );
 
