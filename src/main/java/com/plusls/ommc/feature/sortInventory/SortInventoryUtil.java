@@ -97,7 +97,7 @@ public class SortInventoryUtil {
                 }
             }
             clickQueue.addAll(quickSort(itemStacks, 0, r));
-        } else if (mouseSlot.id >= playerInventoryStartIdx  && mouseSlot.id < playerInventoryStartIdx + 27) {
+        } else if (mouseSlot.id >= playerInventoryStartIdx && mouseSlot.id < playerInventoryStartIdx + 27) {
             clickQueue.addAll(mergeItems(itemStacks, playerInventoryStartIdx, playerInventoryStartIdx + 27));
             clickQueue.addAll(mergeItems(itemStacks, playerInventoryStartIdx, playerInventoryStartIdx + 27));
             r = playerInventoryStartIdx;
@@ -108,7 +108,7 @@ public class SortInventoryUtil {
                 }
             }
             clickQueue.addAll(quickSort(itemStacks, playerInventoryStartIdx, r));
-        } else if (mouseSlot.id >= playerInventoryStartIdx + 27  && mouseSlot.id < playerInventoryStartIdx + 36) {
+        } else if (mouseSlot.id >= playerInventoryStartIdx + 27 && mouseSlot.id < playerInventoryStartIdx + 36) {
             clickQueue.addAll(mergeItems(itemStacks, playerInventoryStartIdx + 27, playerInventoryStartIdx + 36));
             clickQueue.addAll(mergeItems(itemStacks, playerInventoryStartIdx + 27, playerInventoryStartIdx + 36));
             r = playerInventoryStartIdx + 27;

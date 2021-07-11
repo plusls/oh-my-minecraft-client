@@ -20,6 +20,7 @@ import java.util.function.Supplier;
 
 public class WorldEaterMineHelperUtil {
     public static final Map<Block, BakedModel> models = new HashMap<>();
+
     public static boolean blockInWorldEaterMineHelperWhitelist(Block block) {
         String blockName = block.getName().getString();
         String blockId = Registry.BLOCK.getId(block).toString();
@@ -51,6 +52,7 @@ public class WorldEaterMineHelperUtil {
         }
         return false;
     }
+
     static public void emitCustomBlockQuads(FabricBakedModel model, BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
         Block block = state.getBlock();
         if (WorldEaterMineHelperUtil.shouldUseCustomModel(state, pos)) {
