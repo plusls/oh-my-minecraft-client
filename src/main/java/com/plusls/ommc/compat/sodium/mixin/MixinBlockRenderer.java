@@ -24,6 +24,7 @@ public class MixinBlockRenderer {
     private final ThreadLocal<BlockModelRendererContext> ommcRenderContext = ThreadLocal.withInitial(BlockModelRendererContext::new);
     private final ThreadLocal<Integer> ommcOriginalLuminance = ThreadLocal.withInitial(() -> -1);
 
+    @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "renderModel", at = @At(value = "HEAD"))
     private void initRenderContext(BlockRenderView world, BlockState state, BlockPos pos, BlockPos origin, BakedModel model, @Coerce Object buffers, boolean cull, long seed, CallbackInfoReturnable<Boolean> cir) {
         BlockModelRendererContext context = ommcRenderContext.get();
@@ -31,6 +32,7 @@ public class MixinBlockRenderer {
         context.state = state;
     }
 
+    @SuppressWarnings("UnresolvedMixinReference")
     @ModifyVariable(method = "renderModel", at = @At(value = "HEAD"), ordinal = 0)
     private BakedModel modifyBakedModel(BakedModel bakedModel) {
         BlockModelRendererContext context = ommcRenderContext.get();
@@ -45,6 +47,7 @@ public class MixinBlockRenderer {
         return bakedModel;
     }
 
+    @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "renderModel", at = @At(value = "RETURN"))
     private void postRenderModel(BlockRenderView world, BlockState state, BlockPos pos, BlockPos origin, BakedModel model, @Coerce Object buffers, boolean cull, long seed, CallbackInfoReturnable<Boolean> cir) {
         int originalLuminance = ommcOriginalLuminance.get();
