@@ -17,9 +17,9 @@
     "feature.highlightWanderingTrader.MixinMinecraftClient",
     "feature.preventIntentionalGameDesign.MixinClientPlayerInteractionManager",
     "feature.removeBreakCooldown.MixinClientPlayerInteractionManager",
-    "feature.worldEaterMineHelper.JsonUnbakedModelInvoker",
     "feature.worldEaterMineHelper.MixinBlockRenderManager",
     "feature.worldEaterMineHelper.MixinJsonUnbakedModel",
+    "feature.worldEaterMineHelper.fabric.MixinBlockRenderContext",
     "feature.worldEaterMineHelper.fabric.MixinTerrainRenderContext"
   ],
   "injectors": {

@@ -4,6 +4,7 @@
   "plugin": "com.plusls.ommc.OmmcCompatMixinPlugin",
   "client": [
     "MixinLavaFluidModel",
-    "MixinTerrainRenderContext"
+    "MixinTerrainRenderContext",
+    "MixinBlockRenderContext"
   ]
 }
