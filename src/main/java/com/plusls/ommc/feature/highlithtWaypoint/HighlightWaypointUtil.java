@@ -1,11 +1,15 @@
 package com.plusls.ommc.feature.highlithtWaypoint;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.option.Option;
 import net.minecraft.client.render.*;
 import net.minecraft.client.texture.Sprite;
@@ -57,6 +61,9 @@ public class HighlightWaypointUtil {
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
             currentWorld = null;
             highlightPos = null;
+        });
+        WorldRenderEvents.END.register(context -> {
+            HighlightWaypointUtil.drawWaypoint(context.matrixStack(), context.tickDelta());
         });
     }
 
@@ -281,7 +288,7 @@ public class HighlightWaypointUtil {
 
             // 渲染文字
             RenderSystem.enableTexture();
-            VertexConsumerProvider.Immediate vertexConsumerProvider = mc.getBufferBuilders().getEntityVertexConsumers();
+            VertexConsumerProvider.Immediate vertexConsumerProvider = mc.getBufferBuilders().getEffectVertexConsumers();
             int textColor = (int) (255.0f * fade) << 24 | 0xCCCCCC;
             RenderSystem.disableDepthTest();
             textRenderer.draw(new LiteralText(name), (float) (-textRenderer.getWidth(name) / 2), elevateBy, textColor, false, matrix4f, vertexConsumerProvider, true, 0, 0xF000F0);
