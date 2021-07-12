@@ -42,10 +42,9 @@ public class SortInventoryUtil {
 
     public static boolean sort() {
         MinecraftClient client = MinecraftClient.getInstance();
-        if (!(client.currentScreen instanceof HandledScreen)) {
+        if (!(client.currentScreen instanceof HandledScreen<?> handledScreen)) {
             return false;
         }
-        HandledScreen<?> handledScreen = (HandledScreen<?>) client.currentScreen;
 
         double x = client.mouse.getX() * client.getWindow().getScaledWidth() / client.getWindow().getWidth();
         double y = client.mouse.getY() * client.getWindow().getScaledHeight() / client.getWindow().getHeight();
@@ -164,7 +163,7 @@ public class SortInventoryUtil {
                     stackToAdd.decrement(addNum);
                 }
             } else if (stack.getItem() instanceof BundleItem) {
-                NbtCompound nbtCompound = stack.getOrCreateTag();
+                NbtCompound nbtCompound = stack.getOrCreateNbt();
                 NbtList nbtList = nbtCompound.getList("Items", 10);
                 Optional<NbtCompound> optional = BundleItem.canMergeStack(stackToAdd, nbtList);
                 if (optional.isPresent()) {
@@ -192,7 +191,7 @@ public class SortInventoryUtil {
         } else if (!ShulkerBoxItemUtil.isShulkerBoxBlockItem(a) && ShulkerBoxItemUtil.isShulkerBoxBlockItem(b)) {
             return -1;
         } else if (ShulkerBoxItemUtil.isShulkerBoxBlockItem(a) && ShulkerBoxItemUtil.isShulkerBoxBlockItem(b)) {
-            return ShulkerBoxItemUtil.cmpShulkerBox(a.getTag(), b.getTag());
+            return ShulkerBoxItemUtil.cmpShulkerBox(a.getNbt(), b.getNbt());
         }
         if (aId == bId) {
             // 物品少的排在后面

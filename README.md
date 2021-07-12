@@ -21,6 +21,14 @@ Make Minecraft Client Great Again!
 
 不清空聊天历史记录，不清空输入历史记录
 
+### 高亮坐标点
+
+添加了命令 `/highlightWaypoint` 来高亮坐标点
+
+会自动解析聊天栏 voxelmap 格式的坐标点（形如 `[x:1, y: 2, z: 3]`，只在未安装 voxelmap 时生效）
+
+可用快捷键取消高亮
+
 ### 整理仓库
 
 按下快捷键后可以自动整理仓库（R 键整理的替代品）
@@ -114,6 +122,7 @@ Make Minecraft Client Great Again!
 + 感谢 [XeKr](https://space.bilibili.com/5930630) 的岩浆护眼材质
 + 感谢 [NextPage](https://github.com/Next-Page-Vi) 提供的英文翻译，岩浆材质修改以及测试工作
 + 感谢 [水星嗷](https://space.bilibili.com/18525909) 提供的[矿物高亮的灵感以及样例](https://www.bilibili.com/video/BV1w64y1D7wP)
++ 感谢 [voxelmap](https://www.curseforge.com/minecraft/mc-mods/voxelmap) 提供的高亮坐标点的实现
 
 ## License
 

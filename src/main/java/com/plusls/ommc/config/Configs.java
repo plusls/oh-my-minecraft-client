@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.plusls.ommc.ModInfo;
+import com.plusls.ommc.feature.highlithtWaypoint.HighlightWaypointUtil;
 import com.plusls.ommc.feature.sortInventory.MyKeybindMulti;
 import com.plusls.ommc.feature.sortInventory.SortInventoryUtil;
 import com.plusls.ommc.gui.GuiConfigs;
@@ -37,6 +38,7 @@ public class Configs implements IConfigHandler {
         public static final ConfigHotkey OPEN_CONFIG_GUI = new TranslatableConfigHotkey(PREFIX, "openConfigGui", "O,C");
         public static final ConfigBoolean DEBUG = new TranslatableConfigBoolean(PREFIX, "debug", false);
         public static final ConfigBoolean DONT_CLEAR_CHAT_HISTORY = new TranslatableConfigBoolean(PREFIX, "dontClearChatHistory", false);
+        public static final ConfigHotkey CLEAR_WAYPOINT = new TranslatableConfigHotkey(PREFIX, "clearWaypoint", "C");
         public static final ConfigHotkey SORT_INVENTORY = new TranslatableConfigHotkey(PREFIX, "sortInventory", "R");
         public static final ConfigBoolean SORT_INVENTORY_SUPPORT_EMPTY_SHULKER_BOX_STACK = new TranslatableConfigBoolean(PREFIX, "sortInventorySupportEmptyShulkerBoxStack", false);
 
@@ -44,12 +46,14 @@ public class Configs implements IConfigHandler {
                 OPEN_CONFIG_GUI,
                 DEBUG,
                 DONT_CLEAR_CHAT_HISTORY,
+                CLEAR_WAYPOINT,
                 SORT_INVENTORY,
                 SORT_INVENTORY_SUPPORT_EMPTY_SHULKER_BOX_STACK
         );
 
         public static final ImmutableList<ConfigHotkey> HOTKEYS = ImmutableList.of(
                 OPEN_CONFIG_GUI,
+                CLEAR_WAYPOINT,
                 SORT_INVENTORY
         );
 
@@ -57,6 +61,10 @@ public class Configs implements IConfigHandler {
         static {
             OPEN_CONFIG_GUI.getKeybind().setCallback((keyAction, iKeybind) -> {
                 GuiBase.openGui(new GuiConfigs());
+                return true;
+            });
+            CLEAR_WAYPOINT.getKeybind().setCallback((keyAction, iKeybind) -> {
+                HighlightWaypointUtil.highlightPos = null;
                 return true;
             });
             ((MyKeybindMulti) SORT_INVENTORY.getKeybind()).allowInScreen();
