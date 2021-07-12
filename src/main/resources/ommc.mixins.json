@@ -17,7 +17,6 @@
     "feature.highlightWanderingTrader.MixinMinecraftClient",
     "feature.highlightWaypoint.MixinChatHudListener",
     "feature.highlightWaypoint.MixinPlayerRespawnS2CPacket",
-    "feature.highlightWaypoint.MixinWorldRenderer",
     "feature.preventIntentionalGameDesign.MixinClientPlayerInteractionManager",
     "feature.removeBreakCooldown.MixinClientPlayerInteractionManager",
     "feature.worldEaterMineHelper.MixinBlockRenderManager",
