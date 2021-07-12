@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-@Mixin(value = JsonUnbakedModel.class, priority = 10000)
+@Mixin(value = JsonUnbakedModel.class, priority = 999)
 public abstract class MixinJsonUnbakedModel implements UnbakedModel {
 
     @Shadow
