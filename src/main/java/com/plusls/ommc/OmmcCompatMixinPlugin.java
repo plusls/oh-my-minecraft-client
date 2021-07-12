@@ -50,7 +50,7 @@ public class OmmcCompatMixinPlugin extends OmmcMixinPlugin {
         try {
             classNode = MixinService.getService().getBytecodeProvider().getClassNode(className);
         } catch (ClassNotFoundException | IOException e) {
-            throw new IllegalStateException(String.format("load ClassNode: {} fail.", className));
+            throw new IllegalStateException(String.format("load ClassNode: %s fail.", className));
         }
         return classNode;
     }
@@ -141,48 +141,8 @@ public class OmmcCompatMixinPlugin extends OmmcMixinPlugin {
                 e.printStackTrace();
                 throw new IllegalStateException("Cannot add custom class path to KnotClassLoader");
             }
-            // obfuscateClasses(mixinPackage);
         }
     }
-
-//    private void obfuscateClasses(String mixinPackage) {
-//        Optional<ModContainer> modContainerOptional = FabricLoader.getInstance().getModContainer(ModInfo.MOD_ID);
-//        assert modContainerOptional.isPresent();
-//        ModContainer modContainer = modContainerOptional.get();
-//        LoaderModMetadata metadata = (LoaderModMetadata) modContainer.getMetadata();
-//        if (metadata.getId().equals(ModInfo.MOD_ID)) {
-//            Collection<String> mixinConfigs = metadata.getMixinConfigs(FabricLoader.getInstance().getEnvironmentType());
-//            for (String mixinConfig : mixinConfigs) {
-//                MixinConfig config;
-//                try {
-//                    InputStream inputStream = OmmcCompatMixinPlugin.class.getClassLoader().getResourceAsStream(mixinConfig);
-//                    String jsonString = IOUtils.toString(Objects.requireNonNull(inputStream), StandardCharsets.UTF_8);
-//                    config = GSON.fromJson(jsonString, MixinConfig.class);
-//                    inputStream.close();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                    throw new IllegalStateException(String.format("Load MixinConfig:%s fail!", mixinConfig));
-//                }
-//                if (mixinPackage.equals(config.mixinPackage)) {
-//                    if (config.mixinClasses != null) {
-//                        for (String mixinClass : config.mixinClasses) {
-//                            obfuscateClass(String.format("%s.%s", mixinPackage, mixinClass));
-//                        }
-//                    }
-//                    if (config.mixinClassesClient != null && FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-//                        for (String mixinClass : config.mixinClassesClient) {
-//                            obfuscateClass(String.format("%s.%s", mixinPackage, mixinClass));
-//                        }
-//                    } else if (config.mixinClassesServer != null && FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
-//                        for (String mixinClass : config.mixinClassesServer) {
-//                            obfuscateClass(String.format("%s.%s", mixinPackage, mixinClass));
-//                        }
-//                    }
-//                    break;
-//                }
-//            }
-//        }
-//    }
 
     private void obfuscateClass(String classFullName) {
         ClassNode classNode = loadClassNode(classFullName);

@@ -13,6 +13,8 @@
   "ommc.config.generic.dontClearChatHistory.comment": "不清空聊天历史记录，以及输入的历史记录",
   "ommc.config.generic.sortInventory.name": "整理仓库",
   "ommc.config.generic.sortInventory.comment": "整理仓库的快捷键",
+  "ommc.config.generic.clearWaypoint.name": "取消高亮坐标点",
+  "ommc.config.generic.clearWaypoint.comment": "取消高亮坐标点的快捷键",
   "ommc.config.generic.sortInventorySupportEmptyShulkerBoxStack.name": "整理仓库时支持空潜影盒堆叠",
   "ommc.config.generic.sortInventorySupportEmptyShulkerBoxStack.comment": "整理仓库时支持空潜影盒堆叠（请配合 PCA 使用）",
   "ommc.config.feature_toggle.disableBreakBlock.name": "禁止破坏特定方块",
@@ -54,5 +56,6 @@
   "ommc.config.advanced_integrated_server.flight.name": "允许飞行",
   "ommc.config.advanced_integrated_server.flight.comment": "本地服务器允许飞行",
   "ommc.config.advanced_integrated_server.port.name": "局域网端口",
-  "ommc.config.advanced_integrated_server.port.comment": "本地服务器的局域网端口，0 表示使用随机端口"
+  "ommc.config.advanced_integrated_server.port.comment": "本地服务器的局域网端口，0 表示使用随机端口",
+  "ommc.highlight_waypoint.tooltip": "点击以高亮坐标点"
 }

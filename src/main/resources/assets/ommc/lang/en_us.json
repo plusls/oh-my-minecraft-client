@@ -13,6 +13,8 @@
   "ommc.config.generic.dontClearChatHistory.comment": "Don't clear chat history and input history.",
   "ommc.config.generic.sortInventory.name": "sortInventory",
   "ommc.config.generic.sortInventory.comment": "A hotkey to sort inventory.",
+  "ommc.config.generic.clearWaypoint.name": "clearWaypoint",
+  "ommc.config.generic.clearWaypoint.comment": "A hotkey to clear highlight waypoint.",
   "ommc.config.generic.sortInventorySupportEmptyShulkerBoxStack.name": "sortInventorySupportEmptyShulkerBoxStack",
   "ommc.config.generic.sortInventorySupportEmptyShulkerBoxStack.comment": "Support empty shulker box stack when sort inventory.",
   "ommc.config.feature_toggle.disableBreakBlock.name": "disableBreakBlock",
@@ -54,5 +56,6 @@
   "ommc.config.advanced_integrated_server.flight.name": "flight",
   "ommc.config.advanced_integrated_server.flight.comment": "Integrated server enable flight.",
   "ommc.config.advanced_integrated_server.port.name": "port",
-  "ommc.config.advanced_integrated_server.port.comment": "Integrated server lan port, 0 to use default port."
+  "ommc.config.advanced_integrated_server.port.comment": "Integrated server lan port, 0 to use default port.",
+  "ommc.highlight_waypoint.tooltip": "Click to highlight waypoint."
 }

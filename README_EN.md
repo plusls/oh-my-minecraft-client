@@ -19,6 +19,14 @@ The default hotkey to open the in-game config GUI is O + C
 
 Minecraft client will not to clear chat history and input history.
 
+### Highlight waypoint
+
+Add command `/highlightWaypoint` to highlight waypoint.
+
+Auto parse waypoint in chat with voxelmap's format (like `[x:1, y: 2, z: 3]`，only work when not install voxelmap).
+
+Can delete it with hotkey.
+
 ### Sort Inventory
 
 Press hotkey to sort inventory.
@@ -117,6 +125,7 @@ Integrated server lan port, 0 to use default port.
   modification and testing work.
 + Thanks to [水星嗷](https://space.bilibili.com/18525909) for
   providing [the idea of highlighting ores and resourcepack](https://www.bilibili.com/video/BV1w64y1D7wP).
++ Thanks to [voxelmap](https://www.curseforge.com/minecraft/mc-mods/voxelmap) for providing the code of highlight waypoint.
 
 ## License
 

@@ -13,7 +13,7 @@ public class ShulkerBoxItemUtil {
 
     public static boolean isEmptyShulkerBoxItem(ItemStack itemStack) {
         if (isShulkerBoxBlockItem(itemStack)) {
-            NbtCompound nbt = itemStack.getTag();
+            NbtCompound nbt = itemStack.getNbt();
             if (nbt != null && nbt.contains("BlockEntityTag", 10)) {
                 NbtCompound tag = nbt.getCompound("BlockEntityTag");
                 if (tag.contains("Items", 9)) {
