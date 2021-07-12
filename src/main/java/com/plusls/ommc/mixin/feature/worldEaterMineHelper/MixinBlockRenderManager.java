@@ -1,7 +1,7 @@
 package com.plusls.ommc.mixin.feature.worldEaterMineHelper;
 
 import com.plusls.ommc.feature.worldEaterMineHelper.BlockModelRendererContext;
-import com.plusls.ommc.feature.worldEaterMineHelper.CustomBakedModels;
+import com.plusls.ommc.feature.worldEaterMineHelper.WorldEaterMineHelperUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.VertexConsumer;
@@ -22,6 +22,7 @@ import java.util.Random;
 @Mixin(BlockRenderManager.class)
 public class MixinBlockRenderManager {
     private final ThreadLocal<BlockModelRendererContext> ommcRenderContext = ThreadLocal.withInitial(BlockModelRendererContext::new);
+    private final ThreadLocal<Integer> ommcOriginalLuminance = ThreadLocal.withInitial(() -> -1);
 
     @Inject(method = "renderDamage", at = @At(value = "HEAD"))
     private void initRenderContext0(BlockState state, BlockPos pos, BlockRenderView world, MatrixStack matrix,
@@ -35,6 +36,11 @@ public class MixinBlockRenderManager {
     private void clearRenderContext0(BlockState state, BlockPos pos, BlockRenderView world, MatrixStack matrix,
                                      VertexConsumer vertexConsumer, CallbackInfo ci) {
         ommcRenderContext.get().clear();
+        int originalLuminance = ommcOriginalLuminance.get();
+        if (originalLuminance != -1) {
+            state.luminance = originalLuminance;
+            ommcOriginalLuminance.set(-1);
+        }
     }
 
     @Inject(method = "renderBlock", at = @At(value = "HEAD"))
@@ -51,6 +57,11 @@ public class MixinBlockRenderManager {
                                      VertexConsumer vertexConsumer, boolean cull, Random random,
                                      CallbackInfoReturnable<Boolean> cir) {
         ommcRenderContext.get().clear();
+        int originalLuminance = ommcOriginalLuminance.get();
+        if (originalLuminance != -1) {
+            state.luminance = originalLuminance;
+            ommcOriginalLuminance.set(-1);
+        }
     }
 
     @Inject(method = "getModel", at = @At(value = "RETURN"), cancellable = true)
@@ -60,9 +71,11 @@ public class MixinBlockRenderManager {
             return;
         }
         Block block = context.state.getBlock();
-        if (CustomBakedModels.shouldUseCustomModel(block, context.pos)) {
-            BakedModel model = CustomBakedModels.models.get(block);
+        if (WorldEaterMineHelperUtil.shouldUseCustomModel(state, context.pos)) {
+            BakedModel model = WorldEaterMineHelperUtil.models.get(block);
             if (model != null) {
+                ommcOriginalLuminance.set(context.state.luminance);
+                state.luminance = 15;
                 cir.setReturnValue(model);
             }
         }

@@ -21,6 +21,14 @@ Make Minecraft Client Great Again!
 
 不清空聊天历史记录，不清空输入历史记录
 
+### 高亮坐标点
+
+添加了命令 `/highlightWaypoint` 来高亮坐标点
+
+会自动解析聊天栏 voxelmap 格式的坐标点（形如 `[x:1, y: 2, z: 3]`，只在未安装 voxelmap 时生效）
+
+可用快捷键取消高亮
+
 ### 整理仓库
 
 按下快捷键后可以自动整理仓库（R 键整理的替代品）
@@ -30,6 +38,10 @@ Make Minecraft Client Great Again!
 在自动整理时会将空盒视作可堆叠的
 
 ## Feature
+
+### 禁止破坏特定方块
+
+玩家无法破坏在 **破坏方块黑名单** 中的方块
 
 ### 禁止破坏脚手架
 
@@ -59,13 +71,25 @@ Make Minecraft Client Great Again!
 
 ![highlightLavaSourceOn](./docs/img/highlightWanderingTrader.png)
 
-### 防止床爆炸
+### 防止刻意的游戏设计
 
-阻止玩家在下界或者末地使用床
+防止刻意的游戏设计（床或者重生锚爆炸）
+
+### 高亮不会消失的怪物
+
+高亮不会消失的怪物（受到客户端的限制，现在只能高亮手里有特殊物品或者被命名的怪物）
+
+### 平坦挖掘
+
+只有在潜行时才能挖掘比自己低的方块
 
 ### 真潜行
 
 玩家在潜行时无法上升或者下降，比如走上或者离开地毯，半砖，台阶这类方块
+
+### 移除挖掘冷却
+
+移除在非秒破方块后的挖掘冷却（默认是 5gt），该功能在开启 **强制添加破坏冷却** 时不会生效
 
 ### 世吞挖矿助手
 
@@ -98,6 +122,7 @@ Make Minecraft Client Great Again!
 + 感谢 [XeKr](https://space.bilibili.com/5930630) 的岩浆护眼材质
 + 感谢 [NextPage](https://github.com/Next-Page-Vi) 提供的英文翻译，岩浆材质修改以及测试工作
 + 感谢 [水星嗷](https://space.bilibili.com/18525909) 提供的[矿物高亮的灵感以及样例](https://www.bilibili.com/video/BV1w64y1D7wP)
++ 感谢 [voxelmap](https://www.curseforge.com/minecraft/mc-mods/voxelmap) 提供的高亮坐标点的实现
 
 ## License
 

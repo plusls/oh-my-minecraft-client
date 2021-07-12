@@ -28,6 +28,7 @@ public class MixinFluidRendererOld {
     @Final
     private Sprite[] lavaSprites;
 
+    @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "render", at = @At("HEAD"))
     public void modifyLavaSprites(BlockRenderView world, FluidState fluidState, BlockPos pos, @Coerce Object buffers, CallbackInfoReturnable<Boolean> info) {
         if (Configs.FeatureToggle.HIGHLIGHT_LAVA_SOURCE.getBooleanValue() && fluidState.isIn(FluidTags.LAVA) &&
@@ -37,6 +38,7 @@ public class MixinFluidRendererOld {
         }
     }
 
+    @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "render", at = @At("RETURN"))
     public void restoreLavaSprites(BlockRenderView world, FluidState fluidState, BlockPos pos, @Coerce Object buffers, CallbackInfoReturnable<Boolean> info) {
         lavaSprites[0] = LavaSourceResourceLoader.defaultLavaSourceStillSprite;

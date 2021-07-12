@@ -19,6 +19,14 @@ The default hotkey to open the in-game config GUI is O + C
 
 Minecraft client will not to clear chat history and input history.
 
+### Highlight waypoint
+
+Add command `/highlightWaypoint` to highlight waypoint.
+
+Auto parse waypoint in chat with voxelmap's format (like `[x:1, y: 2, z: 3]`，only work when not install voxelmap).
+
+Can delete it with hotkey.
+
 ### Sort Inventory
 
 Press hotkey to sort inventory.
@@ -28,6 +36,10 @@ Press hotkey to sort inventory.
 Support empty shulker box stack when sort inventory.
 
 ## Features
+
+### Disable Break Block
+
+You can't break blocks in **breakBlockBlackList**.
 
 ### Disable Break Scaffolding
 
@@ -58,13 +70,26 @@ The Wandering Trader will have the glowing affect, so it in Invisibility.
 
 ![highlightLavaSourceOn](./docs/img/highlightWanderingTrader.png)
 
-### Bed Explosion Prevention
+### Prevent Intentional Game Design
 
-You can prevent breaking beds in The Nether or The End. (Not included with the respawn anchor in Overworld).
+Prevent Intentional Game Design (Bed and Respawn Anchor).
+
+### High Light Persistent Mob
+
+Highlight persistent mobs (Mob have item in hand or mob have custom name).
+
+### Flat Digger
+
+Which allowed you mine a flat road while digging stone by preventing digging of blocks under your feet while standing，sneak to dig blocks under you.
 
 ### Real Sneaking
 
 Players cannot ascend or descend when sneaking.
+
+### Remove Breaking Cooldown
+
+Remove cooldown after break block (default is 5gt), it will not work when enable **forceBreakingCooldown§r**.
+
 
 ### World Eater And Mine Helper
 
@@ -100,6 +125,7 @@ Integrated server lan port, 0 to use default port.
   modification and testing work.
 + Thanks to [水星嗷](https://space.bilibili.com/18525909) for
   providing [the idea of highlighting ores and resourcepack](https://www.bilibili.com/video/BV1w64y1D7wP).
++ Thanks to [voxelmap](https://www.curseforge.com/minecraft/mc-mods/voxelmap) for providing the code of highlight waypoint.
 
 ## License
 

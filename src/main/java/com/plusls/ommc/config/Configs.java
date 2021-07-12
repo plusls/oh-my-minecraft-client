@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.plusls.ommc.ModInfo;
+import com.plusls.ommc.feature.highlithtWaypoint.HighlightWaypointUtil;
 import com.plusls.ommc.feature.sortInventory.MyKeybindMulti;
 import com.plusls.ommc.feature.sortInventory.SortInventoryUtil;
 import com.plusls.ommc.gui.GuiConfigs;
@@ -37,6 +38,7 @@ public class Configs implements IConfigHandler {
         public static final ConfigHotkey OPEN_CONFIG_GUI = new TranslatableConfigHotkey(PREFIX, "openConfigGui", "O,C");
         public static final ConfigBoolean DEBUG = new TranslatableConfigBoolean(PREFIX, "debug", false);
         public static final ConfigBoolean DONT_CLEAR_CHAT_HISTORY = new TranslatableConfigBoolean(PREFIX, "dontClearChatHistory", false);
+        public static final ConfigHotkey CLEAR_WAYPOINT = new TranslatableConfigHotkey(PREFIX, "clearWaypoint", "C");
         public static final ConfigHotkey SORT_INVENTORY = new TranslatableConfigHotkey(PREFIX, "sortInventory", "R");
         public static final ConfigBoolean SORT_INVENTORY_SUPPORT_EMPTY_SHULKER_BOX_STACK = new TranslatableConfigBoolean(PREFIX, "sortInventorySupportEmptyShulkerBoxStack", false);
 
@@ -44,12 +46,14 @@ public class Configs implements IConfigHandler {
                 OPEN_CONFIG_GUI,
                 DEBUG,
                 DONT_CLEAR_CHAT_HISTORY,
+                CLEAR_WAYPOINT,
                 SORT_INVENTORY,
                 SORT_INVENTORY_SUPPORT_EMPTY_SHULKER_BOX_STACK
         );
 
         public static final ImmutableList<ConfigHotkey> HOTKEYS = ImmutableList.of(
                 OPEN_CONFIG_GUI,
+                CLEAR_WAYPOINT,
                 SORT_INVENTORY
         );
 
@@ -57,6 +61,10 @@ public class Configs implements IConfigHandler {
         static {
             OPEN_CONFIG_GUI.getKeybind().setCallback((keyAction, iKeybind) -> {
                 GuiBase.openGui(new GuiConfigs());
+                return true;
+            });
+            CLEAR_WAYPOINT.getKeybind().setCallback((keyAction, iKeybind) -> {
+                HighlightWaypointUtil.highlightPos = null;
                 return true;
             });
             ((MyKeybindMulti) SORT_INVENTORY.getKeybind()).allowInScreen();
@@ -77,23 +85,31 @@ public class Configs implements IConfigHandler {
 
     public static class FeatureToggle {
         private static final String PREFIX = String.format("%s.config.feature_toggle", ModInfo.MOD_ID);
+        public static final ConfigBooleanHotkeyed DISABLE_BREAK_BLOCK = new TranslatableConfigBooleanHotkeyed(PREFIX, "disableBreakBlock", false, "");
         public static final ConfigBooleanHotkeyed DISABLE_BREAK_SCAFFOLDING = new TranslatableConfigBooleanHotkeyed(PREFIX, "disableBreakScaffolding", false, "");
         public static final ConfigBooleanHotkeyed DISABLE_MOVE_DOWN_IN_SCAFFOLDING = new TranslatableConfigBooleanHotkeyed(PREFIX, "disableMoveDownInScaffolding", false, "");
+        public static final ConfigBooleanHotkeyed FLAT_DIGGER = new TranslatableConfigBooleanHotkeyed(PREFIX, "flatDigger", false, "");
         public static final ConfigBooleanHotkeyed FORCE_BREAKING_COOLDOWN = new TranslatableConfigBooleanHotkeyed(PREFIX, "forceBreakingCooldown", false, "");
         public static final ConfigBooleanHotkeyed HIGHLIGHT_LAVA_SOURCE = new TranslatableConfigBooleanHotkeyed(PREFIX, "highlightLavaSource", false, "");
         public static final ConfigBooleanHotkeyed HIGHLIGHT_WANDERING_TRADER = new TranslatableConfigBooleanHotkeyed(PREFIX, "highlightWanderingTrader", false, "");
-        public static final ConfigBooleanHotkeyed PREVENT_EXPLODING_BED = new TranslatableConfigBooleanHotkeyed(PREFIX, "preventExplodingBed", false, "");
+        public static final ConfigBooleanHotkeyed HIGHLIGHT_PERSISTENT_MOB = new TranslatableConfigBooleanHotkeyed(PREFIX, "highlightPersistentMob", false, "");
+        public static final ConfigBooleanHotkeyed PREVENT_INTENTIONAL_GAME_DESIGN = new TranslatableConfigBooleanHotkeyed(PREFIX, "preventIntentionalGameDesign", false, "");
         public static final ConfigBooleanHotkeyed REAL_SNEAKING = new TranslatableConfigBooleanHotkeyed(PREFIX, "realSneaking", false, "");
+        public static final ConfigBooleanHotkeyed REMOVE_BREAKING_COOLDOWN = new TranslatableConfigBooleanHotkeyed(PREFIX, "removeBreakingCooldown", false, "");
         public static final ConfigBooleanHotkeyed WORLD_EATER_MINE_HELPER = new TranslatableConfigBooleanHotkeyed(PREFIX, "worldEaterMineHelper", false, "");
 
         public static final ImmutableList<ConfigBooleanHotkeyed> OPTIONS = ImmutableList.of(
+                DISABLE_BREAK_BLOCK,
                 DISABLE_BREAK_SCAFFOLDING,
                 DISABLE_MOVE_DOWN_IN_SCAFFOLDING,
+                FLAT_DIGGER,
                 FORCE_BREAKING_COOLDOWN,
                 HIGHLIGHT_LAVA_SOURCE,
                 HIGHLIGHT_WANDERING_TRADER,
-                PREVENT_EXPLODING_BED,
+                HIGHLIGHT_PERSISTENT_MOB,
+                PREVENT_INTENTIONAL_GAME_DESIGN,
                 REAL_SNEAKING,
+                REMOVE_BREAKING_COOLDOWN,
                 WORLD_EATER_MINE_HELPER
         );
 
@@ -111,6 +127,8 @@ public class Configs implements IConfigHandler {
 
     public static class Lists {
         private static final String PREFIX = String.format("%s.config.lists", ModInfo.MOD_ID);
+        public static final ConfigStringList BREAK_BLOCK_BLACKLIST = new TranslatableConfigStringList(PREFIX,
+                "breakBlockBlackList", ImmutableList.of("minecraft:budding_amethyst", "_bud"));
         public static final ConfigStringList BREAK_SCAFFOLDING_WHITELIST = new TranslatableConfigStringList(PREFIX,
                 "breakScaffoldingWhiteList", ImmutableList.of("minecraft:air", "minecraft:scaffolding"));
         public static final ConfigStringList MOVE_DOWN_IN_SCAFFOLDING_WHITELIST = new TranslatableConfigStringList(PREFIX,
@@ -118,6 +136,7 @@ public class Configs implements IConfigHandler {
         public static final ConfigStringList WORLD_EATER_MINE_HELPER_WHITELIST = new TranslatableConfigStringList(PREFIX,
                 "worldEaterMineHelperWhitelist", ImmutableList.of("_ore", "minecraft:ancient_debris", "minecraft:obsidian"));
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
+                BREAK_BLOCK_BLACKLIST,
                 BREAK_SCAFFOLDING_WHITELIST,
                 MOVE_DOWN_IN_SCAFFOLDING_WHITELIST,
                 WORLD_EATER_MINE_HELPER_WHITELIST
