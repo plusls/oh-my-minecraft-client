@@ -135,13 +135,13 @@ public class HighlightWaypointUtil {
 
                 switch (key) {
                     case "x":
-                        x = Integer.parseInt(value);
+                        x = Integer.parseInt(value.replace(" ", ""));
                         break;
                     case "y":
-                        y = Integer.parseInt(value);
+                        y = Integer.parseInt(value.replace(" ", ""));
                         break;
                     case "z":
-                        z = Integer.parseInt(value);
+                        z = Integer.parseInt(value.replace(" ", ""));
                         break;
                 }
             }
