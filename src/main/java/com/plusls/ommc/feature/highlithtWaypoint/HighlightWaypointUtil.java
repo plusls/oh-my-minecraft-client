@@ -2,7 +2,6 @@ package com.plusls.ommc.feature.highlithtWaypoint;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
-import com.plusls.ommc.ModInfo;
 import com.plusls.ommc.config.Configs;
 import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -10,9 +9,11 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.option.Option;
-import net.minecraft.client.render.*;
+import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.packet.s2c.play.PlayerRespawnS2CPacket;
@@ -167,7 +168,6 @@ public class HighlightWaypointUtil {
 
     public static boolean parseWaypointsText(Text chat, LiteralText result) {
         String message = chat.getString();
-        ModInfo.LOGGER.warn(message);
         ArrayList<String> waypointStrings = getWaypointStrings(message);
         Style oldStyle = chat.getStyle();
         boolean haveOldEvent = oldStyle.getClickEvent() != null || oldStyle.getHoverEvent() != null;
