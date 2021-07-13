@@ -23,9 +23,13 @@ Minecraft client will not to clear chat history and input history.
 
 Add command `/highlightWaypoint` to highlight waypoint.
 
-Auto parse waypoint in chat with voxelmap's format (like `[x:1, y: 2, z: 3]`，only work when not install voxelmap).
+Auto parse waypoint in chat with voxelmap's format (like `[x:1, y:2, z:3]`，`(x:1, y:2, z:3)`, `[1, 2, 3]`, `(1, 2, 3)`).
 
 Can delete it with hotkey.
+
+### Force Parse Waypoint From Chat
+
+Force parse waypoint from chat (such it will override the clickevent of rtext).
 
 ### Sort Inventory
 
