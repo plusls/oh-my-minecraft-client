@@ -2,7 +2,6 @@ package com.plusls.ommc.feature.highlithtWaypoint;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
-import com.plusls.ommc.ModInfo;
 import com.plusls.ommc.config.Configs;
 import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -160,7 +159,6 @@ public class HighlightWaypointUtil {
 
     public static boolean parseWaypointsText(Text chat, LiteralText result) {
         String message = chat.getString();
-        ModInfo.LOGGER.warn(message);
         ArrayList<String> waypointStrings = getWaypointStrings(message);
         Style oldStyle = chat.getStyle();
         boolean haveOldEvent = oldStyle.getClickEvent() != null || oldStyle.getHoverEvent() != null;
