@@ -39,6 +39,7 @@ public class Configs implements IConfigHandler {
         public static final ConfigBoolean DEBUG = new TranslatableConfigBoolean(PREFIX, "debug", false);
         public static final ConfigBoolean DONT_CLEAR_CHAT_HISTORY = new TranslatableConfigBoolean(PREFIX, "dontClearChatHistory", false);
         public static final ConfigHotkey CLEAR_WAYPOINT = new TranslatableConfigHotkey(PREFIX, "clearWaypoint", "C");
+        public static final ConfigBoolean FORCE_PARSE_WAYPOINT_FROM_CHAT = new TranslatableConfigBoolean(PREFIX, "forceParseWaypointFromChat", false);
         public static final ConfigHotkey SORT_INVENTORY = new TranslatableConfigHotkey(PREFIX, "sortInventory", "R");
         public static final ConfigBoolean SORT_INVENTORY_SUPPORT_EMPTY_SHULKER_BOX_STACK = new TranslatableConfigBoolean(PREFIX, "sortInventorySupportEmptyShulkerBoxStack", false);
 
@@ -47,6 +48,7 @@ public class Configs implements IConfigHandler {
                 DEBUG,
                 DONT_CLEAR_CHAT_HISTORY,
                 CLEAR_WAYPOINT,
+                FORCE_PARSE_WAYPOINT_FROM_CHAT,
                 SORT_INVENTORY,
                 SORT_INVENTORY_SUPPORT_EMPTY_SHULKER_BOX_STACK
         );

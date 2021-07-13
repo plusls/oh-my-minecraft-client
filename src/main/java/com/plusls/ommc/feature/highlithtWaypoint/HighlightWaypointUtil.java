@@ -1,15 +1,14 @@
 package com.plusls.ommc.feature.highlithtWaypoint;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.plusls.ommc.ModInfo;
+import com.plusls.ommc.config.Configs;
 import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.option.Option;
 import net.minecraft.client.render.*;
 import net.minecraft.client.texture.Sprite;
@@ -35,7 +34,11 @@ public class HighlightWaypointUtil {
 
     @Nullable
     public static BlockPos highlightPos;
-    public static Pattern pattern = Pattern.compile("\\[(\\w+\\s*:\\s*[-#]?[^\\[\\]]+)(,\\s*\\w+\\s*:\\s*[-#]?[^\\[\\]]+)+\\]", Pattern.CASE_INSENSITIVE);
+    public static Pattern pattern1 = Pattern.compile("\\[(\\w+\\s*:\\s*[-#]?[^\\[\\]]+)(,\\s*\\w+\\s*:\\s*[-#]?[^\\[\\]]+)+\\]", Pattern.CASE_INSENSITIVE);
+    public static Pattern pattern2 = Pattern.compile("\\((\\w+\\s*:\\s*[-#]?[^\\[\\]]+)(,\\s*\\w+\\s*:\\s*[-#]?[^\\[\\]]+)+\\)", Pattern.CASE_INSENSITIVE);
+    public static Pattern pattern3 = Pattern.compile("\\[(-?\\d+)(,\\s*-?\\d+)(,\\s*-?\\d+)\\]", Pattern.CASE_INSENSITIVE);
+    public static Pattern pattern4 = Pattern.compile("\\((-?\\d+)(,\\s*-?\\d+)(,\\s*-?\\d+)\\)", Pattern.CASE_INSENSITIVE);
+
     private static final String HIGHLIGHT_COMMAND = "highlightWaypoint";
     @Nullable
     public static RegistryKey<World> currentWorld = null;
@@ -83,18 +86,25 @@ public class HighlightWaypointUtil {
 
     public static ArrayList<String> getWaypointStrings(String message) {
         ArrayList<String> ret = new ArrayList<>();
-        if (message.contains("[") && message.contains("]")) {
-            Matcher matcher = pattern.matcher(message);
-            while (matcher.find()) {
-                String match = matcher.group();
-                BlockPos pos = parseWaypoint(match.substring(1, match.length() - 1));
-                if (pos == null) {
-                    continue;
-                }
-                ret.add(match);
-            }
+        if ((message.contains("[") && message.contains("]")) || (message.contains("(") && message.contains(")"))) {
+            getWaypointStringsByPattern(message, ret, pattern1);
+            getWaypointStringsByPattern(message, ret, pattern2);
+            getWaypointStringsByPattern(message, ret, pattern3);
+            getWaypointStringsByPattern(message, ret, pattern4);
         }
         return ret;
+    }
+
+    private static void getWaypointStringsByPattern(String message, ArrayList<String> ret, Pattern pattern) {
+        Matcher matcher = pattern.matcher(message);
+        while (matcher.find()) {
+            String match = matcher.group();
+            BlockPos pos = parseWaypoint(match.substring(1, match.length() - 1));
+            if (pos == null) {
+                continue;
+            }
+            ret.add(match);
+        }
     }
 
     @Nullable
@@ -104,15 +114,27 @@ public class HighlightWaypointUtil {
         Integer z = null;
         int y = 64;
         try {
-            for (String pair : pairs) {
-                int splitIndex = pair.indexOf(":");
-                if (splitIndex == -1) continue;
-                String key = pair.substring(0, splitIndex).toLowerCase().trim();
-                String value = pair.substring(splitIndex + 1).trim();
+            for (int i = 0; i < pairs.length; ++i) {
+                int splitIndex = pairs[i].indexOf(":");
+                String key, value;
+                if (splitIndex == -1 && pairs.length == 3) {
+                    if (i == 0) {
+                        key = "x";
+                    } else if (i == 1) {
+                        key = "y";
+                    } else {
+                        key = "z";
+                    }
+                    value = pairs[i];
+                } else {
+                    key = pairs[i].substring(0, splitIndex).toLowerCase().trim();
+                    value = pairs[i].substring(splitIndex + 1).trim();
+                }
+
                 switch (key) {
-                    case "x" -> x = Integer.parseInt(value);
-                    case "y" -> y = Integer.parseInt(value);
-                    case "z" -> z = Integer.parseInt(value);
+                    case "x" -> x = Integer.parseInt(value.strip());
+                    case "y" -> y = Integer.parseInt(value.strip());
+                    case "z" -> z = Integer.parseInt(value.strip());
                 }
             }
 
@@ -124,17 +146,30 @@ public class HighlightWaypointUtil {
         return new BlockPos(x, y, z);
     }
 
+    public static boolean parseWaypoints(Text chat, LiteralText result) {
+        boolean ret = false;
+        if (chat.getSiblings().size() > 0) {
+            for (Text text : chat.getSiblings()) {
+                ret |= parseWaypoints(text, result);
+            }
+        } else {
+            ret = parseWaypointsText(chat, result);
+        }
+        return ret;
+    }
 
-    public static boolean parseWaypoints(Text chat) {
+    public static boolean parseWaypointsText(Text chat, LiteralText result) {
         String message = chat.getString();
+        ModInfo.LOGGER.warn(message);
         ArrayList<String> waypointStrings = getWaypointStrings(message);
-        if (waypointStrings.size() > 0) {
+        Style oldStyle = chat.getStyle();
+        boolean haveOldEvent = oldStyle.getClickEvent() != null || oldStyle.getHoverEvent() != null;
+        if (waypointStrings.size() > 0 && (!haveOldEvent || Configs.Generic.FORCE_PARSE_WAYPOINT_FROM_CHAT.getBooleanValue())) {
             ArrayList<LiteralText> texts = new ArrayList<>();
             int prevIdx = 0, currentIdx;
             for (String waypointString : waypointStrings) {
                 currentIdx = message.indexOf(waypointString, prevIdx);
                 texts.add(new LiteralText(message.substring(prevIdx, currentIdx)));
-
                 LiteralText clickableWaypoint = new LiteralText(waypointString);
                 Style chatStyle = clickableWaypoint.getStyle();
                 BlockPos pos = Objects.requireNonNull(parseWaypoint(waypointString.substring(1, waypointString.length() - 1)));
@@ -144,7 +179,6 @@ public class HighlightWaypointUtil {
                                 String.format("/%s %d %d %d", HIGHLIGHT_COMMAND, pos.getX(), pos.getY(), pos.getZ())))
                         .withColor(Formatting.GREEN).withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hover));
                 clickableWaypoint.setStyle(chatStyle);
-
                 texts.add(clickableWaypoint);
                 prevIdx = currentIdx + waypointString.length();
             }
@@ -155,9 +189,10 @@ public class HighlightWaypointUtil {
             for (LiteralText text : texts) {
                 finalText.append(text);
             }
-            MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(finalText);
+            result.append(finalText);
             return true;
         }
+        result.append(chat);
         return false;
     }
 

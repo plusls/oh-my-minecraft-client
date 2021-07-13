@@ -15,7 +15,7 @@
     "feature.forceBreakingCooldown.MixinClientPlayerInteractionManager",
     "feature.highlightPersistentMob.MixinMinecraftClient",
     "feature.highlightWanderingTrader.MixinMinecraftClient",
-    "feature.highlightWaypoint.MixinChatHudListener",
+    "feature.highlightWaypoint.MixinChatHud",
     "feature.highlightWaypoint.MixinPlayerRespawnS2CPacket",
     "feature.preventIntentionalGameDesign.MixinClientPlayerInteractionManager",
     "feature.removeBreakCooldown.MixinClientPlayerInteractionManager",
