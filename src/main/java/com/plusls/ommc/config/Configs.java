@@ -67,6 +67,7 @@ public class Configs implements IConfigHandler {
             });
             CLEAR_WAYPOINT.getKeybind().setCallback((keyAction, iKeybind) -> {
                 HighlightWaypointUtil.highlightPos = null;
+                HighlightWaypointUtil.lastBeamTime = 0;
                 return true;
             });
             ((MyKeybindMulti) SORT_INVENTORY.getKeybind()).allowInScreen();

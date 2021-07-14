@@ -2,6 +2,7 @@ package com.plusls.ommc.feature.highlithtWaypoint;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.plusls.ommc.ModInfo;
 import com.plusls.ommc.config.Configs;
 import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -9,10 +10,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.option.Option;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.*;
 import net.minecraft.client.render.block.entity.BeaconBlockEntityRenderer;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
@@ -21,6 +19,7 @@ import net.minecraft.network.packet.s2c.play.PlayerRespawnS2CPacket;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
@@ -61,6 +60,7 @@ public class HighlightWaypointUtil {
                                                 lastBeamTime = System.currentTimeMillis() + 10 * 1000;
                                             } else {
                                                 highlightPos = new BlockPos(x, y, z);
+                                                lastBeamTime = 0;
                                             }
                                             return 0;
                                         })
@@ -179,6 +179,11 @@ public class HighlightWaypointUtil {
         Style oldStyle = chat.getStyle();
         boolean haveOldEvent = oldStyle.getClickEvent() != null || oldStyle.getHoverEvent() != null;
         if (waypointStrings.size() > 0 && (!haveOldEvent || Configs.Generic.FORCE_PARSE_WAYPOINT_FROM_CHAT.getBooleanValue())) {
+            TextColor color = oldStyle.getColor();
+            ModInfo.LOGGER.debug("text: {} color: {}", chat.getString(), color);
+            if (color == null) {
+                color = TextColor.fromFormatting(Formatting.GREEN);
+            }
             ArrayList<LiteralText> texts = new ArrayList<>();
             int prevIdx = 0, currentIdx;
             for (String waypointString : waypointStrings) {
@@ -191,7 +196,7 @@ public class HighlightWaypointUtil {
                 chatStyle = chatStyle.withClickEvent(
                         new ClickEvent(ClickEvent.Action.RUN_COMMAND,
                                 String.format("/%s %d %d %d", HIGHLIGHT_COMMAND, pos.getX(), pos.getY(), pos.getZ())))
-                        .withColor(Formatting.GREEN).withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hover));
+                        .withColor(color).withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hover));
                 clickableWaypoint.setStyle(chatStyle);
                 texts.add(clickableWaypoint);
                 prevIdx = currentIdx + waypointString.length();
@@ -253,6 +258,64 @@ public class HighlightWaypointUtil {
         }
     }
 
+    // code from BeaconBlockEntityRenderer
+    public static void renderBeam(MatrixStack matrices, VertexConsumerProvider vertexConsumers, Identifier textureId, float tickDelta, float heightScale, long worldTime, int yOffset, int maxY, float[] color, float innerRadius, float outerRadius) {
+        int i = yOffset + maxY;
+        matrices.push();
+        matrices.translate(0.5D, 0.0D, 0.5D);
+        float f = (float)Math.floorMod(worldTime, 40L) + tickDelta;
+        float g = maxY < 0 ? f : -f;
+        float h = MathHelper.fractionalPart(g * 0.2F - (float)MathHelper.floor(g * 0.1F));
+        float j = color[0];
+        float k = color[1];
+        float l = color[2];
+        matrices.push();
+        matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(f * 2.25F - 45.0F));
+        float y = 0.0F;
+        float ab = 0.0F;
+        float ac = -innerRadius;
+        float r = 0.0F;
+        float s = 0.0F;
+        float t = -innerRadius;
+        float ag = 0.0F;
+        float ah = 1.0F;
+        float ai = -1.0F + h;
+        float aj = (float)maxY * heightScale * (0.5F / innerRadius) + ai;
+        method_22741(matrices, vertexConsumers.getBuffer(RenderLayer.getTextSeeThrough(textureId)), j, k, l, 1.0F, yOffset, i, 0.0F, innerRadius, innerRadius, 0.0F, ac, 0.0F, 0.0F, t, 0.0F, 1.0F, aj, ai);
+        matrices.pop();
+        y = -outerRadius;
+        float z = -outerRadius;
+        ab = -outerRadius;
+        ac = -outerRadius;
+        ag = 0.0F;
+        ah = 1.0F;
+        ai = -1.0F + h;
+        aj = (float)maxY * heightScale + ai;
+        method_22741(matrices, vertexConsumers.getBuffer(RenderLayer.getBeaconBeam(textureId, true)), j, k, l, 0.125F, yOffset, i, y, z, outerRadius, ab, ac, outerRadius, outerRadius, outerRadius, 0.0F, 1.0F, aj, ai);
+        matrices.pop();
+    }
+
+    private static void method_22741(MatrixStack matrixStack, VertexConsumer vertexConsumer, float f, float g, float h, float i, int j, int k, float l, float m, float n, float o, float p, float q, float r, float s, float t, float u, float v, float w) {
+        MatrixStack.Entry entry = matrixStack.peek();
+        Matrix4f matrix4f = entry.getModel();
+        Matrix3f matrix3f = entry.getNormal();
+        method_22740(matrix4f, matrix3f, vertexConsumer, f, g, h, i, j, k, l, m, n, o, t, u, v, w);
+        method_22740(matrix4f, matrix3f, vertexConsumer, f, g, h, i, j, k, r, s, p, q, t, u, v, w);
+        method_22740(matrix4f, matrix3f, vertexConsumer, f, g, h, i, j, k, n, o, r, s, t, u, v, w);
+        method_22740(matrix4f, matrix3f, vertexConsumer, f, g, h, i, j, k, p, q, l, m, t, u, v, w);
+    }
+
+    private static void method_22740(Matrix4f matrix4f, Matrix3f matrix3f, VertexConsumer vertexConsumer, float f, float g, float h, float i, int j, int k, float l, float m, float n, float o, float p, float q, float r, float s) {
+        method_23076(matrix4f, matrix3f, vertexConsumer, f, g, h, i, k, l, m, q, r);
+        method_23076(matrix4f, matrix3f, vertexConsumer, f, g, h, i, j, l, m, q, s);
+        method_23076(matrix4f, matrix3f, vertexConsumer, f, g, h, i, j, n, o, p, s);
+        method_23076(matrix4f, matrix3f, vertexConsumer, f, g, h, i, k, n, o, p, r);
+    }
+
+    private static void method_23076(Matrix4f matrix4f, Matrix3f matrix3f, VertexConsumer vertexConsumer, float f, float g, float h, float i, int j, float k, float l, float m, float n) {
+        vertexConsumer.vertex(matrix4f, k, (float)j, l).color(f, g, h, i).texture(m, n).overlay(OverlayTexture.DEFAULT_UV).light(15728880).normal(matrix3f, 0.0F, 1.0F, 0.0F).next();
+    }
+
     public static void renderLabel(MatrixStack matrixStack, double distance, Entity cameraEntity, float tickDelta, boolean isPointedAt, BlockPos pos) {
         MinecraftClient mc = MinecraftClient.getInstance();
 
@@ -279,7 +342,7 @@ public class HighlightWaypointUtil {
             // 画信标光柱
             VertexConsumerProvider.Immediate vertexConsumerProvider0 = mc.getBufferBuilders().getEffectVertexConsumers();
             float[] color = {1.0f, 0.0f, 0.0f};
-            BeaconBlockEntityRenderer.renderBeam(matrixStack, vertexConsumerProvider0, BeaconBlockEntityRenderer.BEAM_TEXTURE,
+            renderBeam(matrixStack, vertexConsumerProvider0, BeaconBlockEntityRenderer.BEAM_TEXTURE,
                     tickDelta, 1.0f, Objects.requireNonNull(mc.world).getTime(), (int) (baseY - 512), 1024, color, 0.2F, 0.25F);
             vertexConsumerProvider0.draw();
 
