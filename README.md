@@ -3,6 +3,7 @@
 [![Issues](https://img.shields.io/github/issues/plusls/oh-my-minecraft-client.svg)](https://github.com/plusls/oh-my-minecraft-client/issues)
 [![MC Versions](http://cf.way2muchnoise.eu/versions/For%20MC_454900_all.svg)](https://www.curseforge.com/minecraft/mc-mods/oh-my-minecraft-client)
 [![CurseForge](http://cf.way2muchnoise.eu/full_454900_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/oh-my-minecraft-client)
+[![Github Release Downloads](https://img.shields.io/github/downloads/plusls/oh-my-minecraft-client/total?label=Github%20Release%20Downloads&style=flat-square)](https://github.com/plusls/oh-my-minecraft-client/releases)
 
 [>>> English <<<](./README_EN.md)
 
@@ -26,6 +27,10 @@ Make Minecraft Client Great Again!
 添加了命令 `/highlightWaypoint` 来高亮坐标点
 
 会自动解析聊天栏的坐标点（形如 `[x:1, y:2, z:3]`，`(x:1, y:2, z:3)`, `[1, 2, 3]`, `(1, 2, 3)`）
+
+效果如下：
+
+![highlightWaypoint](./docs/img/highlightWaypoint.png)
 
 可用快捷键取消高亮
 

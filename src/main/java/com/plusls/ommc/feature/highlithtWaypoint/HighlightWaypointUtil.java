@@ -13,6 +13,7 @@ import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.block.entity.BeaconBlockEntityRenderer;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
@@ -36,6 +37,7 @@ public class HighlightWaypointUtil {
 
     @Nullable
     public static BlockPos highlightPos;
+    public static long lastBeamTime = 0;
     public static Pattern pattern1 = Pattern.compile("\\[(\\w+\\s*:\\s*[-#]?[^\\[\\]]+)(,\\s*\\w+\\s*:\\s*[-#]?[^\\[\\]]+)+\\]", Pattern.CASE_INSENSITIVE);
     public static Pattern pattern2 = Pattern.compile("\\((\\w+\\s*:\\s*[-#]?[^\\[\\]]+)(,\\s*\\w+\\s*:\\s*[-#]?[^\\[\\]]+)+\\)", Pattern.CASE_INSENSITIVE);
     public static Pattern pattern3 = Pattern.compile("\\[(-?\\d+)(,\\s*-?\\d+)(,\\s*-?\\d+)\\]", Pattern.CASE_INSENSITIVE);
@@ -54,7 +56,12 @@ public class HighlightWaypointUtil {
                                             int x = IntegerArgumentType.getInteger(context, "x");
                                             int y = IntegerArgumentType.getInteger(context, "y");
                                             int z = IntegerArgumentType.getInteger(context, "z");
-                                            highlightPos = new BlockPos(x, y, z);
+                                            BlockPos pos = new BlockPos(x, y, z);
+                                            if (pos.equals(highlightPos)) {
+                                                lastBeamTime = System.currentTimeMillis() + 10 * 1000;
+                                            } else {
+                                                highlightPos = new BlockPos(x, y, z);
+                                            }
                                             return 0;
                                         })
                         )
@@ -225,6 +232,8 @@ public class HighlightWaypointUtil {
     }
 
     public static void drawWaypoint(MatrixStack matrixStack, float tickDelta) {
+        // 多线程可能会出锅？
+        BlockPos highlightPos = HighlightWaypointUtil.highlightPos;
         if (highlightPos != null) {
             MinecraftClient mc = MinecraftClient.getInstance();
             Entity cameraEntity = Objects.requireNonNull(mc.getCameraEntity());
@@ -264,7 +273,23 @@ public class HighlightWaypointUtil {
         float scale = (float) (adjustedDistance * 0.1f + 1.0f) * 0.0266f;
         matrixStack.push();
         // 当前绘制位置是以玩家为中心的，转移到目的地
-        matrixStack.translate(baseX + 0.5f, baseY + 0.5f, baseZ + 0.5f);
+        matrixStack.translate(baseX, baseY, baseZ);
+
+        if (lastBeamTime >= System.currentTimeMillis()) {
+            // 画信标光柱
+            VertexConsumerProvider.Immediate vertexConsumerProvider0 = mc.getBufferBuilders().getEffectVertexConsumers();
+            float[] color = {1.0f, 0.0f, 0.0f};
+            BeaconBlockEntityRenderer.renderBeam(matrixStack, vertexConsumerProvider0, BeaconBlockEntityRenderer.BEAM_TEXTURE,
+                    tickDelta, 1.0f, Objects.requireNonNull(mc.world).getTime(), (int) (baseY - 512), 1024, color, 0.2F, 0.25F);
+            vertexConsumerProvider0.draw();
+
+            // 画完后会关闭半透明，需要手动打开
+            RenderSystem.enableBlend();
+        }
+
+        // 移动到方块中心
+        matrixStack.translate(0.5f, 0.5f, 0.5f);
+
         // 在玩家正对着的平面进行绘制
         matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-cameraEntity.yaw));
         matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(mc.getEntityRenderDispatcher().camera.getPitch()));

@@ -25,6 +25,10 @@ Add command `/highlightWaypoint` to highlight waypoint.
 
 Auto parse waypoint in chat with voxelmap's format (like `[x:1, y:2, z:3]`，`(x:1, y:2, z:3)`, `[1, 2, 3]`, `(1, 2, 3)`).
 
+It looks like:
+
+![highlightWaypoint](./docs/img/highlightWaypoint.png)
+
 Can delete it with hotkey.
 
 ### Force Parse Waypoint From Chat
