@@ -27,6 +27,10 @@ Make Minecraft Client Great Again!
 
 会自动解析聊天栏的坐标点（形如 `[x:1, y:2, z:3]`，`(x:1, y:2, z:3)`, `[1, 2, 3]`, `(1, 2, 3)`）
 
+效果如下：
+
+![highlightWaypoint](./docs/img/highlightWaypoint.png)
+
 可用快捷键取消高亮
 
 ### 强制从聊天中解析路径点
