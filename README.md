@@ -3,6 +3,7 @@
 [![Issues](https://img.shields.io/github/issues/plusls/oh-my-minecraft-client.svg)](https://github.com/plusls/oh-my-minecraft-client/issues)
 [![MC Versions](http://cf.way2muchnoise.eu/versions/For%20MC_454900_all.svg)](https://www.curseforge.com/minecraft/mc-mods/oh-my-minecraft-client)
 [![CurseForge](http://cf.way2muchnoise.eu/full_454900_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/oh-my-minecraft-client)
+[![Github Release Downloads](https://img.shields.io/github/downloads/plusls/oh-my-minecraft-client/total?label=Github%20Release%20Downloads&style=flat-square)](https://github.com/plusls/oh-my-minecraft-client/releases)
 
 [>>> English <<<](./README_EN.md)
 
