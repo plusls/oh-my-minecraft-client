@@ -16,7 +16,7 @@ import java.util.List;
 
 @Mixin(MinecraftClient.class)
 public class MixinMinecraftClient {
-    private static final List<String> itemBlackList = Arrays.asList("sword", "bow", "trident", "axe");
+    private static final List<String> itemBlackList = Arrays.asList("sword", "bow", "trident", "axe", "fishing_rod");
 
     @Inject(method = "hasOutline", at = @At(value = "RETURN"), cancellable = true)
     private void checkWanderingTraderEntity(Entity entity, CallbackInfoReturnable<Boolean> cir) {
