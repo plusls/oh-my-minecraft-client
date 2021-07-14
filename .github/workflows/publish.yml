@@ -7,9 +7,7 @@ jobs:
   build:
     strategy:
       matrix:
-        # Use these Java versions
         java: [ 16 ]
-        # and run on both Linux and Windows
         os: [ ubuntu-20.04 ]
         branch: [ 1.16, 1.17 ]
     runs-on: ${{ matrix.os }}
@@ -41,3 +39,20 @@ jobs:
         with:
           files: 'build/libs/*;LICENSE'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Find correct JAR
+        id: findjar
+        run: |
+          output="$(find build/libs/ ! -name "*-dev.jar" ! -name "*-sources.jar" -type f -printf "%f\n")"
+          echo "::set-output name=jarname::$output"
+      - name: Upload to Curseforge
+        uses: itsmeow/curseforge-upload@v3
+        with:
+          token: ${{ secrets.CF_API_TOKEN }}
+          project_id: 454900
+          game_endpoint: minecraft
+          file_path: build/libs/${{ steps.findjar.outputs.jarname }}
+          changelog_type: markdown
+          changelog: ${{ github.event.release.body }}
+          # 1.16.5:8203, 1.17:8516, fabric:7499
+          game_versions: ${{ fromJson('{"1.16":"8203","1.17":"8516"}')[matrix.branch] }}, 7499
+          release_type: release
