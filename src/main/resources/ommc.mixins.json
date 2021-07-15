@@ -10,6 +10,7 @@
     "feature.disableBreakBlock.MixinClientPlayerInteractionManager",
     "feature.disableBreakScaffolding.MixinClientPlayerInteractionManager",
     "feature.disableMoveDownInScaffolding.MixinScaffoldingBlock",
+    "feature.disablePistonPushEntity.MixinPistonBlockEntity",
     "feature.dontClearChatHistory.MixinChatHud",
     "feature.flatDigger.MixinClientPlayerInteractionManager",
     "feature.forceBreakingCooldown.MixinClientPlayerInteractionManager",

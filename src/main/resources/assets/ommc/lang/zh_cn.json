@@ -25,6 +25,8 @@
   "ommc.config.feature_toggle.disableBreakScaffolding.comment": "玩家只有在手持 §6破坏脚手架白名单§r 中的物品时才能破坏脚手架",
   "ommc.config.feature_toggle.disableMoveDownInScaffolding.name": "禁止在脚手架中下降",
   "ommc.config.feature_toggle.disableMoveDownInScaffolding.comment": "玩家只有在手持 §6在脚手架中下降白名单§r 中的物品时才能在脚手架下降",
+  "ommc.config.feature_toggle.disablePistonPushEntity.name": "禁止活塞推动实体",
+  "ommc.config.feature_toggle.disablePistonPushEntity.comment": "通过阻止客户端活塞推动实体（玩家除外）来减少活塞卡顿（比如地毯复制机），会导致一些实体位置渲染错误",
   "ommc.config.feature_toggle.flatDigger.name": "平坦挖掘",
   "ommc.config.feature_toggle.flatDigger.comment": "只有在潜行时才能挖掘比自己低的方块",
   "ommc.config.feature_toggle.forceBreakingCooldown.name": "强制添加破坏冷却",
