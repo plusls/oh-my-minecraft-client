@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(PistonBlockEntity.class)
@@ -18,13 +19,14 @@ public class MixinPistonBlockEntity {
     @Redirect(method = "pushEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getOtherEntities(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/math/Box;)Ljava/util/List;", ordinal = 0))
     private static List<Entity> removeNoPlayerEntity(World world, Entity except, Box box) {
         if (world.isClient() && Configs.FeatureToggle.DISABLE_PISTON_PUSH_ENTITY.getBooleanValue()) {
+            List<Entity> ret = new ArrayList<>();
             ClientPlayerEntity playerEntity = MinecraftClient.getInstance().player;
             if (playerEntity != null && !playerEntity.isSpectator() &&
                     playerEntity.getBoundingBox().intersects(box)
             ) {
-                return List.of(playerEntity);
+                ret.add(playerEntity);
             }
-            return List.of();
+            return ret;
         }
         return world.getOtherEntities(except, box);
     }
