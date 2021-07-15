@@ -57,6 +57,10 @@ You can break the scaffolding with the items in **breakScaffoldingWhiteList**.
 
 You can move down in scaffolding when the item of **moveDownInScaffoldingWhiteList** in your hand.
 
+### Disable Piston Push Entity
+
+Prevent piston push entities (except the player) to reduce piston lag (such as the carpet duper), it will cause entities pos error when entity push by piston.
+
 ### Forced Break Cooling
 
 Players will have a 5GT cooldown after breaking the block instantaneously, which will prevent you from accidentally
