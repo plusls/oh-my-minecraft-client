@@ -70,7 +70,9 @@ destroying components with the Haste 2 effect.
 
 Any lava source will be highlighted with a special texture.
 
-We also offer a 32x resource pack ([Download](https://github.com/Hendrix-Shen/oh-my-minecraft-client/raw/1.17/docs/file/ommc-highlightLavaSource[32x].zip)).
+We have also provided some optional resource packs for this purpose. 
+- [ommc-highlightLavaSource[32x](static)](https://github.com/plusls/oh-my-minecraft-client/raw/1.17/docs/file/ommc-highlightLavaSource[32x](static).zip) by [Hendrix-Shen](https://github.com/Hendrix-Shen).
+- [ommc-highlightLavaSource[32x](dynamic)](https://github.com/plusls/oh-my-minecraft-client/raw/1.17/docs/file/ommc-highlightLavaSource[32x](dynamic).zip) by [Hendrix-Shen](https://github.com/Hendrix-Shen).
 
 It looks like:
 
