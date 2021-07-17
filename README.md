@@ -72,6 +72,8 @@ Make Minecraft Client Great Again!
 
 岩浆源将会使用特殊的贴图高亮
 
+我们提供了一个 32x 的材质 ([下载](https://github.com/Hendrix-Shen/oh-my-minecraft-client/raw/1.17/docs/file/ommc-highlightLavaSource[32x].zip))
+
 效果如下：
 
 ![highlightLavaSourceOff](./docs/img/highlightLavaSourceOff.png)
@@ -136,6 +138,7 @@ Make Minecraft Client Great Again!
 + 感谢 [NextPage](https://github.com/Next-Page-Vi) 提供的英文翻译，岩浆材质修改以及测试工作
 + 感谢 [水星嗷](https://space.bilibili.com/18525909) 提供的[矿物高亮的灵感以及样例](https://www.bilibili.com/video/BV1w64y1D7wP)
 + 感谢 [voxelmap](https://www.curseforge.com/minecraft/mc-mods/voxelmap) 提供的高亮坐标点的实现
++ 感谢 [Hendrix-Shen](https://github.com/Hendrix-Shen) 提供的 32x 岩浆高亮材质
 
 ## License
 

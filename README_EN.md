@@ -70,6 +70,8 @@ destroying components with the Haste 2 effect.
 
 Any lava source will be highlighted with a special texture.
 
+We also offer a 32x resource pack ([Download](https://github.com/Hendrix-Shen/oh-my-minecraft-client/raw/1.17/docs/file/ommc-highlightLavaSource[32x].zip)).
+
 It looks like:
 
 ![highlightLavaSourceOff](./docs/img/highlightLavaSourceOff.png)
@@ -138,6 +140,7 @@ Integrated server lan port, 0 to use default port.
 + Thanks to [水星嗷](https://space.bilibili.com/18525909) for
   providing [the idea of highlighting ores and resourcepack](https://www.bilibili.com/video/BV1w64y1D7wP).
 + Thanks to [voxelmap](https://www.curseforge.com/minecraft/mc-mods/voxelmap) for providing the code of highlight waypoint.
++ Thanks to [Hendrix-Shen](https://github.com/Hendrix-Shen) for providing highlightLavaSource x32 resource pack.
 
 ## License
 
