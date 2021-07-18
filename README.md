@@ -73,8 +73,8 @@ Make Minecraft Client Great Again!
 岩浆源将会使用特殊的贴图高亮
 
 为此我们还提供了一些可选的资源包：
-+ [ommc-highlightLavaSource[32x](static)](https://github.com/plusls/oh-my-minecraft-client/raw/1.17/docs/file/ommc-highlightLavaSource[32x](static).zip) 提供者：[Hendrix-Shen](https://github.com/Hendrix-Shen).
-+ [ommc-highlightLavaSource[32x](dynamic)](https://github.com/plusls/oh-my-minecraft-client/raw/1.17/docs/file/ommc-highlightLavaSource[32x](dynamic).zip) 提供者：[Hendrix-Shen](https://github.com/Hendrix-Shen).
++ [ommc-highlightLavaSource\[32x\](static)](https://github.com/plusls/oh-my-minecraft-client/raw/1.17/docs/file/ommc-highlightLavaSource[32x](static).zip) 提供者：[Hendrix-Shen](https://github.com/Hendrix-Shen).
++ [ommc-highlightLavaSource\[32x\](dynamic)](https://github.com/plusls/oh-my-minecraft-client/raw/1.17/docs/file/ommc-highlightLavaSource[32x](dynamic).zip) 提供者：[Hendrix-Shen](https://github.com/Hendrix-Shen).
 + [ommc-xk(32x)](https://github.com/plusls/oh-my-minecraft-client/raw/1.17/docs/file/ommc-xk(32x).zip) 提供者：[SunnySlopes](https://github.com/SunnySlopes).
 + [ommc-faithful(static)](https://github.com/plusls/oh-my-minecraft-client/raw/1.17/docs/file/ommc-faithful(static).zip) 提供者：[SunnySlopes](https://github.com/SunnySlopes).
 + [ommc-faithful(dynamic)](https://github.com/plusls/oh-my-minecraft-client/raw/1.17/docs/file/ommc-faithful(dynamic).zip) 提供者：[SunnySlopes](https://github.com/SunnySlopes).
