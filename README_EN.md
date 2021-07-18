@@ -71,8 +71,8 @@ destroying components with the Haste 2 effect.
 Any lava source will be highlighted with a special texture.
 
 We have also provided some optional resource packs for this purpose.
-+ [ommc-highlightLavaSource[32x](static)](https://github.com/plusls/oh-my-minecraft-client/raw/1.17/docs/file/ommc-highlightLavaSource[32x](static).zip) by [Hendrix-Shen](https://github.com/Hendrix-Shen).
-+ [ommc-highlightLavaSource[32x](dynamic)](https://github.com/plusls/oh-my-minecraft-client/raw/1.17/docs/file/ommc-highlightLavaSource[32x](dynamic).zip) by [Hendrix-Shen](https://github.com/Hendrix-Shen).
++ [ommc-highlightLavaSource\[32x\](static)](https://github.com/plusls/oh-my-minecraft-client/raw/1.17/docs/file/ommc-highlightLavaSource[32x](static).zip) by [Hendrix-Shen](https://github.com/Hendrix-Shen).
++ [ommc-highlightLavaSource\[32x\](dynamic)](https://github.com/plusls/oh-my-minecraft-client/raw/1.17/docs/file/ommc-highlightLavaSource[32x](dynamic).zip) by [Hendrix-Shen](https://github.com/Hendrix-Shen).
 + [ommc-xk(32x)](https://github.com/plusls/oh-my-minecraft-client/raw/1.17/docs/file/ommc-xk(32x).zip) by [SunnySlopes](https://github.com/SunnySlopes).
 + [ommc-faithful(static)](https://github.com/plusls/oh-my-minecraft-client/raw/1.17/docs/file/ommc-faithful(static).zip) by [SunnySlopes](https://github.com/SunnySlopes).
 + [ommc-faithful(dynamic)](https://github.com/plusls/oh-my-minecraft-client/raw/1.17/docs/file/ommc-faithful(dynamic).zip) by [SunnySlopes](https://github.com/SunnySlopes).
