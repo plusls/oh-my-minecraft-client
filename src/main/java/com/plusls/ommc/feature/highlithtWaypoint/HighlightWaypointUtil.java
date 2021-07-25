@@ -37,9 +37,9 @@ public class HighlightWaypointUtil {
     @Nullable
     public static BlockPos highlightPos;
     public static long lastBeamTime = 0;
-    public static Pattern pattern1 = Pattern.compile("\\[(\\w+\\s*:\\s*[-#]?[^\\[\\]]+)(,\\s*\\w+\\s*:\\s*[-#]?[^\\[\\]]+)+\\]", Pattern.CASE_INSENSITIVE);
+    public static Pattern pattern1 = Pattern.compile("\\[(\\w+\\s*:\\s*[-#]?[^\\[\\]]+)(,\\s*\\w+\\s*:\\s*[-#]?[^\\[\\]]+)+]", Pattern.CASE_INSENSITIVE);
     public static Pattern pattern2 = Pattern.compile("\\((\\w+\\s*:\\s*[-#]?[^\\[\\]]+)(,\\s*\\w+\\s*:\\s*[-#]?[^\\[\\]]+)+\\)", Pattern.CASE_INSENSITIVE);
-    public static Pattern pattern3 = Pattern.compile("\\[(-?\\d+)(,\\s*-?\\d+)(,\\s*-?\\d+)\\]", Pattern.CASE_INSENSITIVE);
+    public static Pattern pattern3 = Pattern.compile("\\[(-?\\d+)(,\\s*-?\\d+)(,\\s*-?\\d+)]", Pattern.CASE_INSENSITIVE);
     public static Pattern pattern4 = Pattern.compile("\\((-?\\d+)(,\\s*-?\\d+)(,\\s*-?\\d+)\\)", Pattern.CASE_INSENSITIVE);
 
     private static final String HIGHLIGHT_COMMAND = "highlightWaypoint";
@@ -67,16 +67,12 @@ public class HighlightWaypointUtil {
                         )
                 )
         ));
-        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
-            currentWorld = Objects.requireNonNull(client.world).getRegistryKey();
-        });
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> currentWorld = Objects.requireNonNull(client.world).getRegistryKey());
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
             currentWorld = null;
             highlightPos = null;
         });
-        WorldRenderEvents.END.register(context -> {
-            HighlightWaypointUtil.drawWaypoint(context.matrixStack(), context.tickDelta());
-        });
+        WorldRenderEvents.END.register(context -> HighlightWaypointUtil.drawWaypoint(context.matrixStack(), context.tickDelta()));
     }
 
     public static void postRespawn(PlayerRespawnS2CPacket packet) {
@@ -259,6 +255,7 @@ public class HighlightWaypointUtil {
     }
 
     // code from BeaconBlockEntityRenderer
+    @SuppressWarnings("all")
     public static void renderBeam(MatrixStack matrices, VertexConsumerProvider vertexConsumers, Identifier textureId, float tickDelta, float heightScale, long worldTime, int yOffset, int maxY, float[] color, float innerRadius, float outerRadius) {
         int i = yOffset + maxY;
         matrices.push();
@@ -295,6 +292,7 @@ public class HighlightWaypointUtil {
         matrices.pop();
     }
 
+    @SuppressWarnings("all")
     private static void method_22741(MatrixStack matrixStack, VertexConsumer vertexConsumer, float f, float g, float h, float i, int j, int k, float l, float m, float n, float o, float p, float q, float r, float s, float t, float u, float v, float w) {
         MatrixStack.Entry entry = matrixStack.peek();
         Matrix4f matrix4f = entry.getModel();
@@ -365,7 +363,8 @@ public class HighlightWaypointUtil {
         float fade = distance < 5.0 ? 1.0f : (float) distance / 5.0f;
         fade = Math.min(fade, 1.0f);
         // 渲染的图标的大小
-        float width = 10.0f;
+        float xWidth = 10.0f;
+        float yWidth = 10.0f;
         // 绿色
         float iconR = 1.0f;
         float iconG = 0.0f;
@@ -381,11 +380,11 @@ public class HighlightWaypointUtil {
 
         // 渲染图标
         RenderSystem.enableTexture();
-        vertexBuffer.begin(7, VertexFormats.POSITION_TEXTURE_COLOR);
-        vertexBuffer.vertex(matrix4f, -width, -width, 0.0f).texture(icon.getMinU(), icon.getMinV()).color(iconR, iconG, iconB, fade).next();
-        vertexBuffer.vertex(matrix4f, -width, width, 0.0f).texture(icon.getMinU(), icon.getMaxV()).color(iconR, iconG, iconB, fade).next();
-        vertexBuffer.vertex(matrix4f, width, width, 0.0f).texture(icon.getMaxU(), icon.getMaxV()).color(iconR, iconG, iconB, fade).next();
-        vertexBuffer.vertex(matrix4f, width, -width, 0.0f).texture(icon.getMaxU(), icon.getMinV()).color(iconR, iconG, iconB, fade).next();
+        vertexBuffer.begin(7, VertexFormats.POSITION_COLOR_TEXTURE);
+        vertexBuffer.vertex(matrix4f, -xWidth, -yWidth, 0.0f).color(iconR, iconG, iconB, fade).texture(icon.getMinU(), icon.getMinV()).next();
+        vertexBuffer.vertex(matrix4f, -xWidth, yWidth, 0.0f).color(iconR, iconG, iconB, fade).texture(icon.getMinU(), icon.getMaxV()).next();
+        vertexBuffer.vertex(matrix4f, xWidth, yWidth, 0.0f).color(iconR, iconG, iconB, fade).texture(icon.getMaxU(), icon.getMaxV()).next();
+        vertexBuffer.vertex(matrix4f, xWidth, -yWidth, 0.0f).color(iconR, iconG, iconB, fade).texture(icon.getMaxU(), icon.getMinV()).next();
         tessellator.draw();
         RenderSystem.disableTexture();
 
