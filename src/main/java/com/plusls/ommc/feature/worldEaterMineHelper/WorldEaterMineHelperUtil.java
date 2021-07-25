@@ -19,7 +19,8 @@ import java.util.Random;
 import java.util.function.Supplier;
 
 public class WorldEaterMineHelperUtil {
-    public static final Map<Block, BakedModel> models = new HashMap<>();
+    public static final Map<Block, BakedModel> customModels = new HashMap<>();
+    public static final Map<Block, BakedModel> customFullModels = new HashMap<>();
 
     public static boolean blockInWorldEaterMineHelperWhitelist(Block block) {
         String blockName = block.getName().getString();
@@ -53,10 +54,10 @@ public class WorldEaterMineHelperUtil {
         return false;
     }
 
-    static public void emitCustomBlockQuads(FabricBakedModel model, BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+    static public void emitCustomFullBlockQuads(FabricBakedModel model, BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
         Block block = state.getBlock();
         if (WorldEaterMineHelperUtil.shouldUseCustomModel(state, pos)) {
-            FabricBakedModel customModel = (FabricBakedModel) WorldEaterMineHelperUtil.models.get(block);
+            FabricBakedModel customModel = (FabricBakedModel) WorldEaterMineHelperUtil.customFullModels.get(block);
             if (customModel != null) {
                 int luminance = state.luminance;
                 state.luminance = 15;
@@ -66,5 +67,18 @@ public class WorldEaterMineHelperUtil {
             }
         }
         model.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+    }
+
+    static public void emitCustomBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+        Block block = state.getBlock();
+        if (WorldEaterMineHelperUtil.shouldUseCustomModel(state, pos)) {
+            FabricBakedModel customModel = (FabricBakedModel) WorldEaterMineHelperUtil.customModels.get(block);
+            if (customModel != null) {
+                int luminance = state.luminance;
+                state.luminance = 15;
+                customModel.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+                state.luminance = luminance;
+            }
+        }
     }
 }

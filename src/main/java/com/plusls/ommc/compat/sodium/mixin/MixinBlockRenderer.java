@@ -37,7 +37,7 @@ public class MixinBlockRenderer {
     private BakedModel modifyBakedModel(BakedModel bakedModel) {
         BlockModelRendererContext context = ommcRenderContext.get();
         if (WorldEaterMineHelperUtil.shouldUseCustomModel(context.state, context.pos)) {
-            BakedModel customModel = WorldEaterMineHelperUtil.models.get(context.state.getBlock());
+            BakedModel customModel = WorldEaterMineHelperUtil.customFullModels.get(context.state.getBlock());
             if (customModel != null) {
                 ommcOriginalLuminance.set(context.state.luminance);
                 context.state.luminance = 15;

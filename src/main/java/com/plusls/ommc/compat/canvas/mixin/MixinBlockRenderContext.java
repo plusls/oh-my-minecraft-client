@@ -23,6 +23,6 @@ public abstract class MixinBlockRenderContext {
     @Redirect(method = "render", at = @At(value = "INVOKE",
             target = "Lnet/fabricmc/fabric/api/renderer/v1/model/FabricBakedModel;emitBlockQuads", ordinal = -1))
     private void emitCustomBlockQuads(FabricBakedModel model, BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
-        WorldEaterMineHelperUtil.emitCustomBlockQuads(model, blockView, state, pos, randomSupplier, context);
+        WorldEaterMineHelperUtil.emitCustomFullBlockQuads(model, blockView, state, pos, randomSupplier, context);
     }
 }
