@@ -48,6 +48,10 @@ Make Minecraft Client Great Again!
 
 ## Feature
 
+### 自动切换鞘翅
+
+自动切换鞘翅和胸甲（支持原地起飞）
+
 ### 禁止破坏特定方块
 
 玩家无法破坏在 **破坏方块黑名单** 中的方块

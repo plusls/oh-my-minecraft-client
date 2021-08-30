@@ -4,6 +4,8 @@ import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.network.ClientPlayerInteractionManager;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BundleItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -12,13 +14,15 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.screen.*;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class SortInventoryUtil {
 
-    private static int getPlayerInventoryStartIdx(ScreenHandler screenHandler) {
+    public static int getPlayerInventoryStartIdx(ScreenHandler screenHandler) {
         if (screenHandler instanceof PlayerScreenHandler) {
             return 9;
         } else if (screenHandler instanceof CraftingScreenHandler) {
@@ -120,14 +124,18 @@ public class SortInventoryUtil {
             clickQueue.addAll(quickSort(itemStacks, playerInventoryStartIdx + 27, r));
         }
 
+        doClick(player, screenHandler.syncId, client.interactionManager, clickQueue);
+        return !clickQueue.isEmpty();
+    }
+
+    public static void doClick(PlayerEntity player, int syncId, @NotNull ClientPlayerInteractionManager interactionManager, List<Integer> clickQueue) {
         for (Integer slotId : clickQueue) {
             if (slotId < 0 && slotId != ScreenHandler.EMPTY_SPACE_SLOT_INDEX) {
-                client.interactionManager.clickSlot(screenHandler.syncId, -slotId, 1, SlotActionType.PICKUP, player);
+                interactionManager.clickSlot(syncId, -slotId, 1, SlotActionType.PICKUP, player);
             } else {
-                client.interactionManager.clickSlot(screenHandler.syncId, slotId, 0, SlotActionType.PICKUP, player);
+                interactionManager.clickSlot(syncId, slotId, 0, SlotActionType.PICKUP, player);
             }
         }
-        return !clickQueue.isEmpty();
     }
 
     private static boolean canStackAddMore(ItemStack existingStack, ItemStack stack) {
@@ -138,7 +146,7 @@ public class SortInventoryUtil {
                 existingStack.getCount() < 64;
     }
 
-    private static ArrayList<Integer> addItemStack(ArrayList<ItemStack> itemStacks, ItemStack stackToAdd, int l, int r) {
+    public static ArrayList<Integer> addItemStack(ArrayList<ItemStack> itemStacks, ItemStack stackToAdd, int l, int r) {
         // merge in [l, r)
         ArrayList<Integer> ret = new ArrayList<>();
         for (int i = l; i < r; ++i) {

@@ -45,6 +45,10 @@ Support empty shulker box stack when sort inventory.
 
 ## Features
 
+### Auto Switch Elytra
+
+Auto Switch elytra and chestplate.
+
 ### Disable Break Block
 
 You can't break blocks in **breakBlockBlackList**.
