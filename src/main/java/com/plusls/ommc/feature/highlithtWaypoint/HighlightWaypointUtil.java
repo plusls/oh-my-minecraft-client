@@ -37,9 +37,9 @@ public class HighlightWaypointUtil {
     @Nullable
     public static BlockPos highlightPos;
     public static long lastBeamTime = 0;
-    public static Pattern pattern1 = Pattern.compile("\\[(\\w+\\s*:\\s*[-#]?[^\\[\\]]+)(,\\s*\\w+\\s*:\\s*[-#]?[^\\[\\]]+)+\\]", Pattern.CASE_INSENSITIVE);
+    public static Pattern pattern1 = Pattern.compile("\\[(\\w+\\s*:\\s*[-#]?[^\\[\\]]+)(,\\s*\\w+\\s*:\\s*[-#]?[^\\[\\]]+)+]", Pattern.CASE_INSENSITIVE);
     public static Pattern pattern2 = Pattern.compile("\\((\\w+\\s*:\\s*[-#]?[^\\[\\]]+)(,\\s*\\w+\\s*:\\s*[-#]?[^\\[\\]]+)+\\)", Pattern.CASE_INSENSITIVE);
-    public static Pattern pattern3 = Pattern.compile("\\[(-?\\d+)(,\\s*-?\\d+)(,\\s*-?\\d+)\\]", Pattern.CASE_INSENSITIVE);
+    public static Pattern pattern3 = Pattern.compile("\\[(-?\\d+)(,\\s*-?\\d+)(,\\s*-?\\d+)]", Pattern.CASE_INSENSITIVE);
     public static Pattern pattern4 = Pattern.compile("\\((-?\\d+)(,\\s*-?\\d+)(,\\s*-?\\d+)\\)", Pattern.CASE_INSENSITIVE);
 
     private static final String HIGHLIGHT_COMMAND = "highlightWaypoint";
@@ -67,16 +67,12 @@ public class HighlightWaypointUtil {
                         )
                 )
         ));
-        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
-            currentWorld = Objects.requireNonNull(client.world).getRegistryKey();
-        });
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> currentWorld = Objects.requireNonNull(client.world).getRegistryKey());
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
             currentWorld = null;
             highlightPos = null;
         });
-        WorldRenderEvents.END.register(context -> {
-            HighlightWaypointUtil.drawWaypoint(context.matrixStack(), context.tickDelta());
-        });
+        WorldRenderEvents.END.register(context -> HighlightWaypointUtil.drawWaypoint(context.matrixStack(), context.tickDelta()));
     }
 
     public static void postRespawn(PlayerRespawnS2CPacket packet) {
@@ -188,8 +184,8 @@ public class HighlightWaypointUtil {
                 BlockPos pos = Objects.requireNonNull(parseWaypoint(waypointString.substring(1, waypointString.length() - 1)));
                 TranslatableText hover = new TranslatableText("ommc.highlight_waypoint.tooltip");
                 chatStyle = chatStyle.withClickEvent(
-                        new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-                                String.format("/%s %d %d %d", HIGHLIGHT_COMMAND, pos.getX(), pos.getY(), pos.getZ())))
+                                new ClickEvent(ClickEvent.Action.RUN_COMMAND,
+                                        String.format("/%s %d %d %d", HIGHLIGHT_COMMAND, pos.getX(), pos.getY(), pos.getZ())))
                         .withColor(color).withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hover));
                 clickableWaypoint.setStyle(chatStyle);
                 texts.add(clickableWaypoint);
@@ -253,13 +249,14 @@ public class HighlightWaypointUtil {
     }
 
     // code from BeaconBlockEntityRenderer
+    @SuppressWarnings("all")
     public static void renderBeam(MatrixStack matrices, VertexConsumerProvider vertexConsumers, Identifier textureId, float tickDelta, float heightScale, long worldTime, int yOffset, int maxY, float[] color, float innerRadius, float outerRadius) {
         int i = yOffset + maxY;
         matrices.push();
         matrices.translate(0.5D, 0.0D, 0.5D);
-        float f = (float)Math.floorMod(worldTime, 40) + tickDelta;
+        float f = (float) Math.floorMod(worldTime, 40) + tickDelta;
         float g = maxY < 0 ? f : -f;
-        float h = MathHelper.fractionalPart(g * 0.2F - (float)MathHelper.floor(g * 0.1F));
+        float h = MathHelper.fractionalPart(g * 0.2F - (float) MathHelper.floor(g * 0.1F));
         float j = color[0];
         float k = color[1];
         float l = color[2];
@@ -274,7 +271,7 @@ public class HighlightWaypointUtil {
         float ag = 0.0F;
         float ah = 1.0F;
         float ai = -1.0F + h;
-        float aj = (float)maxY * heightScale * (0.5F / innerRadius) + ai;
+        float aj = (float) maxY * heightScale * (0.5F / innerRadius) + ai;
         // Change layer to getTextSeeThrough
         // it works, but why?
         renderBeamLayer(matrices, vertexConsumers.getBuffer(RenderLayer.getTextSeeThrough(textureId)), j, k, l, 1.0F, yOffset, i, 0.0F, innerRadius, innerRadius, 0.0F, ac, 0.0F, 0.0F, t, 0.0F, 1.0F, aj, ai);
@@ -286,10 +283,11 @@ public class HighlightWaypointUtil {
         ag = 0.0F;
         ah = 1.0F;
         ai = -1.0F + h;
-        aj = (float)maxY * heightScale + ai;
+        aj = (float) maxY * heightScale + ai;
         renderBeamLayer(matrices, vertexConsumers.getBuffer(RenderLayer.getBeaconBeam(textureId, true)), j, k, l, 0.125F, yOffset, i, y, z, outerRadius, ab, ac, outerRadius, outerRadius, outerRadius, 0.0F, 1.0F, aj, ai);
         matrices.pop();
     }
+
     private static void renderBeamFace(Matrix4f modelMatrix, Matrix3f normalMatrix, VertexConsumer vertices, float red, float green, float blue, float alpha, int yOffset, int height, float x1, float z1, float x2, float z2, float u1, float u2, float v1, float v2) {
         renderBeamVertex(modelMatrix, normalMatrix, vertices, red, green, blue, alpha, height, x1, z1, u2, v1);
         renderBeamVertex(modelMatrix, normalMatrix, vertices, red, green, blue, alpha, yOffset, x1, z1, u2, v2);
@@ -298,9 +296,10 @@ public class HighlightWaypointUtil {
     }
 
     private static void renderBeamVertex(Matrix4f modelMatrix, Matrix3f normalMatrix, VertexConsumer vertices, float red, float green, float blue, float alpha, int y, float x, float z, float u, float v) {
-        vertices.vertex(modelMatrix, x, (float)y, z).color(red, green, blue, alpha).texture(u, v).overlay(OverlayTexture.DEFAULT_UV).light(15728880).normal(normalMatrix, 0.0F, 1.0F, 0.0F).next();
+        vertices.vertex(modelMatrix, x, (float) y, z).color(red, green, blue, alpha).texture(u, v).overlay(OverlayTexture.DEFAULT_UV).light(15728880).normal(normalMatrix, 0.0F, 1.0F, 0.0F).next();
     }
 
+    @SuppressWarnings("all")
     private static void renderBeamLayer(MatrixStack matrices, VertexConsumer vertices, float red, float green, float blue, float alpha, int yOffset, int height, float x1, float z1, float x2, float z2, float x3, float z3, float x4, float z4, float u1, float u2, float v1, float v2) {
         MatrixStack.Entry entry = matrices.peek();
         Matrix4f matrix4f = entry.getModel();
@@ -360,7 +359,8 @@ public class HighlightWaypointUtil {
         float fade = distance < 5.0 ? 1.0f : (float) distance / 5.0f;
         fade = Math.min(fade, 1.0f);
         // 渲染的图标的大小
-        float width = 10.0f;
+        float xWidth = 10.0f;
+        float yWidth = 10.0f;
         // 绿色
         float iconR = 1.0f;
         float iconG = 0.0f;
@@ -377,10 +377,10 @@ public class HighlightWaypointUtil {
         // 渲染图标
         RenderSystem.enableTexture();
         vertexBuffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
-        vertexBuffer.vertex(matrix4f, -width, -width, 0.0f).texture(icon.getMinU(), icon.getMinV()).color(iconR, iconG, iconB, fade).next();
-        vertexBuffer.vertex(matrix4f, -width, width, 0.0f).texture(icon.getMinU(), icon.getMaxV()).color(iconR, iconG, iconB, fade).next();
-        vertexBuffer.vertex(matrix4f, width, width, 0.0f).texture(icon.getMaxU(), icon.getMaxV()).color(iconR, iconG, iconB, fade).next();
-        vertexBuffer.vertex(matrix4f, width, -width, 0.0f).texture(icon.getMaxU(), icon.getMinV()).color(iconR, iconG, iconB, fade).next();
+        vertexBuffer.vertex(matrix4f, -xWidth, -yWidth, 0.0f).texture(icon.getMinU(), icon.getMinV()).color(iconR, iconG, iconB, fade).next();
+        vertexBuffer.vertex(matrix4f, -xWidth, yWidth, 0.0f).texture(icon.getMinU(), icon.getMaxV()).color(iconR, iconG, iconB, fade).next();
+        vertexBuffer.vertex(matrix4f, xWidth, yWidth, 0.0f).texture(icon.getMaxU(), icon.getMaxV()).color(iconR, iconG, iconB, fade).next();
+        vertexBuffer.vertex(matrix4f, xWidth, -yWidth, 0.0f).texture(icon.getMaxU(), icon.getMinV()).color(iconR, iconG, iconB, fade).next();
         tessellator.draw();
         RenderSystem.disableTexture();
 
