@@ -19,6 +19,8 @@
   "ommc.config.generic.sortInventory.comment": "A hotkey to sort inventory.",
   "ommc.config.generic.sortInventorySupportEmptyShulkerBoxStack.name": "sortInventorySupportEmptyShulkerBoxStack",
   "ommc.config.generic.sortInventorySupportEmptyShulkerBoxStack.comment": "Support empty shulker box stack when sort inventory.",
+  "ommc.config.feature_toggle.autoSwitchElytra.name": "autoSwitchElytra",
+  "ommc.config.feature_toggle.autoSwitchElytra.comment": "Auto switch elytra and chestplate.",
   "ommc.config.feature_toggle.disableBreakBlock.name": "disableBreakBlock",
   "ommc.config.feature_toggle.disableBreakBlock.comment": "You can't break blocks in §6breakBlockBlackList§r.",
   "ommc.config.feature_toggle.disableBreakScaffolding.name": "disableBreakScaffolding",

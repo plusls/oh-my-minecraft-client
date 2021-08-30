@@ -19,6 +19,8 @@
   "ommc.config.generic.sortInventory.comment": "整理仓库的快捷键",
   "ommc.config.generic.sortInventorySupportEmptyShulkerBoxStack.name": "整理仓库时支持空潜影盒堆叠",
   "ommc.config.generic.sortInventorySupportEmptyShulkerBoxStack.comment": "整理仓库时支持空潜影盒堆叠（请配合 PCA 使用）",
+  "ommc.config.feature_toggle.autoSwitchElytra.name": "自动切换鞘翅",
+  "ommc.config.feature_toggle.autoSwitchElytra.comment": "自动切换鞘翅和胸甲",
   "ommc.config.feature_toggle.disableBreakBlock.name": "禁止破坏特定方块",
   "ommc.config.feature_toggle.disableBreakBlock.comment": "玩家无法破坏在 §6破坏方块黑名单§r 中的方块",
   "ommc.config.feature_toggle.disableBreakScaffolding.name": "禁止破坏脚手架",

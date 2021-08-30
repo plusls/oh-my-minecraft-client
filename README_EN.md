@@ -45,6 +45,10 @@ Support empty shulker box stack when sort inventory.
 
 ## Features
 
+### Auto Switch Elytra
+
+Auto Switch elytra and chestplate.
+
 ### Disable Break Block
 
 You can't break blocks in **breakBlockBlackList**.
@@ -69,6 +73,13 @@ destroying components with the Haste 2 effect.
 ### Highlight Lava Sources
 
 Any lava source will be highlighted with a special texture.
+
+We have also provided some optional resource packs for this purpose.
++ [ommc-highlightLavaSource\[32x\](static)](https://github.com/plusls/oh-my-minecraft-client/raw/1.17/docs/file/ommc-highlightLavaSource[32x](static).zip) by [Hendrix-Shen](https://github.com/Hendrix-Shen).
++ [ommc-highlightLavaSource\[32x\](dynamic)](https://github.com/plusls/oh-my-minecraft-client/raw/1.17/docs/file/ommc-highlightLavaSource[32x](dynamic).zip) by [Hendrix-Shen](https://github.com/Hendrix-Shen).
++ [ommc-xk(32x)](https://github.com/plusls/oh-my-minecraft-client/raw/1.17/docs/file/ommc-xk(32x).zip) by [SunnySlopes](https://github.com/SunnySlopes).
++ [ommc-faithful(static)](https://github.com/plusls/oh-my-minecraft-client/raw/1.17/docs/file/ommc-faithful(static).zip) by [SunnySlopes](https://github.com/SunnySlopes).
++ [ommc-faithful(dynamic)](https://github.com/plusls/oh-my-minecraft-client/raw/1.17/docs/file/ommc-faithful(dynamic).zip) by [SunnySlopes](https://github.com/SunnySlopes).
 
 It looks like:
 
@@ -138,6 +149,8 @@ Integrated server lan port, 0 to use default port.
 + Thanks to [水星嗷](https://space.bilibili.com/18525909) for
   providing [the idea of highlighting ores and resourcepack](https://www.bilibili.com/video/BV1w64y1D7wP).
 + Thanks to [voxelmap](https://www.curseforge.com/minecraft/mc-mods/voxelmap) for providing the code of highlight waypoint.
++ Thanks to [Hendrix-Shen](https://github.com/Hendrix-Shen) for providing highlightLavaSource x32 resource pack.
++ Thanks to [SunnySlopes](https://github.com/SunnySlopes) for providing highlightLavaSource x32 resource pack.
 
 ## License
 

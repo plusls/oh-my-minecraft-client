@@ -7,6 +7,7 @@
   "client": [
     "advancedIntegratedServer.MixinIntegratedServer",
     "advancedIntegratedServer.MixinOpenToLanScreen",
+    "feature.autoSwitchElytra.MixinClientPlayerEntity",
     "feature.disableBreakBlock.MixinClientPlayerInteractionManager",
     "feature.disableBreakScaffolding.MixinClientPlayerInteractionManager",
     "feature.disableMoveDownInScaffolding.MixinScaffoldingBlock",

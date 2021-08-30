@@ -21,7 +21,6 @@ import java.util.function.Supplier;
 
 @Mixin(value = BlockRenderContext.class, remap = false)
 public abstract class MixinBlockRenderContext implements RenderContext {
-
     @Final
     @Shadow
     private Supplier<Random> randomSupplier;
