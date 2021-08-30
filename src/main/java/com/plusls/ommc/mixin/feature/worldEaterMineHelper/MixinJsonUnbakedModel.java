@@ -56,9 +56,10 @@ public abstract class MixinJsonUnbakedModel implements UnbakedModel {
         }
         ommcFirstBake.set(false);
         List<ModelElement> originalModelElements = this.getElements();
-        List<ModelElement> tmpModelElements = new ArrayList<>();
+        List<ModelElement> originalModelElementsBackup = new ArrayList<>(originalModelElements);
+        originalModelElements.clear();
 
-        for (ModelElement modelElement : me.getElements()) {
+        for (ModelElement modelElement : originalModelElementsBackup) {
             Vec3f origin = new Vec3f(8f, 80f, 178.4f);
             origin.scale(0.0625F);
             ModelRotation newModelRotation = new ModelRotation(origin, Direction.Axis.X, 45, false);
@@ -69,19 +70,25 @@ public abstract class MixinJsonUnbakedModel implements UnbakedModel {
                 ModelElementFace tmpModelElementFace = new ModelElementFace(null, modelElementFace.tintIndex, modelElementFace.textureId, modelElementFace.textureData);
                 faces.put(entry.getKey(), tmpModelElementFace);
             }
-            tmpModelElements.add(new ModelElement(modelElement.from, modelElement.to, faces, newModelRotation, modelElement.shade));
+            originalModelElements.add(new ModelElement(modelElement.from, modelElement.to, faces, newModelRotation, modelElement.shade));
         }
-        originalModelElements.addAll(tmpModelElements);
         JsonUnbakedModel tmpJsonUnbakedModel = me;
         while (tmpJsonUnbakedModel.parent != null) {
             tmpJsonUnbakedModel = tmpJsonUnbakedModel.parent;
         }
         boolean tmpAmbientOcclusion = tmpJsonUnbakedModel.ambientOcclusion;
         tmpJsonUnbakedModel.ambientOcclusion = false;
+        // 部分 models
         BakedModel customBakedModel = me.bake(loader, parent, textureGetter, settings, id, hasDepth);
-        WorldEaterMineHelperUtil.models.put(block, customBakedModel);
+        WorldEaterMineHelperUtil.customModels.put(block, customBakedModel);
+        originalModelElements.addAll(originalModelElementsBackup);
+        // 完整 models
+        BakedModel customFullBakedModel = me.bake(loader, parent, textureGetter, settings, id, hasDepth);
+        WorldEaterMineHelperUtil.customFullModels.put(block, customFullBakedModel);
+
         tmpJsonUnbakedModel.ambientOcclusion = tmpAmbientOcclusion;
-        originalModelElements.removeAll(tmpModelElements);
+        originalModelElements.clear();
+        originalModelElements.addAll(originalModelElementsBackup);
         BakedModel ret = me.bake(loader, parent, textureGetter, settings, id, hasDepth);
         ommcFirstBake.set(true);
         cir.setReturnValue(ret);

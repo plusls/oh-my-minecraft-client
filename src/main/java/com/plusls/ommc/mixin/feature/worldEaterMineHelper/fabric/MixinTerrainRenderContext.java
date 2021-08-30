@@ -1,25 +1,30 @@
 package com.plusls.ommc.mixin.feature.worldEaterMineHelper.fabric;
 
 import com.plusls.ommc.feature.worldEaterMineHelper.WorldEaterMineHelperUtil;
-import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+import net.fabricmc.fabric.impl.client.indigo.renderer.render.TerrainBlockRenderInfo;
 import net.fabricmc.fabric.impl.client.indigo.renderer.render.TerrainRenderContext;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.render.model.BakedModel;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockRenderView;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
-
-import java.util.Random;
-import java.util.function.Supplier;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = TerrainRenderContext.class, remap = false)
-public class MixinTerrainRenderContext {
+public abstract class MixinTerrainRenderContext implements RenderContext {
 
-    @Redirect(method = "tesselateBlock", at = @At(value = "INVOKE",
-            target = "Lnet/fabricmc/fabric/api/renderer/v1/model/FabricBakedModel;emitBlockQuads", ordinal = -1))
-    private void emitCustomBlockQuads(FabricBakedModel model, BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
-        WorldEaterMineHelperUtil.emitCustomBlockQuads(model, blockView, state, pos, randomSupplier, context);
+    @Final
+    @Shadow
+    private TerrainBlockRenderInfo blockInfo;
+
+    @Inject(method = "tesselateBlock", at = @At(value = "INVOKE",
+            target = "Lnet/fabricmc/fabric/api/renderer/v1/model/FabricBakedModel;emitBlockQuads", shift = At.Shift.AFTER, ordinal = 0))
+    private void emitCustomBlockQuads(BlockState blockState, BlockPos blockPos, BakedModel model, MatrixStack matrixStack, CallbackInfoReturnable<Boolean> cir) {
+        WorldEaterMineHelperUtil.emitCustomBlockQuads(blockInfo.blockView, blockInfo.blockState, blockInfo.blockPos, blockInfo.randomSupplier, this);
     }
 }
