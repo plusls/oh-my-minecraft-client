@@ -6,7 +6,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.plusls.ommc.ModInfo;
 import com.plusls.ommc.feature.highlithtWaypoint.HighlightWaypointUtil;
-import com.plusls.ommc.feature.sortInventory.MyKeybindMulti;
 import com.plusls.ommc.feature.sortInventory.SortInventoryUtil;
 import com.plusls.ommc.gui.GuiConfigs;
 import fi.dy.masa.malilib.config.ConfigUtils;
@@ -14,6 +13,7 @@ import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.config.IConfigHandler;
 import fi.dy.masa.malilib.config.options.*;
 import fi.dy.masa.malilib.gui.GuiBase;
+import fi.dy.masa.malilib.hotkeys.KeybindSettings;
 import fi.dy.masa.malilib.util.FileUtils;
 import fi.dy.masa.malilib.util.JsonUtils;
 import net.minecraft.client.MinecraftClient;
@@ -40,7 +40,7 @@ public class Configs implements IConfigHandler {
         public static final ConfigBoolean DONT_CLEAR_CHAT_HISTORY = new TranslatableConfigBoolean(PREFIX, "dontClearChatHistory", false);
         public static final ConfigHotkey CLEAR_WAYPOINT = new TranslatableConfigHotkey(PREFIX, "clearWaypoint", "C");
         public static final ConfigBoolean FORCE_PARSE_WAYPOINT_FROM_CHAT = new TranslatableConfigBoolean(PREFIX, "forceParseWaypointFromChat", false);
-        public static final ConfigHotkey SORT_INVENTORY = new TranslatableConfigHotkey(PREFIX, "sortInventory", "R");
+        public static final ConfigHotkey SORT_INVENTORY = new TranslatableConfigHotkey(PREFIX, "sortInventory", "R", KeybindSettings.GUI);
         public static final ConfigBoolean SORT_INVENTORY_SUPPORT_EMPTY_SHULKER_BOX_STACK = new TranslatableConfigBoolean(PREFIX, "sortInventorySupportEmptyShulkerBoxStack", false);
 
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
@@ -70,7 +70,6 @@ public class Configs implements IConfigHandler {
                 HighlightWaypointUtil.lastBeamTime = 0;
                 return true;
             });
-            ((MyKeybindMulti) SORT_INVENTORY.getKeybind()).allowInScreen();
             SORT_INVENTORY.getKeybind().setCallback((keyAction, iKeybind) -> {
                 SortInventoryUtil.sort();
                 MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
@@ -218,6 +217,13 @@ public class Configs implements IConfigHandler {
             if (element != null && element.isJsonObject()) {
                 JsonObject root = element.getAsJsonObject();
                 ConfigUtils.readConfigBase(root, "Generic", Generic.OPTIONS);
+                KeybindSettings keybindSettings = Generic.SORT_INVENTORY.getKeybind().getSettings();
+                if (keybindSettings.getContext() != KeybindSettings.Context.GUI) {
+                    Generic.SORT_INVENTORY.getKeybind().setSettings(KeybindSettings.create(KeybindSettings.Context.GUI,
+                            keybindSettings.getActivateOn(), keybindSettings.getAllowExtraKeys(),
+                            keybindSettings.isOrderSensitive(), keybindSettings.isExclusive(),
+                            keybindSettings.shouldCancel(), keybindSettings.getAllowEmpty()));
+                }
                 ConfigUtils.readHotkeyToggleOptions(root, "FeatureHotkey", "FeatureToggle", FeatureToggle.OPTIONS);
                 ConfigUtils.readConfigBase(root, "Lists", Lists.OPTIONS);
                 ConfigUtils.readConfigBase(root, "AdvancedIntegratedServer", AdvancedIntegratedServer.OPTIONS);
