@@ -52,6 +52,10 @@ Make Minecraft Client Great Again!
 
 自动切换鞘翅和胸甲（支持原地起飞）
 
+效果如下：
+
+![autoSwitchElytra](./docs/img/autoSwitchElytra.gif)
+
 ### 禁止破坏特定方块
 
 玩家无法破坏在 **破坏方块黑名单** 中的方块
