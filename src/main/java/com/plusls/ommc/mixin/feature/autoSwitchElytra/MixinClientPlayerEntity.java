@@ -1,6 +1,7 @@
 package com.plusls.ommc.mixin.feature.autoSwitchElytra;
 
 import com.mojang.authlib.GameProfile;
+import com.plusls.ommc.config.Configs;
 import com.plusls.ommc.feature.autoSwitchElytra.AutoSwitchElytraUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
@@ -31,6 +32,9 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 
     @Inject(method = "tickMovement", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;getEquippedStack(Lnet/minecraft/entity/EquipmentSlot;)Lnet/minecraft/item/ItemStack;", ordinal = 0))
     private void autoSwitchElytra(CallbackInfo ci) {
+        if (!Configs.FeatureToggle.AUTO_SWITCH_ELYTRA.getBooleanValue()) {
+            return;
+        }
         ItemStack chestItemStack = this.getEquippedStack(EquipmentSlot.CHEST);
         if (chestItemStack.isOf(Items.ELYTRA) || !AutoSwitchElytraUtil.myCheckFallFlying(this)) {
             return;
@@ -40,6 +44,9 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayerEntity
 
     @Inject(method = "tickMovement", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/client/network/ClientPlayerEntity;isFallFlying()Z", ordinal = 0))
     private void autoSwitchChest(CallbackInfo ci) {
+        if (!Configs.FeatureToggle.AUTO_SWITCH_ELYTRA.getBooleanValue()) {
+            return;
+        }
         ItemStack chestItemStack = this.getEquippedStack(EquipmentSlot.CHEST);
         if (!chestItemStack.isOf(Items.ELYTRA) || !prevFallFlying || this.isFallFlying()) {
             prevFallFlying = this.isFallFlying();
