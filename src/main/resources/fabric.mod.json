@@ -27,7 +27,6 @@
   "mixins": [
     "ommc.mixins.json",
     "ommc.compat.canvas.mixins.json",
-    "ommc.compat.malilib.mixins.json",
     "ommc.compat.sodium.mixins.json"
   ],
   "depends": {
