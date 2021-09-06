@@ -6,6 +6,7 @@
     "MixinBlockRenderer",
     "MixinBlockRendererOld",
     "MixinFluidRenderer",
-    "MixinFluidRendererOld"
+    "MixinFluidRendererOld",
+    "MixinTerrainRenderContext"
   ]
 }

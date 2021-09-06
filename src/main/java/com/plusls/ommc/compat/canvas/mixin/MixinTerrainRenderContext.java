@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockRenderView;
+import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,6 +21,7 @@ import java.util.function.Supplier;
 @Pseudo
 @Mixin(targets = "grondag.canvas.apiimpl.rendercontext.TerrainRenderContext", remap = false)
 public abstract class MixinTerrainRenderContext {
+    @Dynamic
     @Redirect(method = "renderInner", at = @At(value = "INVOKE",
             target = "Lnet/fabricmc/fabric/api/renderer/v1/model/FabricBakedModel;emitBlockQuads", ordinal = 0))
     private void emitCustomBlockQuads(FabricBakedModel model, BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
