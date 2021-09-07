@@ -31,6 +31,8 @@ public class Configs implements IConfigHandler {
     private static final String CONFIG_FILE_NAME = ModInfo.MOD_ID + ".json";
     private static final int CONFIG_VERSION = 1;
     private static final List<String> OLD_WORLD_EATER_MINE_HELPER_WHITELIST = new ArrayList<>();
+    private static final List<String> OLD_FALLBACK_LANGUAGE_LIST = new ArrayList<>();
+
     private static boolean firstLoadConfig = true;
 
     public static class Generic {
@@ -137,6 +139,8 @@ public class Configs implements IConfigHandler {
                 "breakBlockBlackList", ImmutableList.of("minecraft:budding_amethyst", "_bud"));
         public static final ConfigStringList BREAK_SCAFFOLDING_WHITELIST = new TranslatableConfigStringList(PREFIX,
                 "breakScaffoldingWhiteList", ImmutableList.of("minecraft:air", "minecraft:scaffolding"));
+        public static final ConfigStringList FALLBACK_LANGUAGE_LIST = new TranslatableConfigStringList(PREFIX,
+                "fallbackLanguageList", ImmutableList.of("zh_cn"));
         public static final ConfigStringList MOVE_DOWN_IN_SCAFFOLDING_WHITELIST = new TranslatableConfigStringList(PREFIX,
                 "moveDownInScaffoldingWhiteList", ImmutableList.of("minecraft:air", "minecraft:scaffolding"));
         public static final ConfigStringList WORLD_EATER_MINE_HELPER_WHITELIST = new TranslatableConfigStringList(PREFIX,
@@ -144,10 +148,10 @@ public class Configs implements IConfigHandler {
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
                 BREAK_BLOCK_BLACKLIST,
                 BREAK_SCAFFOLDING_WHITELIST,
+                FALLBACK_LANGUAGE_LIST,
                 MOVE_DOWN_IN_SCAFFOLDING_WHITELIST,
                 WORLD_EATER_MINE_HELPER_WHITELIST
         );
-
     }
 
     public static class AdvancedIntegratedServer {
@@ -190,20 +194,25 @@ public class Configs implements IConfigHandler {
     public static void updateOldStringList() {
         OLD_WORLD_EATER_MINE_HELPER_WHITELIST.clear();
         OLD_WORLD_EATER_MINE_HELPER_WHITELIST.addAll(Lists.WORLD_EATER_MINE_HELPER_WHITELIST.getStrings());
+        OLD_FALLBACK_LANGUAGE_LIST.clear();
+        OLD_FALLBACK_LANGUAGE_LIST.addAll(Lists.FALLBACK_LANGUAGE_LIST.getStrings());
+
     }
 
     public static void checkIsStringListChanged() {
-        if (OLD_WORLD_EATER_MINE_HELPER_WHITELIST.size() > Lists.WORLD_EATER_MINE_HELPER_WHITELIST.getStrings().size()) {
+        boolean dirty = false;
+        if (!OLD_WORLD_EATER_MINE_HELPER_WHITELIST.equals(Lists.WORLD_EATER_MINE_HELPER_WHITELIST.getStrings())) {
             MinecraftClient.getInstance().worldRenderer.reload();
-            updateOldStringList();
-            return;
+            dirty = true;
         }
-        for (String string : Lists.WORLD_EATER_MINE_HELPER_WHITELIST.getStrings()) {
-            if (!OLD_WORLD_EATER_MINE_HELPER_WHITELIST.contains(string)) {
-                MinecraftClient.getInstance().worldRenderer.reload();
-                updateOldStringList();
-                return;
-            }
+
+        if (!OLD_FALLBACK_LANGUAGE_LIST.equals(Lists.FALLBACK_LANGUAGE_LIST.getStrings())) {
+            MinecraftClient.getInstance().reloadResources();
+            dirty = true;
+        }
+
+        if (dirty) {
+            updateOldStringList();
         }
     }
 

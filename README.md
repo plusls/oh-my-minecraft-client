@@ -125,6 +125,12 @@ Make Minecraft Client Great Again!
 
 ![worldEaterMineHelper](./docs/img/worldEaterMineHelper.png)
 
+## 列表
+
+### 候选语言列表
+
+候选语言不只是 en_us，可以设置自己的候选语言列表（比如在设置文言的时候，可以在 **候选语言列表** 中加入 zh_cn，从而在找不到语言资源的情况下使用中文文本）
+
 ## 本地服务器设置
 
 现在可以调节如下的本地服务器设置
