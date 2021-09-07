@@ -1,5 +1,5 @@
 {
-  "ommc.gui.title.configs": "Oh My Minecraft Client Config",
+  "ommc.gui.title.configs": "Oh My Minecraft Client - Config - Version: %s",
   "ommc.gui.button.config_gui.generic": "Generic",
   "ommc.gui.button.config_gui.feature_toggle": "Feature Toggles",
   "ommc.gui.button.config_gui.feature_hotkey": "Feature Hotkeys",

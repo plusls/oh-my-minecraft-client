@@ -1,5 +1,5 @@
 {
-  "ommc.gui.title.configs": "Oh My Minecraft Client 配置",
+  "ommc.gui.title.configs": "Oh My Minecraft Client 设置 - 版本: %s",
   "ommc.gui.button.config_gui.generic": "通用",
   "ommc.gui.button.config_gui.feature_toggle": "特性开关",
   "ommc.gui.button.config_gui.feature_hotkey": "特性快捷键",

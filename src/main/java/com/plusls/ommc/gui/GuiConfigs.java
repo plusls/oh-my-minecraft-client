@@ -21,7 +21,7 @@ public class GuiConfigs extends GuiConfigsBase {
     public static ConfigGuiTab tab = ConfigGuiTab.FEATURE_TOGGLE;
 
     public GuiConfigs() {
-        super(10, 50, ModInfo.MOD_ID, null, String.format("%s.gui.title.configs", ModInfo.MOD_ID));
+        super(10, 50, ModInfo.MOD_ID, null, StringUtils.translate(String.format("%s.gui.title.configs", ModInfo.MOD_ID), ModInfo.MOD_VERSION));
     }
 
     @Override
