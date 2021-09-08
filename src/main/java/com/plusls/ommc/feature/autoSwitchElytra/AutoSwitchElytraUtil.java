@@ -1,6 +1,5 @@
 package com.plusls.ommc.feature.autoSwitchElytra;
 
-import com.plusls.ommc.ModInfo;
 import com.plusls.ommc.feature.sortInventory.SortInventoryUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;

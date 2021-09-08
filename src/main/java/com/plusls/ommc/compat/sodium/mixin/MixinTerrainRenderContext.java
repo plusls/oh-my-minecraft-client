@@ -2,7 +2,6 @@ package com.plusls.ommc.compat.sodium.mixin;
 
 import com.plusls.ommc.compat.Dependencies;
 import com.plusls.ommc.compat.Dependency;
-import com.plusls.ommc.compat.sodium.SodiumDependencyPredicate;
 import com.plusls.ommc.feature.worldEaterMineHelper.WorldEaterMineHelperUtil;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
