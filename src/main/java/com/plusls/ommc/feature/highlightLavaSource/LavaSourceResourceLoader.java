@@ -58,7 +58,7 @@ public class LavaSourceResourceLoader implements SimpleSynchronousResourceReload
         lavaSourceFlowSprite = atlas.apply(flowingSpriteId);
         lavaSourceSpites[0] = lavaSourceStillSprite;
         lavaSourceSpites[1] = lavaSourceFlowSprite;
-        defaultLavaSourceStillSprite = MinecraftClient.getInstance().getBakedModelManager().getBlockModels().getModel(Blocks.LAVA.getDefaultState()).getSprite();
+        defaultLavaSourceStillSprite = MinecraftClient.getInstance().getBakedModelManager().getBlockModels().getModel(Blocks.LAVA.getDefaultState()).getParticleSprite();
         defaultLavaSourceFlowSprite = ModelLoader.LAVA_FLOW.getSprite();
         defaultLavaSourceSpites[0] = defaultLavaSourceStillSprite;
         defaultLavaSourceSpites[1] = defaultLavaSourceFlowSprite;

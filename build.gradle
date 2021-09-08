@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.8-SNAPSHOT'
+    id 'fabric-loom' version '0.9-SNAPSHOT'
     id "com.modrinth.minotaur" version "1.2.1"
     id 'maven-publish'
 }
@@ -27,9 +27,12 @@ repositories {
         name = "Cotton"
         url = "https://server.bbkr.space/artifactory/libs-release/"
     }
+    maven {
+        url "https://www.cursemaven.com"
+    }
 }
 loom {
-    accessWidener "src/main/resources/ommc.accesswidener"
+    accessWidenerPath = file("src/main/resources/ommc.accesswidener")
 }
 dependencies {
     // To change the versions see the gradle.properties file
@@ -39,7 +42,7 @@ dependencies {
 
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    modImplementation "fi.dy.masa.malilib:malilib-fabric-${project.minecraft_version}:${project.malilib_version}"
+    modImplementation "curse.maven:malilib-303119:${project.malilib_version}"
     modImplementation "maven.modrinth:modmenu:${project.mod_menu_version}"
 
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
