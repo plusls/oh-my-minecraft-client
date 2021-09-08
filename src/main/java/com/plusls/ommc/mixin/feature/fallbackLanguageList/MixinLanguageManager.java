@@ -23,8 +23,7 @@ public class MixinLanguageManager {
     private Map<String, LanguageDefinition> languageDefs;
 
 
-
-    @Redirect(method = "reload", at=@At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z"))
+    @Redirect(method = "reload", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z"))
     private boolean addFallbackLanguage(List<LanguageDefinition> list, Object e) {
         LanguageDefinition en_us = this.languageDefs.getOrDefault("en_us", ENGLISH_US);
         boolean ret = false;

@@ -69,7 +69,8 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 import com.modrinth.minotaur.TaskModrinthUpload
-task publishModrinth (type: TaskModrinthUpload){
+
+task publishModrinth(type: TaskModrinthUpload) {
     onlyIf {
         System.getenv("MODRINTH") // Only attempt to run this task if the MODRINTH variable is set, otherwise SKIP it
     }
@@ -79,7 +80,8 @@ task publishModrinth (type: TaskModrinthUpload){
     versionNumber = version
     // On fabric, use 'remapJar' instead of 'jar'
     uploadFile = remapJar
-    addGameVersion(project.minecraft_version)
+    // addGameVersion(project.minecraft_version)
+    addGameVersion("1.17.1")
     addLoader('fabric')
 }
 
