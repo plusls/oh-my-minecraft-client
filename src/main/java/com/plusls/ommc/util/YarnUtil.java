@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Map;
+import java.util.Stack;
 
 // Code from https://github.com/TISUnion/Carpet-TIS-Addition/blob/master/src/main/java/carpettisaddition/utils/deobfuscator/StackTraceDeobfuscator.java
 public class YarnUtil {
@@ -49,6 +50,9 @@ public class YarnUtil {
         private final Map<String, String> deobfuscateMappings;
         private int intermediaryIndex;
         private int namedIndex;
+        private final Stack<Integer> classIdxStack = new Stack<>();
+        private final Stack<String> classNameStack = new Stack<>();
+        private int currentIdx = 0;
 
         public MappingVisitor(Map<String, String> obfuscateMappings, Map<String, String> deobfuscateMappings) {
             this.obfuscateMappings = obfuscateMappings;
@@ -58,6 +62,10 @@ public class YarnUtil {
         private void putMappings(MappingGetter name) {
             String intermediaryName = name.get(this.intermediaryIndex);
             String remappedName = name.get(this.namedIndex);
+            putMappings(intermediaryName, remappedName);
+        }
+
+        private void putMappings(String intermediaryName, String remappedName) {
             this.deobfuscateMappings.put(intermediaryName, remappedName);
             this.obfuscateMappings.put(remappedName, intermediaryName);
         }
@@ -70,18 +78,53 @@ public class YarnUtil {
 
         @Override
         public void pushClass(MappingGetter name) {
+            String intermediaryName = name.get(this.intermediaryIndex);
+            classNameStack.push(intermediaryName);
+            classIdxStack.push(currentIdx);
+            ++currentIdx;
             this.putMappings(name);
         }
 
         @Override
         public void pushField(MappingGetter name, String descriptor) {
-            this.putMappings(name);
+            ++currentIdx;
+            String intermediaryName = String.format("L%s;%s:%s", classNameStack.peek(), name.get(this.intermediaryIndex), descriptor);
+            String remappedName = String.format("L%s;%s:%s", classNameStack.peek(), name.get(this.namedIndex), descriptor);
+            putMappings(intermediaryName, remappedName);
         }
 
         @Override
         public void pushMethod(MappingGetter name, String descriptor) {
-            this.putMappings(name);
+            ++currentIdx;
+            String intermediaryName = String.format("L%s;%s%s", classNameStack.peek(), name.get(this.intermediaryIndex), descriptor);
+            String remappedName = String.format("L%s;%s%s", classNameStack.peek(), name.get(this.namedIndex), descriptor);
+            putMappings(intermediaryName, remappedName);
         }
+
+        @Override
+        public void pushParameter(MappingGetter name, int localVariableIndex) {
+            ++currentIdx;
+        }
+
+        @Override
+        public void pushLocalVariable(MappingGetter name, int localVariableIndex, int localVariableStartOffset, int localVariableTableIndex) {
+            ++currentIdx;
+        }
+
+        @Override
+        public void pushComment(String comment) {
+            ++currentIdx;
+        }
+
+        @Override
+        public void pop(int count) {
+            currentIdx -= count;
+            if (currentIdx == classIdxStack.peek()) {
+                classNameStack.pop();
+                classIdxStack.pop();
+            }
+        }
+
     }
 
     @Nullable
@@ -105,6 +148,7 @@ public class YarnUtil {
             nextIdx = str.indexOf(minecraftTypeStr, nextIdx + 1);
             str = str.replace(minecraftTypeStr, mappings.getOrDefault(minecraftTypeStr, minecraftTypeStr));
         }
+        str = mappings.getOrDefault(str, str);
         return str;
     }
 

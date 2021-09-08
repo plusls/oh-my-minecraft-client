@@ -125,6 +125,12 @@ above them, which is convenient for world eater maintenance and mining.
 
 ![worldEaterMineHelper](./docs/img/worldEaterMineHelper.png)
 
+## Lists
+
+### Fallback Language List
+
+Fallback language list.
+
 ## Advanced Integrated Server
 
 Now allow user to change some integrated server setting.

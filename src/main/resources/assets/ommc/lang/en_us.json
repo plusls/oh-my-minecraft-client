@@ -1,5 +1,5 @@
 {
-  "ommc.gui.title.configs": "Oh My Minecraft Client Config",
+  "ommc.gui.title.configs": "Oh My Minecraft Client - Config - Version: %s",
   "ommc.gui.button.config_gui.generic": "Generic",
   "ommc.gui.button.config_gui.feature_toggle": "Feature Toggles",
   "ommc.gui.button.config_gui.feature_hotkey": "Feature Hotkeys",
@@ -51,6 +51,8 @@
   "ommc.config.lists.breakBlockBlackList.comment": "If §6disableBreakScaffolding§r is enabled, you can't break blocks in §6breakBlockBlackList§r.",
   "ommc.config.lists.breakScaffoldingWhiteList.name": "breakScaffoldingWhiteList",
   "ommc.config.lists.breakScaffoldingWhiteList.comment": "If §6disableBreakScaffolding§r is enabled, you can only break scaffolding with the items in §6breakScaffoldingWhiteList§r.",
+  "ommc.config.lists.fallbackLanguageList.name": "fallbackLanguageList",
+  "ommc.config.lists.fallbackLanguageList.comment": "Fallback language list.",
   "ommc.config.lists.moveDownInScaffoldingWhiteList.name": "moveDownInScaffoldingWhiteList",
   "ommc.config.lists.moveDownInScaffoldingWhiteList.comment": "If §6disableMoveDownInScaffolding§r is enabled, you can only move down scaffolding with the items inside §6moveDownInScaffoldingWhiteList§r in your hand.",
   "ommc.config.lists.worldEaterMineHelperWhitelist.name": "worldEaterMineHelperWhitelist",

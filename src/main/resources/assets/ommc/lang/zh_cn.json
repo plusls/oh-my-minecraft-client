@@ -1,5 +1,5 @@
 {
-  "ommc.gui.title.configs": "Oh My Minecraft Client 配置",
+  "ommc.gui.title.configs": "Oh My Minecraft Client 设置 - 版本: %s",
   "ommc.gui.button.config_gui.generic": "通用",
   "ommc.gui.button.config_gui.feature_toggle": "特性开关",
   "ommc.gui.button.config_gui.feature_hotkey": "特性快捷键",
@@ -51,6 +51,8 @@
   "ommc.config.lists.breakBlockBlackList.comment": "如果开启 §6禁止破坏特定方块§r，玩家无法破坏在 §6破坏方块黑名单§r 中的方块",
   "ommc.config.lists.breakScaffoldingWhiteList.name": "破坏脚手架白名单",
   "ommc.config.lists.breakScaffoldingWhiteList.comment": "如果开启 §6禁止破坏脚手架§r，玩家只有在使用 §6破坏脚手架白名单§r 中的物品时才能破坏脚手架",
+  "ommc.config.lists.fallbackLanguageList.name": "候选语言列表",
+  "ommc.config.lists.fallbackLanguageList.comment": "候选语言不只是 en_us，可以设置自己的候选语言列表（比如在设置文言的时候，可以在 §6候选语言列表§r 中加入 zh_cn，从而在找不到语言资源的情况下使用中文文本）",
   "ommc.config.lists.moveDownInScaffoldingWhiteList.name": "在脚手架中下降白名单",
   "ommc.config.lists.moveDownInScaffoldingWhiteList.comment": "如果开启 §6禁止在脚手架中下降§r，玩家手中拿着 §6在脚手架中下降白名单§r 中的物品时才能在脚手架下降",
   "ommc.config.lists.worldEaterMineHelperWhitelist.name": "世吞挖矿助手白名单",

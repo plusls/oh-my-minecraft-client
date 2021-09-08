@@ -83,11 +83,23 @@ public class OmmcCompatMixinPlugin extends OmmcMixinPlugin {
             if (annotationNode.values.get(i + 1) instanceof AnnotationNode) {
                 AnnotationNode subAnnotationNode = (AnnotationNode) annotationNode.values.get(i + 1);
                 obfuscateAnnotation(subAnnotationNode, remap);
+            } else if (annotationNode.values.get(i + 1) instanceof ArrayList && ((ArrayList) annotationNode.values.get(i + 1)).size() > 0 && ((ArrayList) annotationNode.values.get(i + 1)).get(0) instanceof AnnotationNode) {
+                ArrayList<AnnotationNode> subAnnotationNodeList = (ArrayList) annotationNode.values.get(i + 1);
+                for (AnnotationNode subAnnotationNode : subAnnotationNodeList) {
+                    obfuscateAnnotation(subAnnotationNode, remap);
+                }
             } else if (!defaultRemap) {
                 String name = (String) annotationNode.values.get(i);
-                if (NAME_LIST.contains(name) && annotationNode.values.get(i + 1) instanceof String) {
-                    String str = (String) annotationNode.values.get(i + 1);
-                    annotationNode.values.set(i + 1, YarnUtil.obfuscateString(str));
+                if (NAME_LIST.contains(name)) {
+                    if (annotationNode.values.get(i + 1) instanceof String) {
+                        String str = (String) annotationNode.values.get(i + 1);
+                        annotationNode.values.set(i + 1, YarnUtil.obfuscateString(str));
+                    } else if (annotationNode.values.get(i + 1) instanceof ArrayList && ((ArrayList) annotationNode.values.get(i + 1)).size() > 0 && ((ArrayList) annotationNode.values.get(i + 1)).get(0) instanceof String) {
+                        ArrayList<String> strList = (ArrayList) annotationNode.values.get(i + 1);
+                        for (int j = 0; j < strList.size(); ++j) {
+                            strList.set(j, YarnUtil.obfuscateString(strList.get(j)));
+                        }
+                    }
                 }
             }
         }
@@ -176,7 +188,13 @@ public class OmmcCompatMixinPlugin extends OmmcMixinPlugin {
                 e.printStackTrace();
                 throw new IllegalStateException(String.format("VersionParsingException, modid=%s, version=%s", modId, versionList));
             }
-            ClassNode targetClassNode = loadClassNode(targerClassName);
+            ClassNode targetClassNode;
+            try {
+                targetClassNode = loadClassNode(targerClassName);
+            } catch (IllegalStateException ignored) {
+                ModInfo.LOGGER.warn("Can't load class: {} when check dependency", targerClassName);
+                return false;
+            }
             List<Type> predicateList = Annotations.getValue(dependency, "predicate");
             if (predicateList != null) {
                 for (Type predicateType : predicateList) {
