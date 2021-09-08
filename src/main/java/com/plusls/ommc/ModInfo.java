@@ -5,9 +5,7 @@ import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.spongepowered.asm.util.Annotations;
 
-import java.util.List;
 import java.util.Optional;
 
 public class ModInfo {
