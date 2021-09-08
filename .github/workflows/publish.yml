@@ -9,7 +9,7 @@ jobs:
       matrix:
         java: [ 16 ]
         os: [ ubuntu-20.04 ]
-        branch: [ 1.16, 1.17 ]
+        branch: [ 1.16, 1.17, 1.18 ]
     runs-on: ${{ matrix.os }}
     steps:
       - name: checkout repository
@@ -22,35 +22,25 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: ${{ matrix.java }}
-      - name: Display build number
-        run: echo MasaGadget build\#$GITHUB_RUN_NUMBER \(Public Release\)
       - name: Set build number in codes
         run: |
-          sed -i "s/build.undefined/build.$GITHUB_RUN_NUMBER/g" gradle.properties
-          sed -i "s/build.undefined/build.$GITHUB_RUN_NUMBER/g" src/main/java/com/plusls/MasaGadget/ModInfo.java
-          sed -i "s/Version Exception/Public Release/g" src/main/java/com/plusls/MasaGadget/ModInfo.java
+          sed -i "s/-alpha.114514//g" gradle.properties
       - name: make gradle wrapper executable
         if: ${{ runner.os != 'Windows' }}
         run: chmod +x ./gradlew
-      - name: copy linux deps
-        if: ${{ runner.os != 'Windows' }}
-        run: mkdir -p build/loom-cache && cp ./deps/* ./build/loom-cache/.
-      - name: copy windows deps
-        if: ${{ runner.os == 'Windows' }}
-        run: mkdir build\\loom-cache && copy .\deps\* .\\build\\loom-cache
       - name: build
         run: ./gradlew build
-      - name: Upload assets to GitHub
-        uses: AButler/upload-release-assets@v2.0
-        if: ${{ runner.os == 'Linux' && matrix.java == '16' }}
-        with:
-          files: 'build/libs/*;LICENSE'
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Find correct JAR
         id: findjar
         run: |
           output="$(find build/libs/ ! -name "*-dev.jar" ! -name "*-sources.jar" -type f -printf "%f\n")"
           echo "::set-output name=jarname::$output"
+      - name: Upload assets to GitHub
+        uses: AButler/upload-release-assets@v2.0
+        if: ${{ runner.os == 'Linux' && matrix.java == '16' }}
+        with:
+          files: build/libs/${{ steps.findjar.outputs.jarname }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload to Curseforge
         uses: itsmeow/curseforge-upload@v3
         with:
@@ -61,5 +51,11 @@ jobs:
           changelog_type: markdown
           changelog: ${{ github.event.release.body }}
           # 1.16.5:8203, 1.17:8516, fabric:7499
-          game_versions: ${{ fromJson('{"1.16":"8203","1.17":"8516"}')[matrix.branch] }}, 7499
+          game_versions: ${{ fromJson('{"1.16":"8203","1.17":"8516","1.18":"8633"}')[matrix.branch] }}, 7499
           release_type: release
+      - name: Upload to Modrinth
+        if: ${{ runner.os == 'Linux' && matrix.java == '16' }}
+        run: |
+          ./gradlew publishModrinth
+        env:
+          MODRINTH: ${{ secrets.MODRINTH }}
