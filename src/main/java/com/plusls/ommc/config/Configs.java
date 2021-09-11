@@ -17,8 +17,14 @@ import fi.dy.masa.malilib.hotkeys.KeybindSettings;
 import fi.dy.masa.malilib.util.FileUtils;
 import fi.dy.masa.malilib.util.JsonUtils;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.entity.Entity;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.LiteralText;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.BlockPos;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 
@@ -42,15 +48,16 @@ public class Configs implements IConfigHandler {
         public static final ConfigBoolean DONT_CLEAR_CHAT_HISTORY = new TranslatableConfigBoolean(PREFIX, "dontClearChatHistory", false);
         public static final ConfigHotkey CLEAR_WAYPOINT = new TranslatableConfigHotkey(PREFIX, "clearWaypoint", "C");
         public static final ConfigBoolean FORCE_PARSE_WAYPOINT_FROM_CHAT = new TranslatableConfigBoolean(PREFIX, "forceParseWaypointFromChat", false);
+        public static final ConfigHotkey SEND_LOOKING_AT_BLOCK_POS = new TranslatableConfigHotkey(PREFIX, "sendLookingAtBlockPos", "O,P");
         public static final ConfigHotkey SORT_INVENTORY = new TranslatableConfigHotkey(PREFIX, "sortInventory", "R", KeybindSettings.GUI);
         public static final ConfigBoolean SORT_INVENTORY_SUPPORT_EMPTY_SHULKER_BOX_STACK = new TranslatableConfigBoolean(PREFIX, "sortInventorySupportEmptyShulkerBoxStack", false);
-
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
                 OPEN_CONFIG_GUI,
                 DEBUG,
                 DONT_CLEAR_CHAT_HISTORY,
                 CLEAR_WAYPOINT,
                 FORCE_PARSE_WAYPOINT_FROM_CHAT,
+                SEND_LOOKING_AT_BLOCK_POS,
                 SORT_INVENTORY,
                 SORT_INVENTORY_SUPPORT_EMPTY_SHULKER_BOX_STACK
         );
@@ -58,6 +65,7 @@ public class Configs implements IConfigHandler {
         public static final ImmutableList<ConfigHotkey> HOTKEYS = ImmutableList.of(
                 OPEN_CONFIG_GUI,
                 CLEAR_WAYPOINT,
+                SEND_LOOKING_AT_BLOCK_POS,
                 SORT_INVENTORY
         );
 
@@ -67,6 +75,22 @@ public class Configs implements IConfigHandler {
                 GuiBase.openGui(new GuiConfigs());
                 return true;
             });
+            SEND_LOOKING_AT_BLOCK_POS.getKeybind().setCallback((keyAction, iKeybind) -> {
+                MinecraftClient client = MinecraftClient.getInstance();
+                Entity cameraEntity = client.getCameraEntity();
+                ClientPlayerInteractionManager clientPlayerInteractionManager = client.interactionManager;
+                if (cameraEntity != null && clientPlayerInteractionManager != null) {
+                    HitResult hitresult = cameraEntity.raycast(clientPlayerInteractionManager.getReachDistance(), client.getTickDelta(), false);
+                    if (hitresult.getType() == HitResult.Type.BLOCK) {
+                        BlockPos lookPos = ((BlockHitResult) hitresult).getBlockPos();
+                        if (client.player != null) {
+                            client.player.sendChatMessage(String.format("[%d, %d, %d]", lookPos.getX(), lookPos.getY(), lookPos.getZ()));
+                        }
+                    }
+                }
+                return true;
+            });
+
             CLEAR_WAYPOINT.getKeybind().setCallback((keyAction, iKeybind) -> {
                 HighlightWaypointUtil.highlightPos = null;
                 HighlightWaypointUtil.lastBeamTime = 0;
