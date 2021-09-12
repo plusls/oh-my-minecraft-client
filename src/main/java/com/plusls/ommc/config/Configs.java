@@ -73,7 +73,7 @@ public class Configs implements IConfigHandler {
         static {
             OPEN_CONFIG_GUI.getKeybind().setCallback((keyAction, iKeybind) -> {
                 GuiBase.openGui(new GuiConfigs());
-                return true;
+                return false;
             });
             SEND_LOOKING_AT_BLOCK_POS.getKeybind().setCallback((keyAction, iKeybind) -> {
                 MinecraftClient client = MinecraftClient.getInstance();
@@ -88,18 +88,18 @@ public class Configs implements IConfigHandler {
                         }
                     }
                 }
-                return true;
+                return false;
             });
 
             CLEAR_WAYPOINT.getKeybind().setCallback((keyAction, iKeybind) -> {
                 HighlightWaypointUtil.highlightPos = null;
                 HighlightWaypointUtil.lastBeamTime = 0;
-                return true;
+                return false;
             });
             SORT_INVENTORY.getKeybind().setCallback((keyAction, iKeybind) -> {
                 SortInventoryUtil.sort();
                 MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-                return true;
+                return false;
             });
             DEBUG.setValueChangeCallback(config -> {
                 if (config.getBooleanValue()) {
