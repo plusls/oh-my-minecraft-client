@@ -159,7 +159,3 @@ Make Minecraft Client Great Again!
 + 感谢 [voxelmap](https://www.curseforge.com/minecraft/mc-mods/voxelmap) 提供的高亮坐标点的实现
 + 感谢 [Hendrix-Shen](https://github.com/Hendrix-Shen) 提供的 32x 岩浆高亮材质
 + 感谢 [SunnySlopes](https://github.com/SunnySlopes) 提供的 32x 岩浆高亮材质
-
-## License
-
-This template is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.
