@@ -72,7 +72,7 @@ public class Configs implements IConfigHandler {
         static {
             OPEN_CONFIG_GUI.getKeybind().setCallback((keyAction, iKeybind) -> {
                 GuiBase.openGui(new GuiConfigs());
-                return false;
+                return true;
             });
             SEND_LOOKING_AT_BLOCK_POS.getKeybind().setCallback((keyAction, iKeybind) -> {
                 MinecraftClient client = MinecraftClient.getInstance();
