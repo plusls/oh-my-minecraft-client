@@ -43,6 +43,10 @@ A hotkey to send looking at pos.
 
 Press hotkey to sort inventory.
 
+### Sort Inventory Shulker Box Last
+
+Sort inventory shulker box last.
+
 ### Sort Inventory Support Empty ShulkerBox Stack
 
 Support empty shulker box stack when sort inventory.
