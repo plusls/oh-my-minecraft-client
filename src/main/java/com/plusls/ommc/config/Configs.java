@@ -49,7 +49,9 @@ public class Configs implements IConfigHandler {
         public static final ConfigBoolean FORCE_PARSE_WAYPOINT_FROM_CHAT = new TranslatableConfigBoolean(PREFIX, "forceParseWaypointFromChat", false);
         public static final ConfigHotkey SEND_LOOKING_AT_BLOCK_POS = new TranslatableConfigHotkey(PREFIX, "sendLookingAtBlockPos", "O,P");
         public static final ConfigHotkey SORT_INVENTORY = new TranslatableConfigHotkey(PREFIX, "sortInventory", "R", KeybindSettings.GUI);
+        public static final ConfigBoolean SORT_INVENTORY_SHULKER_BOX_LAST = new TranslatableConfigBoolean(PREFIX, "sortInventoryShulkerBoxLast", false);
         public static final ConfigBoolean SORT_INVENTORY_SUPPORT_EMPTY_SHULKER_BOX_STACK = new TranslatableConfigBoolean(PREFIX, "sortInventorySupportEmptyShulkerBoxStack", false);
+
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
                 OPEN_CONFIG_GUI,
                 DEBUG,
@@ -58,6 +60,7 @@ public class Configs implements IConfigHandler {
                 FORCE_PARSE_WAYPOINT_FROM_CHAT,
                 SEND_LOOKING_AT_BLOCK_POS,
                 SORT_INVENTORY,
+                SORT_INVENTORY_SHULKER_BOX_LAST,
                 SORT_INVENTORY_SUPPORT_EMPTY_SHULKER_BOX_STACK
         );
 
