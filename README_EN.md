@@ -35,6 +35,10 @@ Can delete it with hotkey.
 
 Force parse waypoint from chat (such it will override the clickevent of rtext).
 
+### Send Looking At Pos
+
+A hotkey to send looking at pos.
+
 ### Sort Inventory
 
 Press hotkey to sort inventory.
