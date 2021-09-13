@@ -21,7 +21,6 @@ import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.entity.Entity;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.LiteralText;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -73,7 +72,7 @@ public class Configs implements IConfigHandler {
         static {
             OPEN_CONFIG_GUI.getKeybind().setCallback((keyAction, iKeybind) -> {
                 GuiBase.openGui(new GuiConfigs());
-                return false;
+                return true;
             });
             SEND_LOOKING_AT_BLOCK_POS.getKeybind().setCallback((keyAction, iKeybind) -> {
                 MinecraftClient client = MinecraftClient.getInstance();
