@@ -1,5 +1,6 @@
 package com.plusls.ommc.feature.sortInventory;
 
+import com.plusls.ommc.config.Configs;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -93,10 +94,14 @@ public class SortInventoryUtil {
             clickQueue.addAll(mergeItems(itemStacks, 0, containerInventorySize));
             clickQueue.addAll(mergeItems(itemStacks, 0, containerInventorySize));
             r = 0;
-            for (int i = containerInventorySize - 1; i >= 0; --i) {
-                if (!itemStacks.get(i).isEmpty()) {
-                    r = i + 1;
-                    break;
+            if (Configs.Generic.SORT_INVENTORY_SHULKER_BOX_LAST.getBooleanValue()) {
+                r = containerInventorySize;
+            } else {
+                for (int i = containerInventorySize - 1; i >= 0; --i) {
+                    if (!itemStacks.get(i).isEmpty()) {
+                        r = i + 1;
+                        break;
+                    }
                 }
             }
             clickQueue.addAll(quickSort(itemStacks, 0, r));
@@ -104,10 +109,14 @@ public class SortInventoryUtil {
             clickQueue.addAll(mergeItems(itemStacks, playerInventoryStartIdx, playerInventoryStartIdx + 27));
             clickQueue.addAll(mergeItems(itemStacks, playerInventoryStartIdx, playerInventoryStartIdx + 27));
             r = playerInventoryStartIdx;
-            for (int i = playerInventoryStartIdx + 26; i >= playerInventoryStartIdx; --i) {
-                if (!itemStacks.get(i).isEmpty()) {
-                    r = i + 1;
-                    break;
+            if (Configs.Generic.SORT_INVENTORY_SHULKER_BOX_LAST.getBooleanValue()) {
+                r = playerInventoryStartIdx + 27;
+            } else {
+                for (int i = playerInventoryStartIdx + 26; i >= playerInventoryStartIdx; --i) {
+                    if (!itemStacks.get(i).isEmpty()) {
+                        r = i + 1;
+                        break;
+                    }
                 }
             }
             clickQueue.addAll(quickSort(itemStacks, playerInventoryStartIdx, r));
@@ -115,10 +124,14 @@ public class SortInventoryUtil {
             clickQueue.addAll(mergeItems(itemStacks, playerInventoryStartIdx + 27, playerInventoryStartIdx + 36));
             clickQueue.addAll(mergeItems(itemStacks, playerInventoryStartIdx + 27, playerInventoryStartIdx + 36));
             r = playerInventoryStartIdx + 27;
-            for (int i = playerInventoryStartIdx + 35; i >= playerInventoryStartIdx + 27; --i) {
-                if (!itemStacks.get(i).isEmpty()) {
-                    r = i + 1;
-                    break;
+            if (Configs.Generic.SORT_INVENTORY_SHULKER_BOX_LAST.getBooleanValue()) {
+                r = playerInventoryStartIdx + 36;
+            } else {
+                for (int i = playerInventoryStartIdx + 35; i >= playerInventoryStartIdx + 27; --i) {
+                    if (!itemStacks.get(i).isEmpty()) {
+                        r = i + 1;
+                        break;
+                    }
                 }
             }
             clickQueue.addAll(quickSort(itemStacks, playerInventoryStartIdx + 27, r));
@@ -200,6 +213,10 @@ public class SortInventoryUtil {
             return -1;
         } else if (ShulkerBoxItemUtil.isShulkerBoxBlockItem(a) && ShulkerBoxItemUtil.isShulkerBoxBlockItem(b)) {
             return ShulkerBoxItemUtil.cmpShulkerBox(a.getNbt(), b.getNbt());
+        } else if (a.isEmpty() && !b.isEmpty()) {
+            return 1;
+        } else if (!a.isEmpty() && b.isEmpty()) {
+            return -1;
         }
         if (aId == bId) {
             // 物品少的排在后面

@@ -19,6 +19,8 @@
   "ommc.config.generic.sendLookingAtBlockPos.comment": "A hotkey to send looking at pos.",
   "ommc.config.generic.sortInventory.name": "sortInventory",
   "ommc.config.generic.sortInventory.comment": "A hotkey to sort inventory.",
+  "ommc.config.generic.sortInventoryShulkerBoxLast.name": "sortInventoryShulkerBoxLast",
+  "ommc.config.generic.sortInventoryShulkerBoxLast.comment": "Sort inventory shulker box last.",
   "ommc.config.generic.sortInventorySupportEmptyShulkerBoxStack.name": "sortInventorySupportEmptyShulkerBoxStack",
   "ommc.config.generic.sortInventorySupportEmptyShulkerBoxStack.comment": "Support empty shulker box stack when sort inventory.",
   "ommc.config.feature_toggle.autoSwitchElytra.name": "autoSwitchElytra",

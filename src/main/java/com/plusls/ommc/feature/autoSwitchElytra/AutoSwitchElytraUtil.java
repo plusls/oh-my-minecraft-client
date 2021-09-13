@@ -25,6 +25,9 @@ public class AutoSwitchElytraUtil {
         if (client.interactionManager == null) {
             return;
         }
+        if (clientPlayerEntity.currentScreenHandler != clientPlayerEntity.playerScreenHandler) {
+            clientPlayerEntity.closeHandledScreen();
+        }
         ScreenHandler screenHandler = clientPlayerEntity.currentScreenHandler;
         ArrayList<Integer> clickQueue = new ArrayList<>();
         ItemStack cursorStack = screenHandler.getCursorStack().copy();
