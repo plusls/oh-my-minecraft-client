@@ -25,14 +25,9 @@ public class BlockModelNoOffsetUtil {
         String blockName = blockState.getBlock().getName().getString();
 
         if (Configs.Lists.BLOCK_MODEL_NO_OFFSET_LIST_TYPE.getOptionListValue() == UsageRestriction.ListType.WHITELIST) {
-            if (Configs.Lists.BLOCK_MODEL_NO_OFFSET_WHITELIST.getStrings().stream().anyMatch(s -> blockId.contains(s) || blockName.contains(s))) {
-                return true;
-            }
+            return Configs.Lists.BLOCK_MODEL_NO_OFFSET_WHITELIST.getStrings().stream().anyMatch(s -> blockId.contains(s) || blockName.contains(s));
         } else if (Configs.Lists.BLOCK_MODEL_NO_OFFSET_LIST_TYPE.getOptionListValue() == UsageRestriction.ListType.BLACKLIST) {
-            if (Configs.Lists.BLOCK_MODEL_NO_OFFSET_BLACKLIST.getStrings().stream().anyMatch(s -> !blockId.contains(s) && !blockName.contains(s))) {
-                return true;
-            }
-            return true;
+            return Configs.Lists.BLOCK_MODEL_NO_OFFSET_BLACKLIST.getStrings().stream().noneMatch(s -> blockId.contains(s) || blockName.contains(s));
         }
         return false;
     }

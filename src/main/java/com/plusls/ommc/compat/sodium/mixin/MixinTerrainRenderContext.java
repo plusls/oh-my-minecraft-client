@@ -2,12 +2,15 @@ package com.plusls.ommc.compat.sodium.mixin;
 
 import com.plusls.ommc.compat.Dependencies;
 import com.plusls.ommc.compat.Dependency;
+import com.plusls.ommc.feature.blockModelNoOffset.BlockModelNoOffsetUtil;
 import com.plusls.ommc.feature.worldEaterMineHelper.WorldEaterMineHelperUtil;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.BlockRenderView;
+import net.minecraft.world.BlockView;
 import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
@@ -28,4 +31,11 @@ public class MixinTerrainRenderContext {
         model.emitBlockQuads(blockView, state, pos, randomSupplier, context);
         WorldEaterMineHelperUtil.emitCustomBlockQuads(blockView, state, pos, randomSupplier, context);
     }
+
+    @Dynamic
+    @Redirect(method = "renderBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;getModelOffset(Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/util/math/Vec3d;", ordinal = 0, remap = true))
+    private Vec3d blockModelNoOffset(BlockState blockState, BlockView world, BlockPos pos) {
+        return BlockModelNoOffsetUtil.blockModelNoOffset(blockState, world, pos);
+    }
+
 }

@@ -12,6 +12,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.BlockView;
+import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.*;
@@ -32,8 +33,8 @@ public class MixinBlockRenderer {
         context.state = state;
     }
 
-    @SuppressWarnings("UnresolvedMixinReference")
-    @Redirect(method = "renderModel", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;getModelOffset(Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/util/math/Vec3d;", remap = true))
+    @Dynamic
+    @Redirect(method = "renderModel", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;getModelOffset(Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/util/math/Vec3d;", ordinal = 0, remap = true))
     private Vec3d blockModelNoOffset(BlockState blockState, BlockView world, BlockPos pos) {
         return BlockModelNoOffsetUtil.blockModelNoOffset(blockState, world, pos);
     }
