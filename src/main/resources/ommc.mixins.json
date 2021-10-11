@@ -9,6 +9,7 @@
     "advancedIntegratedServer.MixinOpenToLanScreen",
     "feature.autoSwitchElytra.MixinClientPlayerEntity",
     "feature.blockModelNoOffset.MixinBlockModelRenderer",
+    "feature.blockModelNoOffset.fabric.MixinTerrainRenderContext",
     "feature.disableBreakBlock.MixinClientPlayerInteractionManager",
     "feature.disableBreakScaffolding.MixinClientPlayerInteractionManager",
     "feature.disableMoveDownInScaffolding.MixinScaffoldingBlock",

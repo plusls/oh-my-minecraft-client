@@ -10,22 +10,30 @@ import net.minecraft.world.BlockView;
 
 public class BlockModelNoOffsetUtil {
     public static Vec3d blockModelNoOffset(BlockState blockState, BlockView world, BlockPos pos) {
-        if (!Configs.FeatureToggle.BLOCK_MODEL_NO_OFFSET.getBooleanValue()) {
+        if (shouldNoOffset(blockState)) {
+            return Vec3d.ZERO;
+        } else {
             return blockState.getModelOffset(world, pos);
         }
+    }
+
+    public static boolean shouldNoOffset(BlockState blockState) {
+        if (!Configs.FeatureToggle.BLOCK_MODEL_NO_OFFSET.getBooleanValue()) {
+            return false;
+        }
         String blockId = Registry.BLOCK.getId(blockState.getBlock()).toString();
-        String blockName = world.getBlockState(pos).getBlock().getName().getString();
+        String blockName = blockState.getBlock().getName().getString();
 
         if (Configs.Lists.BLOCK_MODEL_NO_OFFSET_LIST_TYPE.getOptionListValue() == UsageRestriction.ListType.WHITELIST) {
             if (Configs.Lists.BLOCK_MODEL_NO_OFFSET_WHITELIST.getStrings().stream().anyMatch(s -> blockId.contains(s) || blockName.contains(s))) {
-                return Vec3d.ZERO;
+                return true;
             }
         } else if (Configs.Lists.BLOCK_MODEL_NO_OFFSET_LIST_TYPE.getOptionListValue() == UsageRestriction.ListType.BLACKLIST) {
             if (Configs.Lists.BLOCK_MODEL_NO_OFFSET_BLACKLIST.getStrings().stream().anyMatch(s -> !blockId.contains(s) && !blockName.contains(s))) {
-                return Vec3d.ZERO;
+                return true;
             }
-            return Vec3d.ZERO;
+            return true;
         }
-        return blockState.getModelOffset(world, pos);
+        return false;
     }
 }
