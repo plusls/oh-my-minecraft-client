@@ -16,6 +16,7 @@ import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.hotkeys.KeybindSettings;
 import fi.dy.masa.malilib.util.FileUtils;
 import fi.dy.masa.malilib.util.JsonUtils;
+import fi.dy.masa.malilib.util.restrictions.UsageRestriction;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.sound.PositionedSoundInstance;
@@ -37,6 +38,8 @@ public class Configs implements IConfigHandler {
     private static final int CONFIG_VERSION = 1;
     private static final List<String> OLD_WORLD_EATER_MINE_HELPER_WHITELIST = new ArrayList<>();
     private static final List<String> OLD_FALLBACK_LANGUAGE_LIST = new ArrayList<>();
+    private static final List<String> OLD_BLOCK_MODEL_NO_OFFSET_BLACKLIST = new ArrayList<>();
+    private static final List<String> OLD_BLOCK_MODEL_NO_OFFSET_WHITELIST = new ArrayList<>();
 
     private static boolean firstLoadConfig = true;
 
@@ -116,6 +119,7 @@ public class Configs implements IConfigHandler {
     public static class FeatureToggle {
         private static final String PREFIX = String.format("%s.config.feature_toggle", ModInfo.MOD_ID);
         public static final ConfigBooleanHotkeyed AUTO_SWITCH_ELYTRA = new TranslatableConfigBooleanHotkeyed(PREFIX, "autoSwitchElytra", false, "");
+        public static final ConfigBooleanHotkeyed BLOCK_MODEL_NO_OFFSET = new TranslatableConfigBooleanHotkeyed(PREFIX, "blockModelNoOffset", false, "");
         public static final ConfigBooleanHotkeyed DISABLE_BREAK_BLOCK = new TranslatableConfigBooleanHotkeyed(PREFIX, "disableBreakBlock", false, "");
         public static final ConfigBooleanHotkeyed DISABLE_BREAK_SCAFFOLDING = new TranslatableConfigBooleanHotkeyed(PREFIX, "disableBreakScaffolding", false, "");
         public static final ConfigBooleanHotkeyed DISABLE_MOVE_DOWN_IN_SCAFFOLDING = new TranslatableConfigBooleanHotkeyed(PREFIX, "disableMoveDownInScaffolding", false, "");
@@ -132,6 +136,7 @@ public class Configs implements IConfigHandler {
 
         public static final ImmutableList<ConfigBooleanHotkeyed> OPTIONS = ImmutableList.of(
                 AUTO_SWITCH_ELYTRA,
+                BLOCK_MODEL_NO_OFFSET,
                 DISABLE_BREAK_BLOCK,
                 DISABLE_BREAK_SCAFFOLDING,
                 DISABLE_MOVE_DOWN_IN_SCAFFOLDING,
@@ -148,6 +153,7 @@ public class Configs implements IConfigHandler {
         );
 
         static {
+            BLOCK_MODEL_NO_OFFSET.setValueChangeCallback(config -> MinecraftClient.getInstance().worldRenderer.reload());
             HIGHLIGHT_LAVA_SOURCE.setValueChangeCallback(config -> {
                 ModInfo.LOGGER.debug("set HIGHLIGHT_LAVA_SOURCE {}", config.getBooleanValue());
                 MinecraftClient.getInstance().worldRenderer.reload();
@@ -161,6 +167,9 @@ public class Configs implements IConfigHandler {
 
     public static class Lists {
         private static final String PREFIX = String.format("%s.config.lists", ModInfo.MOD_ID);
+        public static final ConfigOptionList BLOCK_MODEL_NO_OFFSET_LIST_TYPE = new TranslatableConfigOptionList(PREFIX, "blockModelNoOffsetListType", UsageRestriction.ListType.WHITELIST);
+        public static final ConfigStringList BLOCK_MODEL_NO_OFFSET_BLACKLIST = new TranslatableConfigStringList(PREFIX, "blockModelNoOffsetBlacklist", ImmutableList.of());
+        public static final ConfigStringList BLOCK_MODEL_NO_OFFSET_WHITELIST = new TranslatableConfigStringList(PREFIX, "blockModelNoOffsetWhitelist", ImmutableList.of("minecraft:wither_rose", "minecraft:poppy", "minecraft:dandelion"));
         public static final ConfigStringList BREAK_BLOCK_BLACKLIST = new TranslatableConfigStringList(PREFIX,
                 "breakBlockBlackList", ImmutableList.of("minecraft:budding_amethyst", "_bud"));
         public static final ConfigStringList BREAK_SCAFFOLDING_WHITELIST = new TranslatableConfigStringList(PREFIX,
@@ -172,12 +181,20 @@ public class Configs implements IConfigHandler {
         public static final ConfigStringList WORLD_EATER_MINE_HELPER_WHITELIST = new TranslatableConfigStringList(PREFIX,
                 "worldEaterMineHelperWhitelist", ImmutableList.of("_ore", "minecraft:ancient_debris", "minecraft:obsidian"));
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
+                BLOCK_MODEL_NO_OFFSET_LIST_TYPE,
+                BLOCK_MODEL_NO_OFFSET_BLACKLIST,
+                BLOCK_MODEL_NO_OFFSET_WHITELIST,
                 BREAK_BLOCK_BLACKLIST,
                 BREAK_SCAFFOLDING_WHITELIST,
                 FALLBACK_LANGUAGE_LIST,
                 MOVE_DOWN_IN_SCAFFOLDING_WHITELIST,
                 WORLD_EATER_MINE_HELPER_WHITELIST
         );
+
+        static {
+            BLOCK_MODEL_NO_OFFSET_LIST_TYPE.setValueChangeCallback(config -> MinecraftClient.getInstance().worldRenderer.reload());
+        }
+
     }
 
     public static class AdvancedIntegratedServer {
@@ -222,12 +239,18 @@ public class Configs implements IConfigHandler {
         OLD_WORLD_EATER_MINE_HELPER_WHITELIST.addAll(Lists.WORLD_EATER_MINE_HELPER_WHITELIST.getStrings());
         OLD_FALLBACK_LANGUAGE_LIST.clear();
         OLD_FALLBACK_LANGUAGE_LIST.addAll(Lists.FALLBACK_LANGUAGE_LIST.getStrings());
+        OLD_BLOCK_MODEL_NO_OFFSET_BLACKLIST.clear();
+        OLD_BLOCK_MODEL_NO_OFFSET_BLACKLIST.addAll(Lists.BLOCK_MODEL_NO_OFFSET_BLACKLIST.getStrings());
+        OLD_BLOCK_MODEL_NO_OFFSET_WHITELIST.clear();
+        OLD_BLOCK_MODEL_NO_OFFSET_WHITELIST.addAll(Lists.BLOCK_MODEL_NO_OFFSET_WHITELIST.getStrings());
 
     }
 
     public static void checkIsStringListChanged() {
         boolean dirty = false;
-        if (!OLD_WORLD_EATER_MINE_HELPER_WHITELIST.equals(Lists.WORLD_EATER_MINE_HELPER_WHITELIST.getStrings())) {
+        if (!OLD_WORLD_EATER_MINE_HELPER_WHITELIST.equals(Lists.WORLD_EATER_MINE_HELPER_WHITELIST.getStrings()) ||
+                !OLD_BLOCK_MODEL_NO_OFFSET_BLACKLIST.equals(Lists.BLOCK_MODEL_NO_OFFSET_BLACKLIST.getStrings()) ||
+                !OLD_BLOCK_MODEL_NO_OFFSET_WHITELIST.equals(Lists.BLOCK_MODEL_NO_OFFSET_WHITELIST.getStrings())) {
             MinecraftClient.getInstance().worldRenderer.reload();
             dirty = true;
         }

@@ -61,6 +61,10 @@ It looks like:
 
 ![autoSwitchElytra](./docs/img/autoSwitchElytra.gif)
 
+### Block Model No Offset
+
+Render block model without random offset.
+
 ### Disable Break Block
 
 You can't break blocks in **breakBlockBlackList**.
