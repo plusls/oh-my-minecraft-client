@@ -60,7 +60,7 @@ public abstract class MixinJsonUnbakedModel implements UnbakedModel {
         originalModelElements.clear();
 
         for (ModelElement modelElement : originalModelElementsBackup) {
-            Vec3f origin = new Vec3f(8f, 80f, 178.4f);
+            Vec3f origin = new Vec3f(0f, 80f, 181.82f);
             origin.scale(0.0625F);
             ModelRotation newModelRotation = new ModelRotation(origin, Direction.Axis.X, 45, false);
 

@@ -61,6 +61,14 @@ It looks like:
 
 ![autoSwitchElytra](./docs/img/autoSwitchElytra.gif)
 
+### Better Sneaking
+
+Player can move down 1 height when sneaking.
+
+### Block Model No Offset
+
+Render block model without random offset.
+
 ### Disable Break Block
 
 You can't break blocks in **breakBlockBlackList**.

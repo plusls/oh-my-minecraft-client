@@ -6,8 +6,9 @@ import com.plusls.ommc.compat.NeedObfuscate;
 import com.plusls.ommc.util.YarnUtil;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
+import net.fabricmc.loader.api.Version;
 import net.fabricmc.loader.api.VersionParsingException;
-import net.fabricmc.loader.util.version.VersionPredicateParser;
+import net.fabricmc.loader.impl.util.version.VersionPredicateParser;
 import org.apache.commons.io.FileUtils;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Type;
@@ -33,6 +34,8 @@ public class OmmcCompatMixinPlugin extends OmmcMixinPlugin {
     private final List<String> obfuscatedMixinList = new ArrayList<>();
     static private Path tempDirectory;
 
+    static private Method oldMatchesMethod;
+
     static {
         if (!FabricLoader.getInstance().isDevelopmentEnvironment()) {
             try {
@@ -42,6 +45,11 @@ public class OmmcCompatMixinPlugin extends OmmcMixinPlugin {
                 throw new IllegalStateException("Cannot create temp directory.");
             }
         }
+        try {
+            oldMatchesMethod = Class.forName("net.fabricmc.loader.util.version.VersionPredicateParser").getMethod("matches", Version.class, String.class);
+        } catch (ClassNotFoundException | NoSuchMethodException ignored) {
+        }
+
     }
     // private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
@@ -141,7 +149,12 @@ public class OmmcCompatMixinPlugin extends OmmcMixinPlugin {
             Object urlLoader = Thread.currentThread().getContextClassLoader();
             Class<?> knotClassLoader;
             try {
-                knotClassLoader = Class.forName("net.fabricmc.loader.launch.knot.KnotClassLoader");
+                if (oldMatchesMethod == null) {
+                    knotClassLoader = Class.forName("net.fabricmc.loader.impl.launch.knot.KnotClassLoader");
+                } else {
+                    knotClassLoader = Class.forName("net.fabricmc.loader.launch.knot.KnotClassLoader");
+                }
+
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
                 throw new IllegalStateException("Cannot load class: net.fabricmc.loader.launch.knot.KnotClassLoader");
@@ -171,22 +184,29 @@ public class OmmcCompatMixinPlugin extends OmmcMixinPlugin {
         }
     }
 
+
+    private boolean myMatches(Version version, String s) {
+        try {
+            if (oldMatchesMethod != null) {
+                return (boolean) oldMatchesMethod.invoke(null, version, s);
+            }
+            return VersionPredicateParser.parse(s).test(version);
+        } catch (VersionParsingException | InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     private boolean checkDependency(String targerClassName, AnnotationNode dependency) {
         String modId = Annotations.getValue(dependency, "modId");
         Optional<ModContainer> modContainerOptional = FabricLoader.getInstance().getModContainer(modId);
         if (modContainerOptional.isPresent()) {
             ModContainer modContainer = modContainerOptional.get();
             List<String> versionList = Annotations.getValue(dependency, "version");
-            try {
-                for (String version : versionList) {
-                    // not work in fabric-loader 0.12
-                    if (!VersionPredicateParser.matches(modContainer.getMetadata().getVersion(), version)) {
-                        return false;
-                    }
+            for (String version : versionList) {
+                if (!myMatches(modContainer.getMetadata().getVersion(), version)) {
+                    return false;
                 }
-            } catch (VersionParsingException e) {
-                e.printStackTrace();
-                throw new IllegalStateException(String.format("VersionParsingException, modid=%s, version=%s", modId, versionList));
             }
             ClassNode targetClassNode;
             try {

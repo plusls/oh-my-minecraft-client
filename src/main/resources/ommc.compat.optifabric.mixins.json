@@ -1,0 +1,10 @@
+{
+  "parent": "ommc.mixins.json",
+  "package": "com.plusls.ommc.compat.optifabric.mixin",
+  "plugin": "com.plusls.ommc.OmmcCompatMixinPlugin",
+  "client": [
+  ],
+  "mixins": [
+    "MixinBlockModelRenderer"
+  ]
+}
