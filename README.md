@@ -64,6 +64,14 @@ Make Minecraft Client Great Again!
 
 ![autoSwitchElytra](./docs/img/autoSwitchElytra.gif)
 
+### 更好的潜行
+
+在潜行时玩家可以向下移动 1 格高
+
+### 方块模型没有偏移
+
+渲染方块模型时不再有随机偏移（比如凋零玫瑰）
+
 ### 禁止破坏特定方块
 
 玩家无法破坏在 **破坏方块黑名单** 中的方块
