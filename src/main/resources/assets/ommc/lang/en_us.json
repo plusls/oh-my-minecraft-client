@@ -25,6 +25,8 @@
   "ommc.config.generic.sortInventorySupportEmptyShulkerBoxStack.comment": "Support empty shulker box stack when sort inventory.",
   "ommc.config.feature_toggle.autoSwitchElytra.name": "autoSwitchElytra",
   "ommc.config.feature_toggle.autoSwitchElytra.comment": "Auto switch elytra and chestplate.",
+  "ommc.config.feature_toggle.betterSneaking.name": "betterSneaking",
+  "ommc.config.feature_toggle.betterSneaking.comment": "Player can move down 1 height when sneaking.",
   "ommc.config.feature_toggle.blockModelNoOffset.name": "blockModelNoOffset",
   "ommc.config.feature_toggle.blockModelNoOffset.comment": "Render block model without random offset.",
   "ommc.config.feature_toggle.disableBreakBlock.name": "disableBreakBlock",

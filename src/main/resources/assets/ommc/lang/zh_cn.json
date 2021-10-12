@@ -25,6 +25,8 @@
   "ommc.config.generic.sortInventorySupportEmptyShulkerBoxStack.comment": "整理仓库时支持空潜影盒堆叠（请配合 PCA 使用）",
   "ommc.config.feature_toggle.autoSwitchElytra.name": "自动切换鞘翅",
   "ommc.config.feature_toggle.autoSwitchElytra.comment": "自动切换鞘翅和胸甲",
+  "ommc.config.feature_toggle.betterSneaking.name": "更好的潜行",
+  "ommc.config.feature_toggle.betterSneaking.comment": "在潜行时玩家可以向下移动 1 格高",
   "ommc.config.feature_toggle.blockModelNoOffset.name": "方块模型没有偏移",
   "ommc.config.feature_toggle.blockModelNoOffset.comment": "渲染方块模型时不再有随机偏移（比如凋零玫瑰）",
   "ommc.config.feature_toggle.disableBreakBlock.name": "禁止破坏特定方块",
