@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class MixinBlockModelRenderer {
 
     @Dynamic
-    @Redirect(method = "tesselateBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;getModelOffset(Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/util/math/Vec3d;", remap = true), remap = false)
+    @Redirect(method = "renderModel", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;getModelOffset(Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/util/math/Vec3d;", remap = true), remap = false)
     private Vec3d blockModelNoOffset(BlockState blockState, BlockView world, BlockPos pos) {
         return BlockModelNoOffsetUtil.blockModelNoOffset(blockState, world, pos);
     }
