@@ -36,4 +36,24 @@ public class MixinPlayerEntity  {
         ((PlayerEntity) (Object) this).stepHeight = prevStepHeight;
         prevStepHeight = DEFAULT_STEP_HEIGHT;
     }
+
+
+    @Inject(method = "method_30263", at=@At(value = "HEAD"))
+    private void setStepHeight(CallbackInfoReturnable<Boolean> cir) {
+        if (!Configs.FeatureToggle.BETTER_SNEAKING.getBooleanValue()) {
+            return;
+        }
+        PlayerEntity playerEntity = (PlayerEntity) (Object) this;
+        prevStepHeight = playerEntity.stepHeight;
+        playerEntity.stepHeight = MAX_STEP_HEIGHT;
+    }
+
+    @Inject(method = "method_30263", at=@At(value = "RETURN"))
+    private void restoreStepHeight(CallbackInfoReturnable<Boolean> cir) {
+        if (!Configs.FeatureToggle.BETTER_SNEAKING.getBooleanValue() || Math.abs(prevStepHeight - DEFAULT_STEP_HEIGHT) <= 0.001) {
+            return;
+        }
+        ((PlayerEntity) (Object) this).stepHeight = prevStepHeight;
+        prevStepHeight = DEFAULT_STEP_HEIGHT;
+    }
 }
