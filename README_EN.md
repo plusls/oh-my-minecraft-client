@@ -69,6 +69,12 @@ Player can move down 1 height when sneaking.
 
 Render block model without random offset.
 
+### Chat Network Lag Fix
+
+Fix [MC-218167](https://bugs.mojang.com/browse/MC-218167).
+When receives a chat message with sender's UUID, the game will check a blocklist to determine whether to display it or not.
+The game before 21w39a fetches the list in Render Thread. Unfortunately, the network request is blocking, and freezes the Render Thread for several seconds in poor network conditions.
+
 ### Disable Break Block
 
 You can't break blocks in **breakBlockBlackList**.

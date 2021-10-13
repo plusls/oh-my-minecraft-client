@@ -121,6 +121,7 @@ public class Configs implements IConfigHandler {
         public static final ConfigBooleanHotkeyed AUTO_SWITCH_ELYTRA = new TranslatableConfigBooleanHotkeyed(PREFIX, "autoSwitchElytra", false, "");
         public static final ConfigBooleanHotkeyed BETTER_SNEAKING = new TranslatableConfigBooleanHotkeyed(PREFIX, "betterSneaking", false, "");
         public static final ConfigBooleanHotkeyed BLOCK_MODEL_NO_OFFSET = new TranslatableConfigBooleanHotkeyed(PREFIX, "blockModelNoOffset", false, "");
+        public static final ConfigBooleanHotkeyed CHAT_NETWORK_LAG_FIX = new TranslatableConfigBooleanHotkeyed(PREFIX, "chatNetworkLagFix", false, "");
         public static final ConfigBooleanHotkeyed DISABLE_BREAK_BLOCK = new TranslatableConfigBooleanHotkeyed(PREFIX, "disableBreakBlock", false, "");
         public static final ConfigBooleanHotkeyed DISABLE_BREAK_SCAFFOLDING = new TranslatableConfigBooleanHotkeyed(PREFIX, "disableBreakScaffolding", false, "");
         public static final ConfigBooleanHotkeyed DISABLE_MOVE_DOWN_IN_SCAFFOLDING = new TranslatableConfigBooleanHotkeyed(PREFIX, "disableMoveDownInScaffolding", false, "");
@@ -139,6 +140,7 @@ public class Configs implements IConfigHandler {
                 AUTO_SWITCH_ELYTRA,
                 BETTER_SNEAKING,
                 BLOCK_MODEL_NO_OFFSET,
+                CHAT_NETWORK_LAG_FIX,
                 DISABLE_BREAK_BLOCK,
                 DISABLE_BREAK_SCAFFOLDING,
                 DISABLE_MOVE_DOWN_IN_SCAFFOLDING,

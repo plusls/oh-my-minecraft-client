@@ -10,6 +10,8 @@
     "feature.autoSwitchElytra.MixinClientPlayerEntity",
     "feature.betterSneaking.MixinPlayerEntity",
     "feature.blockModelNoOffset.fabric.MixinTerrainRenderContext",
+    "feature.chatNetworkLagFix.MixinMinecraftClient",
+    "feature.chatNetworkLagFix.MixinGameMessageS2CPacket",
     "feature.disableBreakBlock.MixinClientPlayerInteractionManager",
     "feature.disableBreakScaffolding.MixinClientPlayerInteractionManager",
     "feature.disableMoveDownInScaffolding.MixinScaffoldingBlock",

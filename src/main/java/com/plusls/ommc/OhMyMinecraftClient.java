@@ -2,6 +2,7 @@ package com.plusls.ommc;
 
 import com.plusls.ommc.config.Configs;
 import com.plusls.ommc.event.InputHandler;
+import com.plusls.ommc.feature.chatNetworkLagFix.ChatMessageHandler;
 import com.plusls.ommc.feature.highlightLavaSource.LavaSourceResourceLoader;
 import com.plusls.ommc.feature.highlithtWaypoint.HighlightWaypointResourceLoader;
 import com.plusls.ommc.feature.highlithtWaypoint.HighlightWaypointUtil;
@@ -19,6 +20,7 @@ public class OhMyMinecraftClient implements ClientModInitializer {
         InputEventHandler.getKeybindManager().registerKeybindProvider(InputHandler.getInstance());
         RealSneakingEventHandler.init();
         HighlightWaypointUtil.init();
+        ChatMessageHandler.getInstance().init();
     }
 }
 
