@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.9-SNAPSHOT'
+    id 'fabric-loom' version '0.10-SNAPSHOT'
     id "com.modrinth.minotaur" version "1.2.1"
     id 'maven-publish'
 }
@@ -80,8 +80,7 @@ task publishModrinth(type: TaskModrinthUpload) {
     versionNumber = version
     // On fabric, use 'remapJar' instead of 'jar'
     uploadFile = remapJar
-    // addGameVersion(project.minecraft_version)
-    addGameVersion("1.17.1")
+    addGameVersion(project.minecraft_version)
     addLoader('fabric')
 }
 
