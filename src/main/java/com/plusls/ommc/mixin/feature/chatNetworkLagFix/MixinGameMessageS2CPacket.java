@@ -25,11 +25,9 @@ public class MixinGameMessageS2CPacket {
                 if (!client.getSocialInteractionsManager().isPlayerBlocked(packet.getSender()) &&
                         !client.getSocialInteractionsManager()
                                 .isPlayerBlocked(client.inGameHud.extractSender(packet.getMessage()))) {
-                    client.executeTask(() -> {
-                        if (client.getNetworkHandler() != null) {
-                            client.inGameHud.addChatMessage(packet.getLocation(), packet.getMessage(), packet.getSender());
-                        }
-                    });
+                    client.executeTask(() ->
+                            client.inGameHud.addChatMessage(packet.getLocation(), packet.getMessage(), packet.getSender())
+                    );
                 }
             });
         } else {
