@@ -29,6 +29,8 @@
   "ommc.config.feature_toggle.betterSneaking.comment": "Player can move down 1 height when sneaking.",
   "ommc.config.feature_toggle.blockModelNoOffset.name": "blockModelNoOffset",
   "ommc.config.feature_toggle.blockModelNoOffset.comment": "Render block model without random offset.",
+  "ommc.config.feature_toggle.disableBlocklistCheck.name": "disableBlocklistCheck",
+  "ommc.config.feature_toggle.disableBlocklistCheck.comment": "Workaround for MC-218167, prevent network request from blocking the Render Thread.",
   "ommc.config.feature_toggle.disableBreakBlock.name": "disableBreakBlock",
   "ommc.config.feature_toggle.disableBreakBlock.comment": "You can't break blocks in §6breakBlockBlackList§r.",
   "ommc.config.feature_toggle.disableBreakScaffolding.name": "disableBreakScaffolding",
