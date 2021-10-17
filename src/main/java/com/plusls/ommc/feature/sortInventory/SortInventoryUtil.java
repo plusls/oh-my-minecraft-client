@@ -1,17 +1,17 @@
 package com.plusls.ommc.feature.sortInventory;
 
 import com.plusls.ommc.config.Configs;
+import com.plusls.ommc.mixin.feature.sortInventory.MixinContainerScreen;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.gui.screen.ingame.ContainerScreen;
+import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
+import net.minecraft.container.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.*;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.screen.slot.SlotActionType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -20,39 +20,40 @@ import java.util.List;
 public class SortInventoryUtil {
     final public static int EMPTY_SPACE_SLOT_INDEX = -999;
 
-    public static int getPlayerInventoryStartIdx(ScreenHandler screenHandler) {
-        if (screenHandler instanceof PlayerScreenHandler) {
+    public static int getPlayerInventoryStartIdx(Container container) {
+        if (container instanceof PlayerContainer) {
             return 9;
-        } else if (screenHandler instanceof CraftingScreenHandler) {
+        } else if (container instanceof CraftingContainer) {
             return 10;
         } else {
-            return getContainerInventorySize(screenHandler);
+            return getContainerInventorySize(container);
         }
 
     }
 
-    private static int getContainerInventorySize(ScreenHandler screenHandler) {
-        if (screenHandler instanceof Generic3x3ContainerScreenHandler ||
-                screenHandler instanceof GenericContainerScreenHandler ||
-                screenHandler instanceof HopperScreenHandler ||
-                screenHandler instanceof ShulkerBoxScreenHandler
+    private static int getContainerInventorySize(Container container) {
+        if (container instanceof Generic3x3Container ||
+                container instanceof GenericContainer ||
+                container instanceof HopperContainer ||
+                container instanceof ShulkerBoxContainer
         ) {
-            return screenHandler.getSlot(0).inventory.size();
+            return container.getSlot(0).inventory.getInvSize();
         }
         return -1;
     }
 
     public static boolean sort() {
         MinecraftClient client = MinecraftClient.getInstance();
-        HandledScreen<?> handledScreen;
-        if (!(client.currentScreen instanceof HandledScreen<?>)) {
+        ContainerScreen<?> containerScreen;
+        if (!(client.currentScreen instanceof ContainerScreen<?>) || client.currentScreen instanceof CreativeInventoryScreen) {
             return false;
         }
-        handledScreen = (HandledScreen<?>) client.currentScreen;
+        containerScreen = (ContainerScreen<?>) client.currentScreen;
 
         double x = client.mouse.getX() * client.getWindow().getScaledWidth() / client.getWindow().getWidth();
         double y = client.mouse.getY() * client.getWindow().getScaledHeight() / client.getWindow().getHeight();
-        Slot mouseSlot = handledScreen.getSlotAt(x, y);
+        // Why ContainerScreen.getSlotAt has private access
+        Slot mouseSlot = ((MixinContainerScreen) containerScreen).getSlotAt(x, y);
         if (mouseSlot == null) {
             return false;
         }
@@ -61,8 +62,8 @@ public class SortInventoryUtil {
         if (client.interactionManager == null || player == null) {
             return false;
         }
-        ScreenHandler screenHandler = player.currentScreenHandler;
-        int playerInventoryStartIdx = getPlayerInventoryStartIdx(screenHandler);
+        Container container = player.container;
+        int playerInventoryStartIdx = getPlayerInventoryStartIdx(container);
         if (playerInventoryStartIdx == -1) {
             return false;
         }
@@ -70,14 +71,14 @@ public class SortInventoryUtil {
         ArrayList<Integer> clickQueue = new ArrayList<>();
         ItemStack cursorStack = player.inventory.getCursorStack().copy();
         ArrayList<ItemStack> itemStacks = new ArrayList<>();
-        int containerInventorySize = getContainerInventorySize(screenHandler);
+        int containerInventorySize = getContainerInventorySize(container);
 
-        for (int i = 0; i < screenHandler.slots.size(); ++i) {
-            itemStacks.add(screenHandler.slots.get(i).getStack().copy());
+        for (int i = 0; i < container.slots.size(); ++i) {
+            itemStacks.add(container.slots.get(i).getStack().copy());
         }
         if (!cursorStack.isEmpty()) {
             // 把鼠标的物品放到玩家仓库中
-            clickQueue.addAll(addItemStack(itemStacks, cursorStack, playerInventoryStartIdx, screenHandler.slots.size()));
+            clickQueue.addAll(addItemStack(itemStacks, cursorStack, playerInventoryStartIdx, container.slots.size()));
         }
         if (!cursorStack.isEmpty() && containerInventorySize != -1) {
             // 把鼠标的物品放到仓库
@@ -136,7 +137,7 @@ public class SortInventoryUtil {
             clickQueue.addAll(quickSort(itemStacks, playerInventoryStartIdx + 27, r));
         }
 
-        doClick(player, screenHandler.syncId, client.interactionManager, clickQueue);
+        doClick(player, container.syncId, client.interactionManager, clickQueue);
         return !clickQueue.isEmpty();
     }
 

@@ -18,16 +18,25 @@
     "feature.fallbackLanguageList.MixinLanguageManager",
     "feature.flatDigger.MixinClientPlayerInteractionManager",
     "feature.forceBreakingCooldown.MixinClientPlayerInteractionManager",
-    "feature.highlightPersistentMob.MixinMinecraftClient",
-    "feature.highlightWanderingTrader.MixinMinecraftClient",
+    "feature.highlightPersistentMob.MixinEntity",
+    "feature.highlightWanderingTrader.MixinEntity",
     "feature.highlightWaypoint.MixinChatHud",
     "feature.highlightWaypoint.MixinPlayerRespawnS2CPacket",
+    "feature.highlightWaypoint.MixinWorldRenderer",
     "feature.preventIntentionalGameDesign.MixinClientPlayerInteractionManager",
     "feature.removeBreakCooldown.MixinClientPlayerInteractionManager",
+    "feature.sortInventory.MixinContainerScreen",
     "feature.worldEaterMineHelper.MixinBlockRenderManager",
     "feature.worldEaterMineHelper.MixinJsonUnbakedModel",
     "feature.worldEaterMineHelper.fabric.MixinBlockRenderContext",
-    "feature.worldEaterMineHelper.fabric.MixinTerrainRenderContext"
+    "feature.worldEaterMineHelper.fabric.MixinTerrainRenderContext",
+    "generic.MixinBlockState",
+    "generic.command.MixinClientCommandSource",
+    "generic.command.MixinClientPlayerEntity",
+    "generic.command.MixinClientPlayNetworkHandler",
+    "generic.command.MixinMinecraftClient",
+    "generic.command.MixinCommandManager",
+    "generic.command.HelpCommandAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -3,7 +3,6 @@ package com.plusls.ommc.mixin.feature.preventIntentionalGameDesign;
 import com.plusls.ommc.config.Configs;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.RespawnAnchorBlock;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.world.ClientWorld;
@@ -29,8 +28,7 @@ public class MixinClientPlayerInteractionManager {
         }
         BlockPos blockPos = hitResult.getBlockPos();
         BlockState blockState = world.getBlockState(blockPos);
-        if ((blockState.getBlock() instanceof BedBlock && !world.getDimension().isBedWorking()) ||
-                (blockState.getBlock() instanceof RespawnAnchorBlock && !world.getDimension().isRespawnAnchorWorking())) {
+        if ((blockState.getBlock() instanceof BedBlock && !world.getDimension().canPlayersSleep())) {
             cir.setReturnValue(ActionResult.SUCCESS);
         }
     }

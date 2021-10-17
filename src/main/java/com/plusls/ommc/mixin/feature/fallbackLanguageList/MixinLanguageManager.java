@@ -17,19 +17,15 @@ public class MixinLanguageManager {
 
     @Final
     @Shadow
-    private static LanguageDefinition field_25291;
-
-    @Shadow
     private Map<String, LanguageDefinition> languageDefs;
 
-
-    @Redirect(method = "reload", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z"))
+    @Redirect(method = "apply", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z"))
     private boolean addFallbackLanguage(List<LanguageDefinition> list, Object e) {
-        LanguageDefinition en_us = this.languageDefs.getOrDefault("en_us", field_25291);
+        LanguageDefinition en_us = this.languageDefs.get("en_us");
         boolean ret = false;
         List<String> fallbackLanguageList = Configs.Lists.FALLBACK_LANGUAGE_LIST.getStrings();
         for (int i = fallbackLanguageList.size() - 1; i >= 0; --i) {
-            LanguageDefinition languageDefinition = this.languageDefs.getOrDefault(fallbackLanguageList.get(i), field_25291);
+            LanguageDefinition languageDefinition = this.languageDefs.getOrDefault(fallbackLanguageList.get(i), en_us);
             if (languageDefinition != e && languageDefinition != en_us) {
                 ret |= list.add(languageDefinition);
             }

@@ -13,9 +13,9 @@ import net.minecraft.client.render.model.json.ModelElementFace;
 import net.minecraft.client.render.model.json.ModelRotation;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
+import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.registry.Registry;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -60,7 +60,7 @@ public abstract class MixinJsonUnbakedModel implements UnbakedModel {
         originalModelElements.clear();
 
         for (ModelElement modelElement : originalModelElementsBackup) {
-            Vec3f origin = new Vec3f(0f, 80f, 181.82f);
+            Vector3f origin = new Vector3f(0f, 80f, 181.82f);
             origin.scale(0.0625F);
             ModelRotation newModelRotation = new ModelRotation(origin, Direction.Axis.X, 45, false);
 

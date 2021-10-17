@@ -13,11 +13,11 @@ import net.minecraft.block.FluidBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.model.ModelLoader;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.container.PlayerContainer;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
-import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockRenderView;
@@ -38,7 +38,7 @@ public class LavaSourceResourceLoader implements SimpleSynchronousResourceReload
     private static final Identifier stillSpriteId = ModInfo.id("block/lava_still");
 
     public static void init() {
-        ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register((atlasTexture, registry) ->
+        ClientSpriteRegistryCallback.event(PlayerContainer.BLOCK_ATLAS_TEXTURE).register((atlasTexture, registry) ->
         {
             registry.register(flowingSpriteId);
             registry.register(stillSpriteId);
@@ -52,8 +52,8 @@ public class LavaSourceResourceLoader implements SimpleSynchronousResourceReload
     }
 
     @Override
-    public void reload(ResourceManager manager) {
-        final Function<Identifier, Sprite> atlas = MinecraftClient.getInstance().getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
+    public void apply(ResourceManager manager) {
+        final Function<Identifier, Sprite> atlas = MinecraftClient.getInstance().getSpriteAtlas(PlayerContainer.BLOCK_ATLAS_TEXTURE);
         lavaSourceStillSprite = atlas.apply(stillSpriteId);
         lavaSourceFlowSprite = atlas.apply(flowingSpriteId);
         lavaSourceSpites[0] = lavaSourceStillSprite;

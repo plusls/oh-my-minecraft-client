@@ -2,6 +2,7 @@ package com.plusls.ommc.mixin.feature.worldEaterMineHelper;
 
 import com.plusls.ommc.feature.worldEaterMineHelper.BlockModelRendererContext;
 import com.plusls.ommc.feature.worldEaterMineHelper.WorldEaterMineHelperUtil;
+import com.plusls.ommc.mixin.generic.MixinBlockState;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.VertexConsumer;
@@ -38,7 +39,7 @@ public class MixinBlockRenderManager {
         ommcRenderContext.get().clear();
         int originalLuminance = ommcOriginalLuminance.get();
         if (originalLuminance != -1) {
-            state.luminance = originalLuminance;
+            ((MixinBlockState) state).setLuminance(originalLuminance);
             ommcOriginalLuminance.set(-1);
         }
     }
@@ -59,7 +60,7 @@ public class MixinBlockRenderManager {
         ommcRenderContext.get().clear();
         int originalLuminance = ommcOriginalLuminance.get();
         if (originalLuminance != -1) {
-            state.luminance = originalLuminance;
+            ((MixinBlockState) state).setLuminance(originalLuminance);
             ommcOriginalLuminance.set(-1);
         }
     }
@@ -74,8 +75,8 @@ public class MixinBlockRenderManager {
         if (WorldEaterMineHelperUtil.shouldUseCustomModel(state, context.pos)) {
             BakedModel model = WorldEaterMineHelperUtil.customFullModels.get(block);
             if (model != null) {
-                ommcOriginalLuminance.set(context.state.luminance);
-                state.luminance = 15;
+                ommcOriginalLuminance.set(((MixinBlockState) context.state).getLuminance());
+                ((MixinBlockState) state).setLuminance(15);
                 cir.setReturnValue(model);
             }
         }

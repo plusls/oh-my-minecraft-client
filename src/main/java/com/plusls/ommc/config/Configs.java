@@ -85,7 +85,7 @@ public class Configs implements IConfigHandler {
                 Entity cameraEntity = client.getCameraEntity();
                 ClientPlayerInteractionManager clientPlayerInteractionManager = client.interactionManager;
                 if (cameraEntity != null && clientPlayerInteractionManager != null) {
-                    HitResult hitresult = cameraEntity.raycast(clientPlayerInteractionManager.getReachDistance(), client.getTickDelta(), false);
+                    HitResult hitresult = cameraEntity.rayTrace(clientPlayerInteractionManager.getReachDistance(), client.getTickDelta(), false);
                     if (hitresult.getType() == HitResult.Type.BLOCK) {
                         BlockPos lookPos = ((BlockHitResult) hitresult).getBlockPos();
                         if (client.player != null) {

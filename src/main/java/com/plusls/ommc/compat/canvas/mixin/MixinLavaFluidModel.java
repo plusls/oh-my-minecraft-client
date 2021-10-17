@@ -24,7 +24,7 @@ public class MixinLavaFluidModel {
     @Dynamic
     @Inject(method = "getFluidSprites", at = @At(value = "HEAD"), cancellable = true)
     private void modifyLavaSprites(BlockRenderView view, BlockPos pos, FluidState state, CallbackInfoReturnable<Sprite[]> cir) {
-        if (Configs.FeatureToggle.HIGHLIGHT_LAVA_SOURCE.getBooleanValue() && state.isIn(FluidTags.LAVA) &&
+        if (Configs.FeatureToggle.HIGHLIGHT_LAVA_SOURCE.getBooleanValue() && state.matches(FluidTags.LAVA) &&
                 view.getBlockState(pos).get(FluidBlock.LEVEL) == 0) {
             cir.setReturnValue(LavaSourceResourceLoader.lavaSourceSpites);
         }

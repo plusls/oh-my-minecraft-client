@@ -14,12 +14,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Arrays;
 import java.util.List;
 
-@Mixin(MinecraftClient.class)
-public class MixinMinecraftClient {
+@Mixin(Entity.class)
+public class MixinEntity {
     private static final List<String> itemBlackList = Arrays.asList("sword", "bow", "trident", "axe", "fishing_rod");
 
-    @Inject(method = "hasOutline", at = @At(value = "RETURN"), cancellable = true)
-    private void checkWanderingTraderEntity(Entity entity, CallbackInfoReturnable<Boolean> cir) {
+    @Inject(method = "isGlowing", at = @At(value = "RETURN"), cancellable = true)
+    private void checkWanderingTraderEntity(CallbackInfoReturnable<Boolean> cir) {
+        Entity entity = (Entity) (Object) this;
         if (Configs.FeatureToggle.HIGHLIGHT_PERSISTENT_MOB.getBooleanValue() && !cir.getReturnValue()) {
             if (entity instanceof EndermanEntity) {
                 EndermanEntity endermanEntity = (EndermanEntity) entity;
