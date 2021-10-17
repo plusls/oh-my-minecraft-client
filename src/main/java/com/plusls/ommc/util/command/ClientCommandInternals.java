@@ -17,11 +17,11 @@ import com.mojang.brigadier.exceptions.BuiltInExceptionProvider;
 import com.mojang.brigadier.exceptions.CommandExceptionType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.CommandNode;
-import com.plusls.ommc.mixin.generic.command.HelpCommandAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.CommandException;
+import net.minecraft.server.command.HelpCommand;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.Texts;
@@ -146,7 +146,7 @@ public final class ClientCommandInternals {
         List<ParsedCommandNode<FabricClientCommandSource>> nodes = parseResults.getContext().getNodes();
 
         if (nodes.isEmpty()) {
-            throw HelpCommandAccessor.getFailedException().create();
+            throw HelpCommand.FAILED_EXCEPTION.create();
         }
 
         return executeHelp(Iterables.getLast(nodes).getNode(), context);

@@ -25,18 +25,15 @@
     "feature.highlightWaypoint.MixinWorldRenderer",
     "feature.preventIntentionalGameDesign.MixinClientPlayerInteractionManager",
     "feature.removeBreakCooldown.MixinClientPlayerInteractionManager",
-    "feature.sortInventory.MixinContainerScreen",
     "feature.worldEaterMineHelper.MixinBlockRenderManager",
     "feature.worldEaterMineHelper.MixinJsonUnbakedModel",
     "feature.worldEaterMineHelper.fabric.MixinBlockRenderContext",
     "feature.worldEaterMineHelper.fabric.MixinTerrainRenderContext",
-    "generic.MixinBlockState",
     "generic.command.MixinClientCommandSource",
     "generic.command.MixinClientPlayerEntity",
     "generic.command.MixinClientPlayNetworkHandler",
     "generic.command.MixinMinecraftClient",
-    "generic.command.MixinCommandManager",
-    "generic.command.HelpCommandAccessor"
+    "generic.command.MixinCommandManager"
   ],
   "injectors": {
     "defaultRequire": 1

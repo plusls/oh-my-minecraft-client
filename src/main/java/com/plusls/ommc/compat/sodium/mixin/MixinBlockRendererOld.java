@@ -6,7 +6,6 @@ import com.plusls.ommc.compat.sodium.SodiumDependencyPredicate;
 import com.plusls.ommc.feature.blockModelNoOffset.BlockModelNoOffsetUtil;
 import com.plusls.ommc.feature.worldEaterMineHelper.BlockModelRendererContext;
 import com.plusls.ommc.feature.worldEaterMineHelper.WorldEaterMineHelperUtil;
-import com.plusls.ommc.mixin.generic.MixinBlockState;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.util.math.BlockPos;
@@ -47,8 +46,8 @@ public class MixinBlockRendererOld {
         if (WorldEaterMineHelperUtil.shouldUseCustomModel(context.state, context.pos)) {
             BakedModel customModel = WorldEaterMineHelperUtil.customFullModels.get(context.state.getBlock());
             if (customModel != null) {
-                ommcOriginalLuminance.set(((MixinBlockState) context.state).getLuminance());
-                ((MixinBlockState) context.state).setLuminance(15);
+                ommcOriginalLuminance.set(context.state.luminance);
+                context.state.luminance = 15;
                 return customModel;
             }
         }
@@ -60,7 +59,7 @@ public class MixinBlockRendererOld {
     private void postRenderModel(BlockRenderView world, BlockState state, BlockPos pos, BakedModel model, @Coerce Object buffers, boolean cull, long seed, CallbackInfoReturnable<Boolean> cir) {
         int originalLuminance = ommcOriginalLuminance.get();
         if (originalLuminance != -1) {
-            ((MixinBlockState) state).setLuminance(originalLuminance);
+            state.luminance = originalLuminance;
             ommcOriginalLuminance.set(-1);
         }
     }

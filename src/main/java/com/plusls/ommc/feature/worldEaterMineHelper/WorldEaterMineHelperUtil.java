@@ -1,7 +1,6 @@
 package com.plusls.ommc.feature.worldEaterMineHelper;
 
 import com.plusls.ommc.config.Configs;
-import com.plusls.ommc.mixin.generic.MixinBlockState;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.Block;
@@ -60,10 +59,10 @@ public class WorldEaterMineHelperUtil {
         if (WorldEaterMineHelperUtil.shouldUseCustomModel(state, pos)) {
             FabricBakedModel customModel = (FabricBakedModel) WorldEaterMineHelperUtil.customFullModels.get(block);
             if (customModel != null) {
-                int luminance = ((MixinBlockState) state).getLuminance();
-                ((MixinBlockState) state).setLuminance(15);
+                int luminance = state.luminance;
+                state.luminance = 15;
                 customModel.emitBlockQuads(blockView, state, pos, randomSupplier, context);
-                ((MixinBlockState) state).setLuminance(luminance);
+                state.luminance = 15;
                 return;
             }
         }
@@ -75,10 +74,10 @@ public class WorldEaterMineHelperUtil {
         if (WorldEaterMineHelperUtil.shouldUseCustomModel(state, pos)) {
             FabricBakedModel customModel = (FabricBakedModel) WorldEaterMineHelperUtil.customModels.get(block);
             if (customModel != null) {
-                int luminance = ((MixinBlockState) state).getLuminance();
-                ((MixinBlockState) state).setLuminance(15);
+                int luminance = state.luminance;
+                state.luminance = 15;
                 customModel.emitBlockQuads(blockView, state, pos, randomSupplier, context);
-                ((MixinBlockState) state).setLuminance(luminance);
+                state.luminance = luminance;
             }
         }
     }

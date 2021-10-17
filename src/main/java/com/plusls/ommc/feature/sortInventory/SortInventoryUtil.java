@@ -1,7 +1,6 @@
 package com.plusls.ommc.feature.sortInventory;
 
 import com.plusls.ommc.config.Configs;
-import com.plusls.ommc.mixin.feature.sortInventory.MixinContainerScreen;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.ContainerScreen;
@@ -52,8 +51,7 @@ public class SortInventoryUtil {
 
         double x = client.mouse.getX() * client.getWindow().getScaledWidth() / client.getWindow().getWidth();
         double y = client.mouse.getY() * client.getWindow().getScaledHeight() / client.getWindow().getHeight();
-        // Why ContainerScreen.getSlotAt has private access
-        Slot mouseSlot = ((MixinContainerScreen) containerScreen).getSlotAt(x, y);
+        Slot mouseSlot = containerScreen.getSlotAt(x, y);
         if (mouseSlot == null) {
             return false;
         }
