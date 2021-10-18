@@ -3,8 +3,8 @@ package com.plusls.ommc.mixin.feature.disableMoveDownInScaffolding;
 import com.plusls.ommc.config.Configs;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ScaffoldingBlock;
-import net.minecraft.block.ShapeContext;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.EntityContext;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
@@ -25,7 +25,7 @@ public class MixinScaffoldingBlock {
     private static VoxelShape NORMAL_OUTLINE_SHAPE;
 
     @Inject(method = "getCollisionShape", at = @At(value = "RETURN"), cancellable = true)
-    private void setNormalOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context, CallbackInfoReturnable<VoxelShape> cir) {
+    private void setNormalOutlineShape(BlockState state, BlockView view, BlockPos pos, EntityContext context, CallbackInfoReturnable<VoxelShape> cir) {
         if (cir.getReturnValue() != NORMAL_OUTLINE_SHAPE) {
             if (Configs.FeatureToggle.DISABLE_MOVE_DOWN_IN_SCAFFOLDING.getBooleanValue() &&
                     context.isDescending() && context.isAbove(VoxelShapes.fullCube(), pos, true)) {

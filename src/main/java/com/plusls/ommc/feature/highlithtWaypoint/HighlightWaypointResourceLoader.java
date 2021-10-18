@@ -6,9 +6,9 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.container.PlayerContainer;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
-import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 
 import java.util.function.Function;
@@ -20,7 +20,7 @@ public class HighlightWaypointResourceLoader implements SimpleSynchronousResourc
     private static final Identifier targetId = ModInfo.id("images/target");
 
     public static void init() {
-        ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register(
+        ClientSpriteRegistryCallback.event(PlayerContainer.BLOCK_ATLAS_TEXTURE).register(
                 (atlasTexture, registry) -> registry.register(targetId)
         );
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new HighlightWaypointResourceLoader());
@@ -32,8 +32,8 @@ public class HighlightWaypointResourceLoader implements SimpleSynchronousResourc
     }
 
     @Override
-    public void reload(ResourceManager manager) {
-        final Function<Identifier, Sprite> atlas = MinecraftClient.getInstance().getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
+    public void apply(ResourceManager manager) {
+        final Function<Identifier, Sprite> atlas = MinecraftClient.getInstance().getSpriteAtlas(PlayerContainer.BLOCK_ATLAS_TEXTURE);
         targetIdSprite = atlas.apply(targetId);
     }
 }

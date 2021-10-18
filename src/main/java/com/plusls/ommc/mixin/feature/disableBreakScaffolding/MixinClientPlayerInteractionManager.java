@@ -35,7 +35,7 @@ public class MixinClientPlayerInteractionManager {
         World world = MinecraftClient.getInstance().world;
         PlayerEntity player = MinecraftClient.getInstance().player;
         if (Configs.FeatureToggle.DISABLE_BREAK_SCAFFOLDING.getBooleanValue() &&
-                world != null && world.getBlockState(pos).isOf(Blocks.SCAFFOLDING) &&
+                world != null && world.getBlockState(pos).getBlock() == Blocks.SCAFFOLDING &&
                 player != null) {
             String itemId = Registry.ITEM.getId(player.getMainHandStack().getItem()).toString();
             String itemName = player.getMainHandStack().getItem().getName().getString();

@@ -4,25 +4,26 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.plusls.ommc.ModInfo;
 import com.plusls.ommc.config.Configs;
-import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
+import com.plusls.ommc.util.command.ClientCommandManager;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.option.Option;
+import net.minecraft.client.options.Option;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.block.entity.BeaconBlockEntityRenderer;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.util.math.Matrix3f;
+import net.minecraft.client.util.math.Matrix4f;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.Vector3f;
+import net.minecraft.container.PlayerContainer;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.packet.s2c.play.PlayerRespawnS2CPacket;
-import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public class HighlightWaypointUtil {
 
     private static final String HIGHLIGHT_COMMAND = "highlightWaypoint";
     @Nullable
-    public static RegistryKey<World> currentWorld = null;
+    public static DimensionType currentWorld = null;
 
     public static void init() {
         ClientCommandManager.DISPATCHER.register(ClientCommandManager.literal(HIGHLIGHT_COMMAND).then(
@@ -67,20 +68,20 @@ public class HighlightWaypointUtil {
                         )
                 )
         ));
-        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> currentWorld = Objects.requireNonNull(client.world).getRegistryKey());
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> currentWorld = Objects.requireNonNull(client.world).dimension.getType());
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
             currentWorld = null;
             highlightPos = null;
         });
-        WorldRenderEvents.END.register(context -> HighlightWaypointUtil.drawWaypoint(context.matrixStack(), context.tickDelta()));
+        // Render is registered in com.plusls.ommc.mixin.feature.highlightWaypoint.MixinWorldRenderer
     }
 
     public static void postRespawn(PlayerRespawnS2CPacket packet) {
-        RegistryKey<World> newDimension = packet.getDimension();
+        DimensionType newDimension = packet.getDimension();
         if (highlightPos != null && currentWorld != newDimension) {
-            if (currentWorld == World.OVERWORLD && newDimension == World.NETHER) {
+            if (currentWorld == DimensionType.OVERWORLD && newDimension == DimensionType.THE_NETHER) {
                 highlightPos = new BlockPos(highlightPos.getX() / 8, highlightPos.getY(), highlightPos.getZ() / 8);
-            } else if (currentWorld == World.NETHER && newDimension == World.OVERWORLD) {
+            } else if (currentWorld == DimensionType.THE_NETHER && newDimension == DimensionType.OVERWORLD) {
                 highlightPos = new BlockPos(highlightPos.getX() * 8, highlightPos.getY(), highlightPos.getZ() * 8);
             } else {
                 highlightPos = null;
@@ -175,10 +176,10 @@ public class HighlightWaypointUtil {
         Style oldStyle = chat.getStyle();
         boolean haveOldEvent = oldStyle.getClickEvent() != null || oldStyle.getHoverEvent() != null;
         if (waypointStrings.size() > 0 && (!haveOldEvent || Configs.Generic.FORCE_PARSE_WAYPOINT_FROM_CHAT.getBooleanValue())) {
-            TextColor color = oldStyle.getColor();
+            Formatting color = oldStyle.getColor();
             ModInfo.LOGGER.debug("text: {} color: {}", chat.getString(), color);
             if (color == null) {
-                color = TextColor.fromFormatting(Formatting.GREEN);
+                color = Formatting.GREEN;
             }
             ArrayList<LiteralText> texts = new ArrayList<>();
             int prevIdx = 0, currentIdx;
@@ -189,10 +190,10 @@ public class HighlightWaypointUtil {
                 Style chatStyle = clickableWaypoint.getStyle();
                 BlockPos pos = Objects.requireNonNull(parseWaypoint(waypointString.substring(1, waypointString.length() - 1)));
                 TranslatableText hover = new TranslatableText("ommc.highlight_waypoint.tooltip");
-                chatStyle = chatStyle.withClickEvent(
+                chatStyle = chatStyle.setClickEvent(
                         new ClickEvent(ClickEvent.Action.RUN_COMMAND,
                                 String.format("/%s %d %d %d", HIGHLIGHT_COMMAND, pos.getX(), pos.getY(), pos.getZ())))
-                        .withColor(color).withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hover));
+                        .setColor(color).setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hover));
                 clickableWaypoint.setStyle(chatStyle);
                 texts.add(clickableWaypoint);
                 prevIdx = currentIdx + waypointString.length();
@@ -228,8 +229,8 @@ public class HighlightWaypointUtil {
         Vec3d cameraPosPlusDirectionTimesDistance = cameraPos.add(cameraPosPlusDirection.getX() * distance, cameraPosPlusDirection.getY() * distance, cameraPosPlusDirection.getZ() * distance);
         Box axisalignedbb = new Box(pos.getX() + 0.5f - size, pos.getY() + 0.5f - size, pos.getZ() + 0.5f - size,
                 pos.getX() + 0.5f + size, pos.getY() + 0.5f + size, pos.getZ() + 0.5f + size);
-        Optional<Vec3d> raycastResult = axisalignedbb.raycast(cameraPos, cameraPosPlusDirectionTimesDistance);
-        return axisalignedbb.contains(cameraPos) ? distance >= 1.0 : raycastResult.isPresent();
+        Optional<Vec3d> rayTraceResult = axisalignedbb.rayTrace(cameraPos, cameraPosPlusDirectionTimesDistance);
+        return axisalignedbb.contains(cameraPos) ? distance >= 1.0 : rayTraceResult.isPresent();
     }
 
     public static void drawWaypoint(MatrixStack matrixStack, float tickDelta) {
@@ -267,7 +268,7 @@ public class HighlightWaypointUtil {
         float k = color[1];
         float l = color[2];
         matrices.push();
-        matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(f * 2.25F - 45.0F));
+        matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(f * 2.25F - 45.0F));
         float y = 0.0F;
         float ab = 0.0F;
         float ac = -innerRadius;
@@ -340,7 +341,8 @@ public class HighlightWaypointUtil {
             // 画信标光柱
             VertexConsumerProvider.Immediate vertexConsumerProvider0 = mc.getBufferBuilders().getEffectVertexConsumers();
             float[] color = {1.0f, 0.0f, 0.0f};
-            renderBeam(matrixStack, vertexConsumerProvider0, BeaconBlockEntityRenderer.BEAM_TEXTURE,
+            // Could you tell me why it is BEAM_TEX but not BEAM_TEXTURE
+            renderBeam(matrixStack, vertexConsumerProvider0, BeaconBlockEntityRenderer.BEAM_TEX,
                     tickDelta, 1.0f, Objects.requireNonNull(mc.world).getTime(), (int) (baseY - 512), 1024, color, 0.2F, 0.25F);
             vertexConsumerProvider0.draw();
 
@@ -352,8 +354,8 @@ public class HighlightWaypointUtil {
         matrixStack.translate(0.5f, 0.5f, 0.5f);
 
         // 在玩家正对着的平面进行绘制
-        matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-cameraEntity.yaw));
-        matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(mc.getEntityRenderDispatcher().camera.getPitch()));
+        matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-cameraEntity.yaw));
+        matrixStack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(mc.getEntityRenderManager().camera.getPitch()));
         // 缩放绘制的大小，让 waypoint 根据距离缩放
         matrixStack.scale(-scale, -scale, -scale);
         Matrix4f matrix4f = matrixStack.peek().getModel();
@@ -376,7 +378,7 @@ public class HighlightWaypointUtil {
         Sprite icon = HighlightWaypointResourceLoader.targetIdSprite;
         // 不设置渲染不出
 //        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
-        RenderSystem.bindTexture(Objects.requireNonNull(mc.getTextureManager().getTexture(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE)).getGlId());
+        RenderSystem.bindTexture(Objects.requireNonNull(mc.getTextureManager().getTexture(PlayerContainer.BLOCK_ATLAS_TEXTURE)).getGlId());
 
         // 渲染图标
         RenderSystem.enableTexture();
@@ -393,7 +395,7 @@ public class HighlightWaypointUtil {
             // 渲染高度
             int elevateBy = -19;
             RenderSystem.enablePolygonOffset();
-            int halfStringWidth = textRenderer.getWidth(name) / 2;
+            int halfStringWidth = textRenderer.getStringWidth(name) / 2;
 //            RenderSystem.setShader(GameRenderer::getPositionColorShader);
 
             // 渲染内框
@@ -420,7 +422,7 @@ public class HighlightWaypointUtil {
             VertexConsumerProvider.Immediate vertexConsumerProvider = mc.getBufferBuilders().getEffectVertexConsumers();
             int textColor = (int) (255.0f * fade) << 24 | 0xCCCCCC;
             RenderSystem.disableDepthTest();
-            textRenderer.draw(new LiteralText(name), (float) (-textRenderer.getWidth(name) / 2), elevateBy, textColor, false, matrix4f, vertexConsumerProvider, true, 0, 0xF000F0);
+            textRenderer.draw(name, (float) (-textRenderer.getStringWidth(name) / 2), elevateBy, textColor, false, matrix4f, vertexConsumerProvider, true, 0, 0xF000F0);
             vertexConsumerProvider.draw();
         }
 //        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);

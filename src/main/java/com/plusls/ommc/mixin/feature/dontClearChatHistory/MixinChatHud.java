@@ -2,8 +2,7 @@ package com.plusls.ommc.mixin.feature.dontClearChatHistory;
 
 import com.plusls.ommc.config.Configs;
 import net.minecraft.client.gui.hud.ChatHud;
-import net.minecraft.client.gui.hud.ChatHudLine;
-import net.minecraft.text.OrderedText;
+import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -23,7 +22,7 @@ public class MixinChatHud {
     }
 
     @Redirect(method = "addMessage(Lnet/minecraft/text/Text;IIZ)V", at = @At(value = "INVOKE", target = "Ljava/util/List;size()I", ordinal = 0))
-    private int modifySize(List<ChatHudLine<OrderedText>> list) {
+    private int modifySize(List<Text> list) {
         if (Configs.Generic.DONT_CLEAR_CHAT_HISTORY.getBooleanValue()) {
             return 1;
         }

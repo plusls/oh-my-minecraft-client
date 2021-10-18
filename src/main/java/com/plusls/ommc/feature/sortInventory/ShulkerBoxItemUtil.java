@@ -4,8 +4,8 @@ import com.plusls.ommc.config.Configs;
 import net.minecraft.block.ShulkerBoxBlock;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import org.jetbrains.annotations.Nullable;
 
 public class ShulkerBoxItemUtil {
@@ -13,11 +13,11 @@ public class ShulkerBoxItemUtil {
 
     public static boolean isEmptyShulkerBoxItem(ItemStack itemStack) {
         if (isShulkerBoxBlockItem(itemStack)) {
-            NbtCompound nbt = itemStack.getTag();
+            CompoundTag nbt = itemStack.getTag();
             if (nbt != null && nbt.contains("BlockEntityTag", 10)) {
-                NbtCompound tag = nbt.getCompound("BlockEntityTag");
+                CompoundTag tag = nbt.getCompound("BlockEntityTag");
                 if (tag.contains("Items", 9)) {
-                    NbtList tagList = tag.getList("Items", 10);
+                    ListTag tagList = tag.getList("Items", 10);
                     return tagList.size() <= 0;
                 }
             }
@@ -31,20 +31,20 @@ public class ShulkerBoxItemUtil {
         return itemStack.getItem() instanceof BlockItem && ((BlockItem) itemStack.getItem()).getBlock() instanceof ShulkerBoxBlock;
     }
 
-    public static int cmpShulkerBox(@Nullable NbtCompound a, @Nullable NbtCompound b) {
+    public static int cmpShulkerBox(@Nullable CompoundTag a, @Nullable CompoundTag b) {
         int aSize = 0, bSize = 0;
         if (a != null) {
-            NbtCompound tag = a.getCompound("BlockEntityTag");
+            CompoundTag tag = a.getCompound("BlockEntityTag");
             if (tag.contains("Items", 9)) {
-                NbtList tagList = tag.getList("Items", 10);
+                ListTag tagList = tag.getList("Items", 10);
                 aSize = tagList.size();
             }
         }
 
         if (b != null) {
-            NbtCompound tag = b.getCompound("BlockEntityTag");
+            CompoundTag tag = b.getCompound("BlockEntityTag");
             if (tag.contains("Items", 9)) {
-                NbtList tagList = tag.getList("Items", 10);
+                ListTag tagList = tag.getList("Items", 10);
                 bSize = tagList.size();
             }
         }

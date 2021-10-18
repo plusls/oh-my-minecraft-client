@@ -13,7 +13,7 @@ public class BlockModelNoOffsetUtil {
         if (shouldNoOffset(blockState)) {
             return Vec3d.ZERO;
         } else {
-            return blockState.getModelOffset(world, pos);
+            return blockState.getOffsetPos(world, pos);
         }
     }
 

@@ -62,7 +62,7 @@ public class WorldEaterMineHelperUtil {
                 int luminance = state.luminance;
                 state.luminance = 15;
                 customModel.emitBlockQuads(blockView, state, pos, randomSupplier, context);
-                state.luminance = luminance;
+                state.luminance = 15;
                 return;
             }
         }

@@ -25,7 +25,7 @@ public abstract class MixinTerrainRenderContext implements RenderContext {
 
     @Inject(method = "tesselateBlock", at = @At(value = "HEAD"))
     private void blockModelNoOffset(BlockState blockState, BlockPos blockPos, BakedModel model, MatrixStack matrixStack, CallbackInfoReturnable<Boolean> cir) {
-        Vec3d offsetPos = blockState.getModelOffset(blockInfo.blockView, blockPos);
+        Vec3d offsetPos = blockState.getOffsetPos(blockInfo.blockView, blockPos);
         if (BlockModelNoOffsetUtil.shouldNoOffset(blockState)) {
             matrixStack.translate(-offsetPos.x, -offsetPos.y, -offsetPos.z);
         }

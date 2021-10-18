@@ -16,7 +16,7 @@ import java.util.List;
 
 @Mixin(PistonBlockEntity.class)
 public class MixinPistonBlockEntity {
-    @Redirect(method = "pushEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getOtherEntities(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/math/Box;)Ljava/util/List;", ordinal = 0))
+    @Redirect(method = "pushEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getEntities(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/math/Box;)Ljava/util/List;", ordinal = 0))
     private List<Entity> removeNoPlayerEntity(World world, Entity except, Box box) {
         if (world.isClient() && Configs.FeatureToggle.DISABLE_PISTON_PUSH_ENTITY.getBooleanValue()) {
             List<Entity> ret = new ArrayList<>();
@@ -28,6 +28,6 @@ public class MixinPistonBlockEntity {
             }
             return ret;
         }
-        return world.getOtherEntities(except, box);
+        return world.getEntities(except, box);
     }
 }

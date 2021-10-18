@@ -1,7 +1,8 @@
 accessWidener v1 named
-accessible method net/minecraft/client/gui/screen/ingame/HandledScreen getSlotAt (DD)Lnet/minecraft/screen/slot/Slot;
-mutable field net/minecraft/block/AbstractBlock$AbstractBlockState luminance I
-accessible field net/minecraft/block/AbstractBlock$AbstractBlockState luminance I
+accessible method net/minecraft/client/gui/screen/ingame/ContainerScreen getSlotAt (DD)Lnet/minecraft/container/Slot;
+mutable field net/minecraft/block/BlockState luminance I
+accessible field net/minecraft/block/BlockState luminance I
 mutable field net/minecraft/client/render/model/json/JsonUnbakedModel ambientOcclusion Z
 accessible field net/minecraft/client/render/model/json/JsonUnbakedModel ambientOcclusion Z
 accessible field net/minecraft/client/render/model/json/JsonUnbakedModel parent Lnet/minecraft/client/render/model/json/JsonUnbakedModel;
+accessible field net/minecraft/server/command/HelpCommand FAILED_EXCEPTION Lcom/mojang/brigadier/exceptions/SimpleCommandExceptionType;
