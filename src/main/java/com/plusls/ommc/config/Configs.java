@@ -132,6 +132,7 @@ public class Configs implements IConfigHandler {
         public static final ConfigBooleanHotkeyed HIGHLIGHT_WANDERING_TRADER = new TranslatableConfigBooleanHotkeyed(PREFIX, "highlightWanderingTrader", false, "");
         public static final ConfigBooleanHotkeyed HIGHLIGHT_PERSISTENT_MOB = new TranslatableConfigBooleanHotkeyed(PREFIX, "highlightPersistentMob", false, "");
         public static final ConfigBooleanHotkeyed PREVENT_INTENTIONAL_GAME_DESIGN = new TranslatableConfigBooleanHotkeyed(PREFIX, "preventIntentionalGameDesign", false, "");
+        public static final ConfigBooleanHotkeyed PREVENT_WASTAGE_OF_WATER = new TranslatableConfigBooleanHotkeyed(PREFIX, "preventWastageOfWater", false, "");
         public static final ConfigBooleanHotkeyed REAL_SNEAKING = new TranslatableConfigBooleanHotkeyed(PREFIX, "realSneaking", false, "");
         public static final ConfigBooleanHotkeyed REMOVE_BREAKING_COOLDOWN = new TranslatableConfigBooleanHotkeyed(PREFIX, "removeBreakingCooldown", false, "");
         public static final ConfigBooleanHotkeyed WORLD_EATER_MINE_HELPER = new TranslatableConfigBooleanHotkeyed(PREFIX, "worldEaterMineHelper", false, "");
@@ -151,6 +152,7 @@ public class Configs implements IConfigHandler {
                 HIGHLIGHT_WANDERING_TRADER,
                 HIGHLIGHT_PERSISTENT_MOB,
                 PREVENT_INTENTIONAL_GAME_DESIGN,
+                PREVENT_WASTAGE_OF_WATER,
                 REAL_SNEAKING,
                 REMOVE_BREAKING_COOLDOWN,
                 WORLD_EATER_MINE_HELPER
