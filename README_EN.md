@@ -69,6 +69,10 @@ Player can move down 1 height when sneaking.
 
 Render block model without random offset.
 
+### Disable Blocklist Check
+
+Workaround for [MC-218167](https://bugs.mojang.com/browse/MC-218167), prevent network request from blocking the Render Thread.
+
 ### Disable Break Block
 
 You can't break blocks in **breakBlockBlackList**.
@@ -116,6 +120,10 @@ The Wandering Trader will have the glowing affect, so it in Invisibility.
 ### Prevent Intentional Game Design
 
 Prevent Intentional Game Design (Bed and Respawn Anchor).
+
+### Prevent Wastage of Water
+
+Prevent water bucket from vanishing in nether.
 
 ### High Light Persistent Mob
 

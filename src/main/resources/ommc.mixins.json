@@ -10,6 +10,7 @@
     "feature.autoSwitchElytra.MixinClientPlayerEntity",
     "feature.betterSneaking.MixinPlayerEntity",
     "feature.blockModelNoOffset.fabric.MixinTerrainRenderContext",
+    "feature.disableBlocklistCheck.MixinSocialInteractionsManager",
     "feature.disableBreakBlock.MixinClientPlayerInteractionManager",
     "feature.disableBreakScaffolding.MixinClientPlayerInteractionManager",
     "feature.disableMoveDownInScaffolding.MixinScaffoldingBlock",

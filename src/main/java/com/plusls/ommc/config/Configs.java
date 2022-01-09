@@ -121,6 +121,7 @@ public class Configs implements IConfigHandler {
         public static final ConfigBooleanHotkeyed AUTO_SWITCH_ELYTRA = new TranslatableConfigBooleanHotkeyed(PREFIX, "autoSwitchElytra", false, "");
         public static final ConfigBooleanHotkeyed BETTER_SNEAKING = new TranslatableConfigBooleanHotkeyed(PREFIX, "betterSneaking", false, "");
         public static final ConfigBooleanHotkeyed BLOCK_MODEL_NO_OFFSET = new TranslatableConfigBooleanHotkeyed(PREFIX, "blockModelNoOffset", false, "");
+        public static final ConfigBooleanHotkeyed DISABLE_BLOCKLIST_CHECK = new TranslatableConfigBooleanHotkeyed(PREFIX, "disableBlocklistCheck", false, "");
         public static final ConfigBooleanHotkeyed DISABLE_BREAK_BLOCK = new TranslatableConfigBooleanHotkeyed(PREFIX, "disableBreakBlock", false, "");
         public static final ConfigBooleanHotkeyed DISABLE_BREAK_SCAFFOLDING = new TranslatableConfigBooleanHotkeyed(PREFIX, "disableBreakScaffolding", false, "");
         public static final ConfigBooleanHotkeyed DISABLE_MOVE_DOWN_IN_SCAFFOLDING = new TranslatableConfigBooleanHotkeyed(PREFIX, "disableMoveDownInScaffolding", false, "");
@@ -131,6 +132,7 @@ public class Configs implements IConfigHandler {
         public static final ConfigBooleanHotkeyed HIGHLIGHT_WANDERING_TRADER = new TranslatableConfigBooleanHotkeyed(PREFIX, "highlightWanderingTrader", false, "");
         public static final ConfigBooleanHotkeyed HIGHLIGHT_PERSISTENT_MOB = new TranslatableConfigBooleanHotkeyed(PREFIX, "highlightPersistentMob", false, "");
         public static final ConfigBooleanHotkeyed PREVENT_INTENTIONAL_GAME_DESIGN = new TranslatableConfigBooleanHotkeyed(PREFIX, "preventIntentionalGameDesign", false, "");
+        public static final ConfigBooleanHotkeyed PREVENT_WASTAGE_OF_WATER = new TranslatableConfigBooleanHotkeyed(PREFIX, "preventWastageOfWater", false, "");
         public static final ConfigBooleanHotkeyed REAL_SNEAKING = new TranslatableConfigBooleanHotkeyed(PREFIX, "realSneaking", false, "");
         public static final ConfigBooleanHotkeyed REMOVE_BREAKING_COOLDOWN = new TranslatableConfigBooleanHotkeyed(PREFIX, "removeBreakingCooldown", false, "");
         public static final ConfigBooleanHotkeyed WORLD_EATER_MINE_HELPER = new TranslatableConfigBooleanHotkeyed(PREFIX, "worldEaterMineHelper", false, "");
@@ -139,6 +141,7 @@ public class Configs implements IConfigHandler {
                 AUTO_SWITCH_ELYTRA,
                 BETTER_SNEAKING,
                 BLOCK_MODEL_NO_OFFSET,
+                DISABLE_BLOCKLIST_CHECK,
                 DISABLE_BREAK_BLOCK,
                 DISABLE_BREAK_SCAFFOLDING,
                 DISABLE_MOVE_DOWN_IN_SCAFFOLDING,
@@ -149,6 +152,7 @@ public class Configs implements IConfigHandler {
                 HIGHLIGHT_WANDERING_TRADER,
                 HIGHLIGHT_PERSISTENT_MOB,
                 PREVENT_INTENTIONAL_GAME_DESIGN,
+                PREVENT_WASTAGE_OF_WATER,
                 REAL_SNEAKING,
                 REMOVE_BREAKING_COOLDOWN,
                 WORLD_EATER_MINE_HELPER
