@@ -302,8 +302,8 @@ public class HighlightWaypointUtil {
     @SuppressWarnings("all")
     private static void renderBeamLayer(MatrixStack matrices, VertexConsumer vertices, float red, float green, float blue, float alpha, int yOffset, int height, float x1, float z1, float x2, float z2, float x3, float z3, float x4, float z4, float u1, float u2, float v1, float v2) {
         MatrixStack.Entry entry = matrices.peek();
-        Matrix4f matrix4f = entry.getModel();
-        Matrix3f matrix3f = entry.getNormal();
+        Matrix4f matrix4f = entry.getPositionMatrix();
+        Matrix3f matrix3f = entry.getNormalMatrix();
         renderBeamFace(matrix4f, matrix3f, vertices, red, green, blue, alpha, yOffset, height, x1, z1, x2, z2, u1, u2, v1, v2);
         renderBeamFace(matrix4f, matrix3f, vertices, red, green, blue, alpha, yOffset, height, x4, z4, x3, z3, u1, u2, v1, v2);
         renderBeamFace(matrix4f, matrix3f, vertices, red, green, blue, alpha, yOffset, height, x2, z2, x4, z4, u1, u2, v1, v2);
@@ -352,7 +352,7 @@ public class HighlightWaypointUtil {
         matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(mc.getEntityRenderDispatcher().camera.getPitch()));
         // 缩放绘制的大小，让 waypoint 根据距离缩放
         matrixStack.scale(-scale, -scale, -scale);
-        Matrix4f matrix4f = matrixStack.peek().getModel();
+        Matrix4f matrix4f = matrixStack.peek().getPositionMatrix();
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder vertexBuffer = tessellator.getBuffer();
         // 透明度
