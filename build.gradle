@@ -78,7 +78,7 @@ task publishModrinth(type: TaskModrinthUpload) {
     token = System.getenv("MODRINTH")
     changelog = System.getenv("CHANGELOG")
     projectId = "oQgSAEhD"
-    versionNumber = version
+    versionNumber = "${project.mod_version}-${project.minecraft_version}"
     // On fabric, use "remapJar" instead of "jar"
     uploadFile = remapJar
     addGameVersion(project.minecraft_version as String)
