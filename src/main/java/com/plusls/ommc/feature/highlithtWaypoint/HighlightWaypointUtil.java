@@ -34,6 +34,7 @@ import java.util.regex.Pattern;
 // from fabric-voxel map
 public class HighlightWaypointUtil {
 
+    private static final String HIGHLIGHT_COMMAND = "highlightWaypoint";
     @Nullable
     public static BlockPos highlightPos;
     public static long lastBeamTime = 0;
@@ -41,8 +42,6 @@ public class HighlightWaypointUtil {
     public static Pattern pattern2 = Pattern.compile("\\((\\w+\\s*:\\s*[-#]?[^\\[\\]]+)(,\\s*\\w+\\s*:\\s*[-#]?[^\\[\\]]+)+\\)", Pattern.CASE_INSENSITIVE);
     public static Pattern pattern3 = Pattern.compile("\\[(-?\\d+)(,\\s*-?\\d+)(,\\s*-?\\d+)]", Pattern.CASE_INSENSITIVE);
     public static Pattern pattern4 = Pattern.compile("\\((-?\\d+)(,\\s*-?\\d+)(,\\s*-?\\d+)\\)", Pattern.CASE_INSENSITIVE);
-
-    private static final String HIGHLIGHT_COMMAND = "highlightWaypoint";
     @Nullable
     public static RegistryKey<World> currentWorld = null;
 

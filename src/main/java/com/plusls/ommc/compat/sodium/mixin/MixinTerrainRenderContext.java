@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import java.util.Random;
 import java.util.function.Supplier;
 
-@Dependencies(dependencyList = @Dependency(modId = "sodium", version = ">=0.3.2"))
+@Dependencies(dependencyList = @Dependency(modId = "sodium", version = ">=0.5"))
 @Pseudo
 @Mixin(targets = "me.jellysquid.mods.sodium.render.renderer.TerrainRenderContext", remap = false)
 public class MixinTerrainRenderContext {

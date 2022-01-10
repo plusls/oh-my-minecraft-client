@@ -5,12 +5,12 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.MinecraftClient;
 
 public class RealSneakingEventHandler {
+    final private static float MIN_STEP_HEIGHT = 0.001f;
+    private static float prevStepHeight;
+
     public static void init() {
         ClientTickEvents.START_CLIENT_TICK.register(RealSneakingEventHandler::preClientTick);
     }
-
-    final private static float MIN_STEP_HEIGHT = 0.001f;
-    private static float prevStepHeight;
 
     private static void preClientTick(MinecraftClient minecraftClient) {
         if (minecraftClient.player != null) {

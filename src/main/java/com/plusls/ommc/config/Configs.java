@@ -43,6 +43,92 @@ public class Configs implements IConfigHandler {
 
     private static boolean firstLoadConfig = true;
 
+    public static void updateOldStringList() {
+        OLD_WORLD_EATER_MINE_HELPER_WHITELIST.clear();
+        OLD_WORLD_EATER_MINE_HELPER_WHITELIST.addAll(Lists.WORLD_EATER_MINE_HELPER_WHITELIST.getStrings());
+        OLD_FALLBACK_LANGUAGE_LIST.clear();
+        OLD_FALLBACK_LANGUAGE_LIST.addAll(Lists.FALLBACK_LANGUAGE_LIST.getStrings());
+        OLD_BLOCK_MODEL_NO_OFFSET_BLACKLIST.clear();
+        OLD_BLOCK_MODEL_NO_OFFSET_BLACKLIST.addAll(Lists.BLOCK_MODEL_NO_OFFSET_BLACKLIST.getStrings());
+        OLD_BLOCK_MODEL_NO_OFFSET_WHITELIST.clear();
+        OLD_BLOCK_MODEL_NO_OFFSET_WHITELIST.addAll(Lists.BLOCK_MODEL_NO_OFFSET_WHITELIST.getStrings());
+
+    }
+
+    public static void checkIsStringListChanged() {
+        boolean dirty = false;
+        if (!OLD_WORLD_EATER_MINE_HELPER_WHITELIST.equals(Lists.WORLD_EATER_MINE_HELPER_WHITELIST.getStrings()) ||
+                !OLD_BLOCK_MODEL_NO_OFFSET_BLACKLIST.equals(Lists.BLOCK_MODEL_NO_OFFSET_BLACKLIST.getStrings()) ||
+                !OLD_BLOCK_MODEL_NO_OFFSET_WHITELIST.equals(Lists.BLOCK_MODEL_NO_OFFSET_WHITELIST.getStrings())) {
+            MinecraftClient.getInstance().worldRenderer.reload();
+            dirty = true;
+        }
+
+        if (!OLD_FALLBACK_LANGUAGE_LIST.equals(Lists.FALLBACK_LANGUAGE_LIST.getStrings())) {
+            MinecraftClient.getInstance().reloadResources();
+            dirty = true;
+        }
+
+        if (dirty) {
+            updateOldStringList();
+        }
+    }
+
+    public static void loadFromFile() {
+        File configFile = new File(FileUtils.getConfigDirectory(), CONFIG_FILE_NAME);
+
+        if (configFile.exists() && configFile.isFile() && configFile.canRead()) {
+            JsonElement element = JsonUtils.parseJsonFile(configFile);
+
+            if (element != null && element.isJsonObject()) {
+                JsonObject root = element.getAsJsonObject();
+                ConfigUtils.readConfigBase(root, "Generic", Generic.OPTIONS);
+                KeybindSettings keybindSettings = Generic.SORT_INVENTORY.getKeybind().getSettings();
+                if (keybindSettings.getContext() != KeybindSettings.Context.GUI) {
+                    Generic.SORT_INVENTORY.getKeybind().setSettings(KeybindSettings.create(KeybindSettings.Context.GUI,
+                            keybindSettings.getActivateOn(), keybindSettings.getAllowExtraKeys(),
+                            keybindSettings.isOrderSensitive(), keybindSettings.isExclusive(),
+                            keybindSettings.shouldCancel(), keybindSettings.getAllowEmpty()));
+                }
+                ConfigUtils.readHotkeyToggleOptions(root, "FeatureHotkey", "FeatureToggle", FeatureToggle.OPTIONS);
+                ConfigUtils.readConfigBase(root, "Lists", Lists.OPTIONS);
+                ConfigUtils.readConfigBase(root, "AdvancedIntegratedServer", AdvancedIntegratedServer.OPTIONS);
+                int version = JsonUtils.getIntegerOrDefault(root, "config_version", 0);
+            }
+        }
+        if (Generic.DEBUG.getBooleanValue()) {
+            Configurator.setLevel(ModInfo.LOGGER.getName(), Level.toLevel("DEBUG"));
+        }
+        if (firstLoadConfig) {
+            updateOldStringList();
+        }
+        firstLoadConfig = false;
+    }
+
+    public static void saveToFile() {
+        File dir = FileUtils.getConfigDirectory();
+
+        if ((dir.exists() && dir.isDirectory()) || dir.mkdirs()) {
+            JsonObject root = new JsonObject();
+            ConfigUtils.writeConfigBase(root, "Generic", Generic.OPTIONS);
+            ConfigUtils.writeHotkeyToggleOptions(root, "FeatureHotkey", "FeatureToggle", FeatureToggle.OPTIONS);
+            ConfigUtils.writeConfigBase(root, "Lists", Lists.OPTIONS);
+            ConfigUtils.writeConfigBase(root, "AdvancedIntegratedServer", AdvancedIntegratedServer.OPTIONS);
+            root.add("config_version", new JsonPrimitive(CONFIG_VERSION));
+            JsonUtils.writeJsonToFile(root, new File(dir, CONFIG_FILE_NAME));
+        }
+    }
+
+    @Override
+    public void load() {
+        loadFromFile();
+    }
+
+    @Override
+    public void save() {
+        saveToFile();
+    }
+
     public static class Generic {
         private static final String PREFIX = String.format("%s.config.generic", ModInfo.MOD_ID);
         public static final ConfigHotkey OPEN_CONFIG_GUI = new TranslatableConfigHotkey(PREFIX, "openConfigGui", "O,C");
@@ -52,9 +138,14 @@ public class Configs implements IConfigHandler {
         public static final ConfigBoolean PARSE_WAYPOINT_FROM_CHAT = new TranslatableConfigBoolean(PREFIX, "parseWaypointFromChat", true);
         public static final ConfigHotkey SEND_LOOKING_AT_BLOCK_POS = new TranslatableConfigHotkey(PREFIX, "sendLookingAtBlockPos", "O,P");
         public static final ConfigHotkey SORT_INVENTORY = new TranslatableConfigHotkey(PREFIX, "sortInventory", "R", KeybindSettings.GUI);
+        public static final ImmutableList<ConfigHotkey> HOTKEYS = ImmutableList.of(
+                OPEN_CONFIG_GUI,
+                CLEAR_WAYPOINT,
+                SEND_LOOKING_AT_BLOCK_POS,
+                SORT_INVENTORY
+        );
         public static final ConfigBoolean SORT_INVENTORY_SHULKER_BOX_LAST = new TranslatableConfigBoolean(PREFIX, "sortInventoryShulkerBoxLast", false);
         public static final ConfigBoolean SORT_INVENTORY_SUPPORT_EMPTY_SHULKER_BOX_STACK = new TranslatableConfigBoolean(PREFIX, "sortInventorySupportEmptyShulkerBoxStack", false);
-
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
                 OPEN_CONFIG_GUI,
                 DEBUG,
@@ -66,14 +157,6 @@ public class Configs implements IConfigHandler {
                 SORT_INVENTORY_SHULKER_BOX_LAST,
                 SORT_INVENTORY_SUPPORT_EMPTY_SHULKER_BOX_STACK
         );
-
-        public static final ImmutableList<ConfigHotkey> HOTKEYS = ImmutableList.of(
-                OPEN_CONFIG_GUI,
-                CLEAR_WAYPOINT,
-                SEND_LOOKING_AT_BLOCK_POS,
-                SORT_INVENTORY
-        );
-
 
         static {
             OPEN_CONFIG_GUI.getKeybind().setCallback((keyAction, iKeybind) -> {
@@ -238,92 +321,5 @@ public class Configs implements IConfigHandler {
             });
         }
 
-    }
-
-    public static void updateOldStringList() {
-        OLD_WORLD_EATER_MINE_HELPER_WHITELIST.clear();
-        OLD_WORLD_EATER_MINE_HELPER_WHITELIST.addAll(Lists.WORLD_EATER_MINE_HELPER_WHITELIST.getStrings());
-        OLD_FALLBACK_LANGUAGE_LIST.clear();
-        OLD_FALLBACK_LANGUAGE_LIST.addAll(Lists.FALLBACK_LANGUAGE_LIST.getStrings());
-        OLD_BLOCK_MODEL_NO_OFFSET_BLACKLIST.clear();
-        OLD_BLOCK_MODEL_NO_OFFSET_BLACKLIST.addAll(Lists.BLOCK_MODEL_NO_OFFSET_BLACKLIST.getStrings());
-        OLD_BLOCK_MODEL_NO_OFFSET_WHITELIST.clear();
-        OLD_BLOCK_MODEL_NO_OFFSET_WHITELIST.addAll(Lists.BLOCK_MODEL_NO_OFFSET_WHITELIST.getStrings());
-
-    }
-
-    public static void checkIsStringListChanged() {
-        boolean dirty = false;
-        if (!OLD_WORLD_EATER_MINE_HELPER_WHITELIST.equals(Lists.WORLD_EATER_MINE_HELPER_WHITELIST.getStrings()) ||
-                !OLD_BLOCK_MODEL_NO_OFFSET_BLACKLIST.equals(Lists.BLOCK_MODEL_NO_OFFSET_BLACKLIST.getStrings()) ||
-                !OLD_BLOCK_MODEL_NO_OFFSET_WHITELIST.equals(Lists.BLOCK_MODEL_NO_OFFSET_WHITELIST.getStrings())) {
-            MinecraftClient.getInstance().worldRenderer.reload();
-            dirty = true;
-        }
-
-        if (!OLD_FALLBACK_LANGUAGE_LIST.equals(Lists.FALLBACK_LANGUAGE_LIST.getStrings())) {
-            MinecraftClient.getInstance().reloadResources();
-            dirty = true;
-        }
-
-        if (dirty) {
-            updateOldStringList();
-        }
-    }
-
-
-    public static void loadFromFile() {
-        File configFile = new File(FileUtils.getConfigDirectory(), CONFIG_FILE_NAME);
-
-        if (configFile.exists() && configFile.isFile() && configFile.canRead()) {
-            JsonElement element = JsonUtils.parseJsonFile(configFile);
-
-            if (element != null && element.isJsonObject()) {
-                JsonObject root = element.getAsJsonObject();
-                ConfigUtils.readConfigBase(root, "Generic", Generic.OPTIONS);
-                KeybindSettings keybindSettings = Generic.SORT_INVENTORY.getKeybind().getSettings();
-                if (keybindSettings.getContext() != KeybindSettings.Context.GUI) {
-                    Generic.SORT_INVENTORY.getKeybind().setSettings(KeybindSettings.create(KeybindSettings.Context.GUI,
-                            keybindSettings.getActivateOn(), keybindSettings.getAllowExtraKeys(),
-                            keybindSettings.isOrderSensitive(), keybindSettings.isExclusive(),
-                            keybindSettings.shouldCancel(), keybindSettings.getAllowEmpty()));
-                }
-                ConfigUtils.readHotkeyToggleOptions(root, "FeatureHotkey", "FeatureToggle", FeatureToggle.OPTIONS);
-                ConfigUtils.readConfigBase(root, "Lists", Lists.OPTIONS);
-                ConfigUtils.readConfigBase(root, "AdvancedIntegratedServer", AdvancedIntegratedServer.OPTIONS);
-                int version = JsonUtils.getIntegerOrDefault(root, "config_version", 0);
-            }
-        }
-        if (Generic.DEBUG.getBooleanValue()) {
-            Configurator.setLevel(ModInfo.LOGGER.getName(), Level.toLevel("DEBUG"));
-        }
-        if (firstLoadConfig) {
-            updateOldStringList();
-        }
-        firstLoadConfig = false;
-    }
-
-    public static void saveToFile() {
-        File dir = FileUtils.getConfigDirectory();
-
-        if ((dir.exists() && dir.isDirectory()) || dir.mkdirs()) {
-            JsonObject root = new JsonObject();
-            ConfigUtils.writeConfigBase(root, "Generic", Generic.OPTIONS);
-            ConfigUtils.writeHotkeyToggleOptions(root, "FeatureHotkey", "FeatureToggle", FeatureToggle.OPTIONS);
-            ConfigUtils.writeConfigBase(root, "Lists", Lists.OPTIONS);
-            ConfigUtils.writeConfigBase(root, "AdvancedIntegratedServer", AdvancedIntegratedServer.OPTIONS);
-            root.add("config_version", new JsonPrimitive(CONFIG_VERSION));
-            JsonUtils.writeJsonToFile(root, new File(dir, CONFIG_FILE_NAME));
-        }
-    }
-
-    @Override
-    public void load() {
-        loadFromFile();
-    }
-
-    @Override
-    public void save() {
-        saveToFile();
     }
 }

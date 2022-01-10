@@ -30,6 +30,11 @@
     "ommc.compat.optifabric.mixins.json",
     "ommc.compat.sodium.mixins.json"
   ],
+  "custom": {
+    "compat": {
+      "sodium": ">=0.4.0-alpha5+build.9"
+    }
+  },
   "depends": {
     "fabricloader": ">=0.7.4",
     "fabric": "*",
