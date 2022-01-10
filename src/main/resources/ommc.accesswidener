@@ -7,3 +7,6 @@ accessible field net/minecraft/block/AbstractBlock$AbstractBlockState luminance 
 mutable field net/minecraft/client/render/model/json/JsonUnbakedModel ambientOcclusion Z
 accessible field net/minecraft/client/render/model/json/JsonUnbakedModel ambientOcclusion Z
 accessible field net/minecraft/client/render/model/json/JsonUnbakedModel parent Lnet/minecraft/client/render/model/json/JsonUnbakedModel;
+mutable field net/minecraft/text/LiteralText string Ljava/lang/String;
+accessible field net/minecraft/text/LiteralText string Ljava/lang/String;
+accessible field net/minecraft/text/TranslatableText languageCache Lnet/minecraft/util/Language;
