@@ -185,8 +185,11 @@ public class Configs implements IConfigHandler {
                 return false;
             });
             SORT_INVENTORY.getKeybind().setCallback((keyAction, iKeybind) -> {
-                SortInventoryUtil.sort();
-                MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                if (SortInventoryUtil.sort()) {
+                    MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                } else {
+                    MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_DISPENSER_FAIL, 1.0F));
+                }
                 return false;
             });
             DEBUG.setValueChangeCallback(config -> {
