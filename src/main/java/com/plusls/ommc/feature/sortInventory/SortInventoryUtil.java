@@ -92,7 +92,7 @@ public class SortInventoryUtil {
             // 整理容器
             mergeQueue = mergeItems(cursorStack, itemStacks, 0, containerInventorySize);
             swapQueue = quickSort(itemStacks, 0, containerInventorySize);
-        } else if (mouseIdx >= playerInventoryStartIdx && mouseIdx< playerInventoryStartIdx + 27) {
+        } else if (mouseIdx >= playerInventoryStartIdx && mouseIdx < playerInventoryStartIdx + 27) {
             // 整理背包
             mergeQueue = mergeItems(cursorStack, itemStacks, playerInventoryStartIdx, playerInventoryStartIdx + 27);
             swapQueue = quickSort(itemStacks, playerInventoryStartIdx, playerInventoryStartIdx + 27);
@@ -118,7 +118,9 @@ public class SortInventoryUtil {
             }
         }
         for (Pair<Integer, Integer> slotIdPair : swapQueue) {
-            interactionManager.clickSlot(syncId, slotIdPair.getLeft(), slotIdPair.getRight(), SlotActionType.SWAP, player);
+            interactionManager.clickSlot(syncId, slotIdPair.getLeft(), 0, SlotActionType.PICKUP, player);
+            interactionManager.clickSlot(syncId, slotIdPair.getRight(), 0, SlotActionType.PICKUP, player);
+            interactionManager.clickSlot(syncId, slotIdPair.getLeft(), 0, SlotActionType.PICKUP, player);
         }
     }
 
@@ -212,50 +214,24 @@ public class SortInventoryUtil {
         sortedItemStacks.sort(new ItemStackComparator());
         for (int i = l; i < r; ++i) {
             ItemStack dstStack = sortedItemStacks.get(i - l);
+            int dstIdx = -1;
             if (itemStacks.get(i) != dstStack) {
-                int dstIdx = itemStacks.indexOf(dstStack);
+                for (int j = l; j < r; ++j) {
+                    if (itemStacks.get(j) == dstStack) {
+                        dstIdx = j;
+                        break;
+                    }
+                }
+                if (dstIdx == -1) {
+                    // wtf???
+                    continue;
+                }
                 itemStacks.set(dstIdx, itemStacks.get(i));
                 itemStacks.set(i, dstStack);
                 ret.add(new Pair<>(i, dstIdx));
             }
         }
         return ret;
-//        int i, j;
-//        ItemStack p;
-//        ItemStack temp;
-//
-//        if (l >= r - 1) {
-//            return ret;
-//        }
-//        p = itemStacks.get(l);
-//        i = l;
-//        j = r - 1;
-//        while (i < j) {
-//            while (cmp(itemStacks.get(j), p) >= 0 && i < j) {
-//                j--;
-//            }
-//            while (cmp(itemStacks.get(i), p) <= 0 && i < j) {
-//                i++;
-//            }
-//            if (i < j) {
-//                temp = itemStacks.get(i);
-//                itemStacks.set(i, itemStacks.get(j));
-//                itemStacks.set(j, temp);
-//                ret.add(i);
-//                ret.add(j);
-//                ret.add(i);
-//            }
-//        }
-//        if (l != i) {
-//            itemStacks.set(l, itemStacks.get(i));
-//            itemStacks.set(i, p);
-//            ret.add(l);
-//            ret.add(i);
-//            ret.add(l);
-//        }
-//        ret.addAll(quickSort(itemStacks, l, j));
-//        ret.addAll(quickSort(itemStacks, j + 1, r));
-//        return ret;
     }
 
 

@@ -39,7 +39,9 @@ public class AutoSwitchElytraUtil {
             }
         }
         if (idxToSwitch != -1) {
-            client.interactionManager.clickSlot(screenHandler.syncId, idxToSwitch, sourceSlot, SlotActionType.SWAP, clientPlayerEntity);
+            client.interactionManager.clickSlot(screenHandler.syncId, idxToSwitch, 0, SlotActionType.PICKUP, clientPlayerEntity);
+            client.interactionManager.clickSlot(screenHandler.syncId, sourceSlot, 0, SlotActionType.PICKUP, clientPlayerEntity);
+            client.interactionManager.clickSlot(screenHandler.syncId, idxToSwitch, 0, SlotActionType.PICKUP, clientPlayerEntity);
         }
     }
 }
