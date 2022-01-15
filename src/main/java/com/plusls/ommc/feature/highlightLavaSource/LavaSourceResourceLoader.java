@@ -13,15 +13,11 @@ import net.minecraft.block.FluidBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.model.ModelLoader;
 import net.minecraft.client.texture.Sprite;
-import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockRenderView;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
@@ -61,18 +57,15 @@ public class LavaSourceResourceLoader implements SimpleSynchronousResourceReload
         defaultLavaSourceFlowSprite = ModelLoader.LAVA_FLOW.getSprite();
         defaultLavaSourceSpites[0] = defaultLavaSourceStillSprite;
         defaultLavaSourceSpites[1] = defaultLavaSourceFlowSprite;
-        FluidRenderHandler lavaSourceRenderHandler = new FluidRenderHandler() {
-            @Override
-            public Sprite[] getFluidSprites(@Nullable BlockRenderView view, @Nullable BlockPos pos, FluidState state) {
+        FluidRenderHandler lavaSourceRenderHandler = (view, pos, state) -> {
 
-                if (view != null && pos != null && Configs.FeatureToggle.HIGHLIGHT_LAVA_SOURCE.getBooleanValue()) {
-                    BlockState blockState = view.getBlockState(pos);
-                    if (blockState.contains(FluidBlock.LEVEL) && blockState.get(FluidBlock.LEVEL) == 0) {
-                        return lavaSourceSpites;
-                    }
+            if (view != null && pos != null && Configs.FeatureToggle.HIGHLIGHT_LAVA_SOURCE.getBooleanValue()) {
+                BlockState blockState = view.getBlockState(pos);
+                if (blockState.contains(FluidBlock.LEVEL) && blockState.get(FluidBlock.LEVEL) == 0) {
+                    return lavaSourceSpites;
                 }
-                return defaultLavaSourceSpites;
             }
+            return defaultLavaSourceSpites;
         };
         FluidRenderHandlerRegistry.INSTANCE.register(Fluids.LAVA, lavaSourceRenderHandler);
         FluidRenderHandlerRegistry.INSTANCE.register(Fluids.FLOWING_LAVA, lavaSourceRenderHandler);
