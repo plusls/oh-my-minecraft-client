@@ -21,34 +21,62 @@ import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.util.Pair;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class SortInventoryUtil {
+    private static boolean allShulkerBox;
 
-    public static int getPlayerInventoryStartIdx(ScreenHandler screenHandler, Inventory mouseSlotInventory) {
-        if (screenHandler instanceof PlayerScreenHandler ||
-                (screenHandler instanceof CreativeInventoryScreen.CreativeScreenHandler && mouseSlotInventory instanceof PlayerInventory)) {
-            return 9;
-        } else if (screenHandler instanceof CraftingScreenHandler) {
-            return 10;
-        } else {
-            return getContainerInventorySize(screenHandler);
+    @Nullable
+    public static Pair<Integer, Integer> getSortRange(ScreenHandler screenHandler, Slot mouseSlot) {
+        int mouseIdx = mouseSlot.id;
+        if (mouseIdx == 0 && mouseSlot.getIndex() != 0) {
+            mouseIdx = mouseSlot.getIndex();
         }
-    }
 
-    private static int getContainerInventorySize(ScreenHandler screenHandler) {
-        if (screenHandler instanceof Generic3x3ContainerScreenHandler ||
-                screenHandler instanceof GenericContainerScreenHandler ||
-                screenHandler instanceof HopperScreenHandler ||
-                screenHandler instanceof ShulkerBoxScreenHandler
-        ) {
-            return screenHandler.getSlot(0).inventory.size();
+        int l = mouseIdx, r = mouseIdx + 1;
+
+        Class<?> clazz = screenHandler.slots.get(mouseIdx).inventory.getClass();
+        for (int i = mouseIdx - 1; i >= 0; --i) {
+            if (clazz != screenHandler.slots.get(i).inventory.getClass()) {
+                l = i + 1;
+                break;
+            } else if (i == 0) {
+                l = 0;
+            }
         }
-        return -1;
+        for (int i = mouseIdx + 1; i < screenHandler.slots.size(); ++i) {
+            if (clazz != screenHandler.slots.get(i).inventory.getClass()) {
+                r = i;
+                break;
+            } else if (i == screenHandler.slots.size() - 1) {
+                r = screenHandler.slots.size();
+            }
+        }
+
+        if (mouseSlot.inventory instanceof PlayerInventory) {
+            if (l == 5 && r == 46) {
+                if (mouseIdx >= 9 && mouseIdx < 36) {
+                    return new Pair<>(9, 36);
+                } else if (mouseIdx >= 36 && mouseIdx < 45) {
+                    return new Pair<>(36, 45);
+                }
+                return null;
+            } else if (r - l == 36) {
+                if (mouseIdx >= l && mouseIdx < l + 27) {
+                    return new Pair<>(l, l + 27);
+                } else {
+                    return new Pair<>(l + 27, r);
+                }
+            }
+        }
+
+
+        if (l + 1 == r) {
+            return null;
+        }
+        return new Pair<>(l, r);
     }
 
     public static boolean sort() {
@@ -69,43 +97,21 @@ public class SortInventoryUtil {
             return false;
         }
         ScreenHandler screenHandler = player.currentScreenHandler;
-        int playerInventoryStartIdx = getPlayerInventoryStartIdx(screenHandler, mouseSlot.inventory);
-        if (playerInventoryStartIdx == -1) {
+        Pair<Integer, Integer> sortRange = getSortRange(screenHandler, mouseSlot);
+        if (sortRange == null) {
             return false;
         }
-
-        ArrayList<Integer> mergeQueue = null;
-        ArrayList<Pair<Integer, Integer>> swapQueue = null;
         ArrayList<ItemStack> itemStacks = new ArrayList<>();
         ItemStack cursorStack = screenHandler.getCursorStack().copy();
-        int containerInventorySize = getContainerInventorySize(screenHandler);
 
         for (int i = 0; i < screenHandler.slots.size(); ++i) {
             itemStacks.add(screenHandler.slots.get(i).getStack().copy());
         }
+        ArrayList<Integer> mergeQueue = mergeItems(cursorStack, itemStacks, sortRange.getLeft(), sortRange.getRight());
+        ArrayList<Pair<Integer, Integer>> swapQueue = quickSort(itemStacks, sortRange.getLeft(), sortRange.getRight());
 
-        int mouseIdx = mouseSlot.id;
-        if (mouseIdx == 0 && mouseSlot.getIndex() != 0) {
-            mouseIdx = mouseSlot.getIndex();
-        }
-        if (containerInventorySize != -1 && mouseIdx < containerInventorySize) {
-            // 整理容器
-            mergeQueue = mergeItems(cursorStack, itemStacks, 0, containerInventorySize);
-            swapQueue = quickSort(itemStacks, 0, containerInventorySize);
-        } else if (mouseIdx >= playerInventoryStartIdx && mouseIdx < playerInventoryStartIdx + 27) {
-            // 整理背包
-            mergeQueue = mergeItems(cursorStack, itemStacks, playerInventoryStartIdx, playerInventoryStartIdx + 27);
-            swapQueue = quickSort(itemStacks, playerInventoryStartIdx, playerInventoryStartIdx + 27);
-        } else if (mouseIdx >= playerInventoryStartIdx + 27 && mouseIdx < playerInventoryStartIdx + 36) {
-            // 整理快捷栏
-            mergeQueue = mergeItems(cursorStack, itemStacks, playerInventoryStartIdx + 27, playerInventoryStartIdx + 36);
-            swapQueue = quickSort(itemStacks, playerInventoryStartIdx + 27, playerInventoryStartIdx + 36);
-        }
-        if (mergeQueue != null) {
-            doClick(player, screenHandler.syncId, client.interactionManager, mergeQueue, swapQueue);
-            return !mergeQueue.isEmpty() || !swapQueue.isEmpty();
-        }
-        return false;
+        doClick(player, screenHandler.syncId, client.interactionManager, mergeQueue, swapQueue);
+        return !mergeQueue.isEmpty() || !swapQueue.isEmpty();
     }
 
     public static void doClick(PlayerEntity player, int syncId, @NotNull ClientPlayerInteractionManager interactionManager, List<Integer> mergeQueue, List<Pair<Integer, Integer>> swapQueue) {
@@ -179,7 +185,7 @@ public class SortInventoryUtil {
         public int compare(ItemStack a, ItemStack b) {
             int aId = getItemId(a);
             int bId = getItemId(b);
-            if (Configs.Generic.SORT_INVENTORY_SHULKER_BOX_LAST.getBooleanValue()) {
+            if (!allShulkerBox && Configs.Generic.SORT_INVENTORY_SHULKER_BOX_LAST.getBooleanValue()) {
                 if (ShulkerBoxItemUtil.isShulkerBoxBlockItem(a) && !ShulkerBoxItemUtil.isShulkerBoxBlockItem(b)) {
                     return 1;
                 } else if (!ShulkerBoxItemUtil.isShulkerBoxBlockItem(a) && ShulkerBoxItemUtil.isShulkerBoxBlockItem(b)) {
@@ -187,15 +193,27 @@ public class SortInventoryUtil {
                 }
             }
             if (ShulkerBoxItemUtil.isShulkerBoxBlockItem(a) && ShulkerBoxItemUtil.isShulkerBoxBlockItem(b) && a.getItem() == b.getItem()) {
-                return ShulkerBoxItemUtil.cmpShulkerBox(a.getNbt(), b.getNbt());
+                return -ShulkerBoxItemUtil.cmpShulkerBox(a.getNbt(), b.getNbt());
             }
-
             if (a.isEmpty() && !b.isEmpty()) {
                 return 1;
             } else if (!a.isEmpty() && b.isEmpty()) {
                 return -1;
+            } else if (a.isEmpty()) {
+                return 0;
             }
             if (aId == bId) {
+                // 有 nbt 标签的排在前面
+                if (!a.hasNbt() && b.hasNbt()) {
+                    return 1;
+                } else if (a.hasNbt() && !b.hasNbt()) {
+                    return -1;
+                } else if (a.hasNbt()) {
+                    // 如果都有 nbt 的话，确保排序后相邻的物品 nbt 标签一致
+                    if (!ItemStack.areNbtEqual(a, b)) {
+                        return Objects.requireNonNull(a.getNbt()).hashCode() - Objects.requireNonNull(b.getNbt()).hashCode();
+                    }
+                }
                 // 物品少的排在后面
                 return b.getCount() - a.getCount();
             }
@@ -208,11 +226,17 @@ public class SortInventoryUtil {
         // sort [l, r)
         ArrayList<Pair<Integer, Integer>> ret = new ArrayList<>();
         ArrayList<ItemStack> sortedItemStacks = new ArrayList<>();
+        allShulkerBox = true;
         for (int i = l; i < r; ++i) {
-            sortedItemStacks.add(itemStacks.get(i));
+            ItemStack itemStack = itemStacks.get(i);
+            if (!itemStack.isEmpty() && !ShulkerBoxItemUtil.isShulkerBoxBlockItem(itemStack)) {
+                allShulkerBox = false;
+            }
+            sortedItemStacks.add(itemStack);
         }
         sortedItemStacks.sort(new ItemStackComparator());
-        for (int i = l; i < r; ++i) {
+        // 倒序遍历来确保少的方块放在后面，多的方块放在前面
+        for (int i = r - 1; i >= l; --i) {
             ItemStack dstStack = sortedItemStacks.get(i - l);
             int dstIdx = -1;
             if (itemStacks.get(i) != dstStack) {
