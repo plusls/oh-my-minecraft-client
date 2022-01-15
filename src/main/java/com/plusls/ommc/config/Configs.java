@@ -136,6 +136,7 @@ public class Configs implements IConfigHandler {
         public static final ConfigBoolean DONT_CLEAR_CHAT_HISTORY = new TranslatableConfigBoolean(PREFIX, "dontClearChatHistory", false);
         public static final ConfigHotkey CLEAR_WAYPOINT = new TranslatableConfigHotkey(PREFIX, "clearWaypoint", "C");
         public static final ConfigBoolean PARSE_WAYPOINT_FROM_CHAT = new TranslatableConfigBoolean(PREFIX, "parseWaypointFromChat", true);
+        public static final ConfigBoolean FORCE_PARSE_WAYPOINT_FROM_CHAT = new TranslatableConfigBoolean(PREFIX, "forceParseWaypointFromChat", false);
         public static final ConfigHotkey SEND_LOOKING_AT_BLOCK_POS = new TranslatableConfigHotkey(PREFIX, "sendLookingAtBlockPos", "O,P");
         public static final ConfigHotkey SORT_INVENTORY = new TranslatableConfigHotkey(PREFIX, "sortInventory", "R", KeybindSettings.GUI);
         public static final ImmutableList<ConfigHotkey> HOTKEYS = ImmutableList.of(
@@ -152,6 +153,7 @@ public class Configs implements IConfigHandler {
                 DONT_CLEAR_CHAT_HISTORY,
                 CLEAR_WAYPOINT,
                 PARSE_WAYPOINT_FROM_CHAT,
+                FORCE_PARSE_WAYPOINT_FROM_CHAT,
                 SEND_LOOKING_AT_BLOCK_POS,
                 SORT_INVENTORY,
                 SORT_INVENTORY_SHULKER_BOX_LAST,

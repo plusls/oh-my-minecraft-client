@@ -2,6 +2,7 @@ package com.plusls.ommc.feature.highlithtWaypoint;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.plusls.ommc.config.Configs;
 import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
@@ -191,6 +192,7 @@ public class HighlightWaypointUtil {
         if (waypointPairs.size() > 0) {
             Style style = chat.getStyle();
             TextColor color = style.getColor();
+            ClickEvent clickEvent = style.getClickEvent();
             if (color == null) {
                 color = TextColor.fromFormatting(Formatting.GREEN);
             }
@@ -207,9 +209,11 @@ public class HighlightWaypointUtil {
                 Style chatStyle = clickableWaypoint.getStyle();
                 BlockPos pos = Objects.requireNonNull(parseWaypoint(waypointString.substring(1, waypointString.length() - 1)));
                 TranslatableText hover = new TranslatableText("ommc.highlight_waypoint.tooltip");
-                chatStyle = chatStyle.withClickEvent(
-                                new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-                                        String.format("/%s %d %d %d", HIGHLIGHT_COMMAND, pos.getX(), pos.getY(), pos.getZ())))
+                if (clickEvent == null || Configs.Generic.FORCE_PARSE_WAYPOINT_FROM_CHAT.getBooleanValue()) {
+                    clickEvent = new ClickEvent(ClickEvent.Action.RUN_COMMAND,
+                            String.format("/%s %d %d %d", HIGHLIGHT_COMMAND, pos.getX(), pos.getY(), pos.getZ()));
+                }
+                chatStyle = chatStyle.withClickEvent(clickEvent)
                         .withColor(color).withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hover));
                 clickableWaypoint.setStyle(chatStyle);
                 texts.add(clickableWaypoint);
