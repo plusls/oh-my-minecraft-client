@@ -13,6 +13,8 @@
   "ommc.config.generic.dontClearChatHistory.comment": "不清空聊天历史记录，以及输入的历史记录",
   "ommc.config.generic.clearWaypoint.name": "取消高亮坐标点",
   "ommc.config.generic.clearWaypoint.comment": "取消高亮坐标点的快捷键",
+  "ommc.config.generic.parseWaypointFromChat.name": "从聊天中解析路径点",
+  "ommc.config.generic.parseWaypointFromChat.comment": "从聊天中解析路径点",
   "ommc.config.generic.forceParseWaypointFromChat.name": "强制从聊天中解析路径点",
   "ommc.config.generic.forceParseWaypointFromChat.comment": "强制从聊天中解析路径点，就算该信息中存在 click event 也会将其覆盖",
   "ommc.config.generic.sendLookingAtBlockPos.name": "发送当前注视的方块的坐标",

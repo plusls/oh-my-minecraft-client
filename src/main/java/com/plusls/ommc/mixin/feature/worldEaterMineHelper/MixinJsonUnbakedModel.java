@@ -32,11 +32,10 @@ import java.util.function.Function;
 @Mixin(value = JsonUnbakedModel.class, priority = 999)
 public abstract class MixinJsonUnbakedModel implements UnbakedModel {
 
-    @Shadow
-    public abstract List<ModelElement> getElements();
-
     private final ThreadLocal<Boolean> ommcFirstBake = ThreadLocal.withInitial(() -> Boolean.TRUE);
 
+    @Shadow
+    public abstract List<ModelElement> getElements();
 
     @Inject(method = "bake(Lnet/minecraft/client/render/model/ModelLoader;Lnet/minecraft/client/render/model/json/JsonUnbakedModel;Ljava/util/function/Function;Lnet/minecraft/client/render/model/ModelBakeSettings;Lnet/minecraft/util/Identifier;Z)Lnet/minecraft/client/render/model/BakedModel;",
             at = @At(value = "HEAD"), cancellable = true)
