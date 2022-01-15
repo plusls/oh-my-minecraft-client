@@ -5,6 +5,7 @@ import com.plusls.ommc.event.InputHandler;
 import com.plusls.ommc.feature.highlightLavaSource.LavaSourceResourceLoader;
 import com.plusls.ommc.feature.highlithtWaypoint.HighlightWaypointResourceLoader;
 import com.plusls.ommc.feature.highlithtWaypoint.HighlightWaypointUtil;
+import com.plusls.ommc.feature.preventWastageOfWater.PreventWastageOfWaterHandler;
 import com.plusls.ommc.feature.realSneaking.RealSneakingEventHandler;
 import fi.dy.masa.malilib.config.ConfigManager;
 import fi.dy.masa.malilib.event.InputEventHandler;
@@ -19,6 +20,7 @@ public class OhMyMinecraftClient implements ClientModInitializer {
         InputEventHandler.getKeybindManager().registerKeybindProvider(InputHandler.getInstance());
         RealSneakingEventHandler.init();
         HighlightWaypointUtil.init();
+        PreventWastageOfWaterHandler.init();
     }
 }
 

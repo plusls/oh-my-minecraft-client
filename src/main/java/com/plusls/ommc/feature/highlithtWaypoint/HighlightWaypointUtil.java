@@ -2,7 +2,6 @@ package com.plusls.ommc.feature.highlithtWaypoint;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
-import com.plusls.ommc.ModInfo;
 import com.plusls.ommc.config.Configs;
 import com.plusls.ommc.util.command.ClientCommandManager;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -22,11 +21,16 @@ import net.minecraft.network.packet.s2c.play.PlayerRespawnS2CPacket;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.*;
+import net.minecraft.util.Pair;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.dimension.DimensionType;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -35,6 +39,7 @@ import java.util.regex.Pattern;
 // from fabric-voxel map
 public class HighlightWaypointUtil {
 
+    private static final String HIGHLIGHT_COMMAND = "highlightWaypoint";
     @Nullable
     public static BlockPos highlightPos;
     public static long lastBeamTime = 0;
@@ -42,8 +47,6 @@ public class HighlightWaypointUtil {
     public static Pattern pattern2 = Pattern.compile("\\((\\w+\\s*:\\s*[-#]?[^\\[\\]]+)(,\\s*\\w+\\s*:\\s*[-#]?[^\\[\\]]+)+\\)", Pattern.CASE_INSENSITIVE);
     public static Pattern pattern3 = Pattern.compile("\\[(-?\\d+)(,\\s*-?\\d+)(,\\s*-?\\d+)]", Pattern.CASE_INSENSITIVE);
     public static Pattern pattern4 = Pattern.compile("\\((-?\\d+)(,\\s*-?\\d+)(,\\s*-?\\d+)\\)", Pattern.CASE_INSENSITIVE);
-
-    private static final String HIGHLIGHT_COMMAND = "highlightWaypoint";
     @Nullable
     public static DimensionType currentWorld = null;
 
@@ -90,18 +93,19 @@ public class HighlightWaypointUtil {
         currentWorld = newDimension;
     }
 
-    public static ArrayList<String> getWaypointStrings(String message) {
-        ArrayList<String> ret = new ArrayList<>();
+    public static ArrayList<Pair<Integer, String>> getWaypointStrings(String message) {
+        ArrayList<Pair<Integer, String>> ret = new ArrayList<>();
         if ((message.contains("[") && message.contains("]")) || (message.contains("(") && message.contains(")"))) {
             getWaypointStringsByPattern(message, ret, pattern1);
             getWaypointStringsByPattern(message, ret, pattern2);
             getWaypointStringsByPattern(message, ret, pattern3);
             getWaypointStringsByPattern(message, ret, pattern4);
         }
+        ret.sort(Comparator.comparingInt(Pair::getLeft));
         return ret;
     }
 
-    private static void getWaypointStringsByPattern(String message, ArrayList<String> ret, Pattern pattern) {
+    private static void getWaypointStringsByPattern(String message, ArrayList<Pair<Integer, String>> ret, Pattern pattern) {
         Matcher matcher = pattern.matcher(message);
         while (matcher.find()) {
             String match = matcher.group();
@@ -109,7 +113,7 @@ public class HighlightWaypointUtil {
             if (pos == null) {
                 continue;
             }
-            ret.add(match);
+            ret.add(new Pair<>(matcher.start(), match));
         }
     }
 
@@ -158,57 +162,86 @@ public class HighlightWaypointUtil {
         return new BlockPos(x, y, z);
     }
 
-    public static boolean parseWaypoints(Text chat, LiteralText result) {
-        boolean ret = false;
+    public static void parseWaypointText(Text chat) {
         if (chat.getSiblings().size() > 0) {
             for (Text text : chat.getSiblings()) {
-                ret |= parseWaypoints(text, result);
+                parseWaypointText(text);
             }
-        } else {
-            ret = parseWaypointsText(chat, result);
         }
-        return ret;
+        if (chat instanceof TranslatableText) {
+            Object[] args = ((TranslatableText) chat).getArgs();
+            boolean updateTranslatableText = false;
+            for (int i = 0; i < args.length; ++i) {
+                if (args[i] instanceof Text) {
+                    parseWaypointText((Text) args[i]);
+                } else if (args[i] instanceof String) {
+                    Text text = new LiteralText((String) args[i]);
+                    if (updateWaypointsText(text)) {
+                        args[i] = text;
+                        updateTranslatableText = true;
+                    }
+                }
+            }
+            if (updateTranslatableText) {
+                // refresh cache
+                ((TranslatableText) chat).languageReloadTimestamp = -1L;
+            }
+        }
+        updateWaypointsText(chat);
     }
 
-    public static boolean parseWaypointsText(Text chat, LiteralText result) {
-        String message = chat.getString();
-        ArrayList<String> waypointStrings = getWaypointStrings(message);
-        Style oldStyle = chat.getStyle();
-        boolean haveOldEvent = oldStyle.getClickEvent() != null || oldStyle.getHoverEvent() != null;
-        if (waypointStrings.size() > 0 && (!haveOldEvent || Configs.Generic.FORCE_PARSE_WAYPOINT_FROM_CHAT.getBooleanValue())) {
-            Formatting color = oldStyle.getColor();
-            ModInfo.LOGGER.debug("text: {} color: {}", chat.getString(), color);
+
+    public static boolean updateWaypointsText(Text chat) {
+        if (!(chat instanceof LiteralText)) {
+            return false;
+        }
+        LiteralText literalChatText = (LiteralText) chat;
+
+
+        String message = literalChatText.string;
+        ArrayList<Pair<Integer, String>> waypointPairs = getWaypointStrings(message);
+        if (waypointPairs.size() > 0) {
+            Style style = chat.getStyle();
+            Formatting color = style.getColor();
+            ClickEvent clickEvent = style.getClickEvent();
             if (color == null) {
                 color = Formatting.GREEN;
             }
             ArrayList<LiteralText> texts = new ArrayList<>();
-            int prevIdx = 0, currentIdx;
-            for (String waypointString : waypointStrings) {
-                currentIdx = message.indexOf(waypointString, prevIdx);
-                texts.add(new LiteralText(message.substring(prevIdx, currentIdx)));
+            int prevIdx = 0;
+            for (Pair<Integer, String> waypointPair : waypointPairs) {
+                String waypointString = waypointPair.getRight();
+                int waypointIdx = waypointPair.getLeft();
+                LiteralText prevText = new LiteralText(message.substring(prevIdx, waypointIdx));
+                prevText.setStyle(style);
+                texts.add(prevText);
+
                 LiteralText clickableWaypoint = new LiteralText(waypointString);
                 Style chatStyle = clickableWaypoint.getStyle();
                 BlockPos pos = Objects.requireNonNull(parseWaypoint(waypointString.substring(1, waypointString.length() - 1)));
                 TranslatableText hover = new TranslatableText("ommc.highlight_waypoint.tooltip");
-                chatStyle = chatStyle.setClickEvent(
-                        new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-                                String.format("/%s %d %d %d", HIGHLIGHT_COMMAND, pos.getX(), pos.getY(), pos.getZ())))
+                if (clickEvent == null || Configs.Generic.FORCE_PARSE_WAYPOINT_FROM_CHAT.getBooleanValue()) {
+                    clickEvent = new ClickEvent(ClickEvent.Action.RUN_COMMAND,
+                            String.format("/%s %d %d %d", HIGHLIGHT_COMMAND, pos.getX(), pos.getY(), pos.getZ()));
+                }
+                chatStyle = chatStyle.setClickEvent(clickEvent)
                         .setColor(color).setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hover));
                 clickableWaypoint.setStyle(chatStyle);
                 texts.add(clickableWaypoint);
-                prevIdx = currentIdx + waypointString.length();
+                prevIdx = waypointIdx + waypointString.length();
             }
             if (prevIdx < message.length() - 1) {
-                texts.add(new LiteralText(message.substring(prevIdx)));
+                LiteralText lastText = new LiteralText(message.substring(prevIdx));
+                lastText.setStyle(style);
+                texts.add(lastText);
             }
-            LiteralText finalText = new LiteralText("");
-            for (LiteralText text : texts) {
-                finalText.append(text);
+            for (int i = 0; i < texts.size(); ++i) {
+                literalChatText.getSiblings().add(i, texts.get(i));
             }
-            result.append(finalText);
+            literalChatText.string = "";
+            literalChatText.setStyle(new Style());
             return true;
         }
-        result.append(chat);
         return false;
     }
 
@@ -229,8 +262,8 @@ public class HighlightWaypointUtil {
         Vec3d cameraPosPlusDirectionTimesDistance = cameraPos.add(cameraPosPlusDirection.getX() * distance, cameraPosPlusDirection.getY() * distance, cameraPosPlusDirection.getZ() * distance);
         Box axisalignedbb = new Box(pos.getX() + 0.5f - size, pos.getY() + 0.5f - size, pos.getZ() + 0.5f - size,
                 pos.getX() + 0.5f + size, pos.getY() + 0.5f + size, pos.getZ() + 0.5f + size);
-        Optional<Vec3d> rayTraceResult = axisalignedbb.rayTrace(cameraPos, cameraPosPlusDirectionTimesDistance);
-        return axisalignedbb.contains(cameraPos) ? distance >= 1.0 : rayTraceResult.isPresent();
+        Optional<Vec3d> raycastResult = axisalignedbb.rayTrace(cameraPos, cameraPosPlusDirectionTimesDistance);
+        return axisalignedbb.contains(cameraPos) ? distance >= 1.0 : raycastResult.isPresent();
     }
 
     public static void drawWaypoint(MatrixStack matrixStack, float tickDelta) {
@@ -261,9 +294,9 @@ public class HighlightWaypointUtil {
         int i = yOffset + maxY;
         matrices.push();
         matrices.translate(0.5D, 0.0D, 0.5D);
-        float f = (float)Math.floorMod(worldTime, 40L) + tickDelta;
+        float f = (float) Math.floorMod(worldTime, 40L) + tickDelta;
         float g = maxY < 0 ? f : -f;
-        float h = MathHelper.fractionalPart(g * 0.2F - (float)MathHelper.floor(g * 0.1F));
+        float h = MathHelper.fractionalPart(g * 0.2F - (float) MathHelper.floor(g * 0.1F));
         float j = color[0];
         float k = color[1];
         float l = color[2];
@@ -278,7 +311,7 @@ public class HighlightWaypointUtil {
         float ag = 0.0F;
         float ah = 1.0F;
         float ai = -1.0F + h;
-        float aj = (float)maxY * heightScale * (0.5F / innerRadius) + ai;
+        float aj = (float) maxY * heightScale * (0.5F / innerRadius) + ai;
         method_22741(matrices, vertexConsumers.getBuffer(RenderLayer.getTextSeeThrough(textureId)), j, k, l, 1.0F, yOffset, i, 0.0F, innerRadius, innerRadius, 0.0F, ac, 0.0F, 0.0F, t, 0.0F, 1.0F, aj, ai);
         matrices.pop();
         y = -outerRadius;
@@ -288,7 +321,7 @@ public class HighlightWaypointUtil {
         ag = 0.0F;
         ah = 1.0F;
         ai = -1.0F + h;
-        aj = (float)maxY * heightScale + ai;
+        aj = (float) maxY * heightScale + ai;
         method_22741(matrices, vertexConsumers.getBuffer(RenderLayer.getBeaconBeam(textureId, true)), j, k, l, 0.125F, yOffset, i, y, z, outerRadius, ab, ac, outerRadius, outerRadius, outerRadius, 0.0F, 1.0F, aj, ai);
         matrices.pop();
     }
@@ -312,7 +345,7 @@ public class HighlightWaypointUtil {
     }
 
     private static void method_23076(Matrix4f matrix4f, Matrix3f matrix3f, VertexConsumer vertexConsumer, float f, float g, float h, float i, int j, float k, float l, float m, float n) {
-        vertexConsumer.vertex(matrix4f, k, (float)j, l).color(f, g, h, i).texture(m, n).overlay(OverlayTexture.DEFAULT_UV).light(15728880).normal(matrix3f, 0.0F, 1.0F, 0.0F).next();
+        vertexConsumer.vertex(matrix4f, k, (float) j, l).color(f, g, h, i).texture(m, n).overlay(OverlayTexture.DEFAULT_UV).light(15728880).normal(matrix3f, 0.0F, 1.0F, 0.0F).next();
     }
 
     public static void renderLabel(MatrixStack matrixStack, double distance, Entity cameraEntity, float tickDelta, boolean isPointedAt, BlockPos pos) {

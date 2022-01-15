@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 // Code from https://github.com/FabricMC/fabric/blob/1.17/fabric-command-api-v1/src/main/java/net/fabricmc/fabric/mixin/command/CommandManagerMixin.java
-@Mixin(CommandManager.class)
+@Mixin(value = CommandManager.class)
 public abstract class MixinCommandManager {
     @Shadow
     @Final
@@ -25,7 +25,7 @@ public abstract class MixinCommandManager {
      *
      * @reason Add commands before ambiguities are calculated.
      */
-    @Inject(at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/CommandDispatcher;findAmbiguities(Lcom/mojang/brigadier/AmbiguityConsumer;)V"), method = "<init>")
+    @Inject(at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/CommandDispatcher;findAmbiguities(Lcom/mojang/brigadier/AmbiguityConsumer;)V", remap = false), method = "<init>")
     private void fabric_addCommands(boolean isDedicatedServer, CallbackInfo ci) {
         CommandRegistrationCallback.EVENT.invoker().register(this.dispatcher, isDedicatedServer);
     }

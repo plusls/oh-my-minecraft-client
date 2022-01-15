@@ -117,6 +117,10 @@ The Wandering Trader will have the glowing affect, so it in Invisibility.
 
 Prevent Intentional Game Design (Bed and Respawn Anchor).
 
+### Prevent Wastage of Water
+
+Prevent water bucket from vanishing in nether.
+
 ### High Light Persistent Mob
 
 Highlight persistent mobs (Mob have item in hand or mob have custom name).
