@@ -3,20 +3,18 @@ package com.plusls.ommc.feature.sortInventory;
 import com.plusls.ommc.config.Configs;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.item.BundleItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
-import net.minecraft.screen.*;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.util.Pair;
@@ -180,48 +178,6 @@ public class SortInventoryUtil {
         return Item.getRawId(itemStack.getItem());
     }
 
-    static class ItemStackComparator implements Comparator<ItemStack> {
-        @Override
-        public int compare(ItemStack a, ItemStack b) {
-            int aId = getItemId(a);
-            int bId = getItemId(b);
-            if (!allShulkerBox && Configs.Generic.SORT_INVENTORY_SHULKER_BOX_LAST.getBooleanValue()) {
-                if (ShulkerBoxItemUtil.isShulkerBoxBlockItem(a) && !ShulkerBoxItemUtil.isShulkerBoxBlockItem(b)) {
-                    return 1;
-                } else if (!ShulkerBoxItemUtil.isShulkerBoxBlockItem(a) && ShulkerBoxItemUtil.isShulkerBoxBlockItem(b)) {
-                    return -1;
-                }
-            }
-            if (ShulkerBoxItemUtil.isShulkerBoxBlockItem(a) && ShulkerBoxItemUtil.isShulkerBoxBlockItem(b) && a.getItem() == b.getItem()) {
-                return -ShulkerBoxItemUtil.cmpShulkerBox(a.getNbt(), b.getNbt());
-            }
-            if (a.isEmpty() && !b.isEmpty()) {
-                return 1;
-            } else if (!a.isEmpty() && b.isEmpty()) {
-                return -1;
-            } else if (a.isEmpty()) {
-                return 0;
-            }
-            if (aId == bId) {
-                // 有 nbt 标签的排在前面
-                if (!a.hasNbt() && b.hasNbt()) {
-                    return 1;
-                } else if (a.hasNbt() && !b.hasNbt()) {
-                    return -1;
-                } else if (a.hasNbt()) {
-                    // 如果都有 nbt 的话，确保排序后相邻的物品 nbt 标签一致
-                    if (!ItemStack.areNbtEqual(a, b)) {
-                        return Objects.requireNonNull(a.getNbt()).hashCode() - Objects.requireNonNull(b.getNbt()).hashCode();
-                    }
-                }
-                // 物品少的排在后面
-                return b.getCount() - a.getCount();
-            }
-            return aId - bId;
-        }
-    }
-
-
     private static ArrayList<Pair<Integer, Integer>> quickSort(ArrayList<ItemStack> itemStacks, int l, int r) {
         // sort [l, r)
         ArrayList<Pair<Integer, Integer>> ret = new ArrayList<>();
@@ -257,7 +213,6 @@ public class SortInventoryUtil {
         }
         return ret;
     }
-
 
     private static ArrayList<Integer> mergeItems(ItemStack cursorStack, ArrayList<ItemStack> itemStacks, int l, int r) {
         ArrayList<Integer> ret = new ArrayList<>();
@@ -298,5 +253,46 @@ public class SortInventoryUtil {
         }
 
         return ret;
+    }
+
+    static class ItemStackComparator implements Comparator<ItemStack> {
+        @Override
+        public int compare(ItemStack a, ItemStack b) {
+            int aId = getItemId(a);
+            int bId = getItemId(b);
+            if (!allShulkerBox && Configs.Generic.SORT_INVENTORY_SHULKER_BOX_LAST.getBooleanValue()) {
+                if (ShulkerBoxItemUtil.isShulkerBoxBlockItem(a) && !ShulkerBoxItemUtil.isShulkerBoxBlockItem(b)) {
+                    return 1;
+                } else if (!ShulkerBoxItemUtil.isShulkerBoxBlockItem(a) && ShulkerBoxItemUtil.isShulkerBoxBlockItem(b)) {
+                    return -1;
+                }
+            }
+            if (ShulkerBoxItemUtil.isShulkerBoxBlockItem(a) && ShulkerBoxItemUtil.isShulkerBoxBlockItem(b) && a.getItem() == b.getItem()) {
+                return -ShulkerBoxItemUtil.cmpShulkerBox(a.getNbt(), b.getNbt());
+            }
+            if (a.isEmpty() && !b.isEmpty()) {
+                return 1;
+            } else if (!a.isEmpty() && b.isEmpty()) {
+                return -1;
+            } else if (a.isEmpty()) {
+                return 0;
+            }
+            if (aId == bId) {
+                // 有 nbt 标签的排在前面
+                if (!a.hasNbt() && b.hasNbt()) {
+                    return 1;
+                } else if (a.hasNbt() && !b.hasNbt()) {
+                    return -1;
+                } else if (a.hasNbt()) {
+                    // 如果都有 nbt 的话，确保排序后相邻的物品 nbt 标签一致
+                    if (!ItemStack.areNbtEqual(a, b)) {
+                        return Objects.requireNonNull(a.getNbt()).hashCode() - Objects.requireNonNull(b.getNbt()).hashCode();
+                    }
+                }
+                // 物品少的排在后面
+                return b.getCount() - a.getCount();
+            }
+            return aId - bId;
+        }
     }
 }
