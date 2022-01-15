@@ -37,7 +37,7 @@ public class MixinPlayerEntity {
     }
 
 
-    @Inject(method = "method_30263", at=@At(value = "HEAD"))
+    @Inject(method = "method_30263", at = @At(value = "HEAD"))
     private void setStepHeight(CallbackInfoReturnable<Boolean> cir) {
         if (!Configs.FeatureToggle.BETTER_SNEAKING.getBooleanValue()) {
             return;
@@ -47,7 +47,7 @@ public class MixinPlayerEntity {
         playerEntity.stepHeight = MAX_STEP_HEIGHT;
     }
 
-    @Inject(method = "method_30263", at=@At(value = "RETURN"))
+    @Inject(method = "method_30263", at = @At(value = "RETURN"))
     private void restoreStepHeight(CallbackInfoReturnable<Boolean> cir) {
         if (!Configs.FeatureToggle.BETTER_SNEAKING.getBooleanValue() || Math.abs(prevStepHeight - DEFAULT_STEP_HEIGHT) <= 0.001) {
             return;

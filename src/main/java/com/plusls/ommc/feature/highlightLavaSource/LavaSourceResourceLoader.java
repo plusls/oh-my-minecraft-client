@@ -26,16 +26,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Function;
 
 public class LavaSourceResourceLoader implements SimpleSynchronousResourceReloadListener {
-    public static Sprite lavaSourceFlowSprite;
-    public static Sprite lavaSourceStillSprite;
     public static final Sprite[] lavaSourceSpites = new Sprite[2];
-    public static Sprite defaultLavaSourceFlowSprite;
-    public static Sprite defaultLavaSourceStillSprite;
     public static final Sprite[] defaultLavaSourceSpites = new Sprite[2];
-
     private static final Identifier listenerId = ModInfo.id("lava_reload_listener");
     private static final Identifier flowingSpriteId = ModInfo.id("block/lava_flow");
     private static final Identifier stillSpriteId = ModInfo.id("block/lava_still");
+    public static Sprite lavaSourceFlowSprite;
+    public static Sprite lavaSourceStillSprite;
+    public static Sprite defaultLavaSourceFlowSprite;
+    public static Sprite defaultLavaSourceStillSprite;
 
     public static void init() {
         ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register((atlasTexture, registry) ->

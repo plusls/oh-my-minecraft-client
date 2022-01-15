@@ -4,9 +4,7 @@
   "plugin": "com.plusls.ommc.OmmcCompatMixinPlugin",
   "client": [
     "MixinBlockRenderer",
-    "MixinBlockRendererOld",
     "MixinFluidRenderer",
-    "MixinFluidRendererOld",
     "MixinTerrainRenderContext"
   ]
 }

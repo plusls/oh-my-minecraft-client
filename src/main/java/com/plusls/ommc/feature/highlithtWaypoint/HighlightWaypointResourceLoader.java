@@ -14,10 +14,9 @@ import net.minecraft.util.Identifier;
 import java.util.function.Function;
 
 public class HighlightWaypointResourceLoader implements SimpleSynchronousResourceReloadListener {
-    public static Sprite targetIdSprite;
-
     private static final Identifier listenerId = ModInfo.id("target_reload_listener");
     private static final Identifier targetId = ModInfo.id("images/target");
+    public static Sprite targetIdSprite;
 
     public static void init() {
         ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register(
