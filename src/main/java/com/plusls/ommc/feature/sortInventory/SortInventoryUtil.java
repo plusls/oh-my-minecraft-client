@@ -260,7 +260,8 @@ public class SortInventoryUtil {
         public int compare(ItemStack a, ItemStack b) {
             int aId = getItemId(a);
             int bId = getItemId(b);
-            if (!allShulkerBox && Configs.Generic.SORT_INVENTORY_SHULKER_BOX_LAST.getBooleanValue()) {
+            if (Configs.Generic.SORT_INVENTORY_SHULKER_BOX_LAST.getOptionListValue() == Configs.Generic.SortInventoryShulkerBoxLastType.TRUE ||
+                    (Configs.Generic.SORT_INVENTORY_SHULKER_BOX_LAST.getOptionListValue() == Configs.Generic.SortInventoryShulkerBoxLastType.AUTO && !allShulkerBox)) {
                 if (ShulkerBoxItemUtil.isShulkerBoxBlockItem(a) && !ShulkerBoxItemUtil.isShulkerBoxBlockItem(b)) {
                     return 1;
                 } else if (!ShulkerBoxItemUtil.isShulkerBoxBlockItem(a) && ShulkerBoxItemUtil.isShulkerBoxBlockItem(b)) {
@@ -285,9 +286,7 @@ public class SortInventoryUtil {
                     return -1;
                 } else if (a.hasNbt()) {
                     // 如果都有 nbt 的话，确保排序后相邻的物品 nbt 标签一致
-                    if (!ItemStack.areNbtEqual(a, b)) {
-                        return Objects.requireNonNull(a.getNbt()).hashCode() - Objects.requireNonNull(b.getNbt()).hashCode();
-                    }
+                    return Long.signum(((long) Objects.requireNonNull(a.getNbt()).hashCode() - Objects.requireNonNull(b.getNbt()).hashCode()));
                 }
                 // 物品少的排在后面
                 return b.getCount() - a.getCount();
