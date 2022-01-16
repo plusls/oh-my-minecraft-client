@@ -11,6 +11,7 @@ import com.plusls.ommc.gui.GuiConfigs;
 import fi.dy.masa.malilib.config.ConfigUtils;
 import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.config.IConfigHandler;
+import fi.dy.masa.malilib.config.IConfigOptionListEntry;
 import fi.dy.masa.malilib.config.options.*;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.hotkeys.KeybindSettings;
@@ -19,6 +20,7 @@ import fi.dy.masa.malilib.util.JsonUtils;
 import fi.dy.masa.malilib.util.restrictions.UsageRestriction;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.entity.Entity;
 import net.minecraft.sound.SoundEvents;
@@ -145,7 +147,60 @@ public class Configs implements IConfigHandler {
                 SEND_LOOKING_AT_BLOCK_POS,
                 SORT_INVENTORY
         );
-        public static final ConfigBoolean SORT_INVENTORY_SHULKER_BOX_LAST = new TranslatableConfigBoolean(PREFIX, "sortInventoryShulkerBoxLast", false);
+        public static final ConfigOptionList SORT_INVENTORY_SHULKER_BOX_LAST = new TranslatableConfigOptionList(PREFIX, "sortInventoryShulkerBoxLast", SortInventoryShulkerBoxLastType.AUTO);
+
+        public enum SortInventoryShulkerBoxLastType implements IConfigOptionListEntry {
+            FALSE("false", "ommc.gui.label.sort_inventory_shulker_box_last_type.false"),
+            TRUE("true", "ommc.gui.label.sort_inventory_shulker_box_last_type.true"),
+            AUTO("auto", "ommc.gui.label.sort_inventory_shulker_box_last_type.auto");
+            private final String configString;
+            private final String translationKey;
+
+            SortInventoryShulkerBoxLastType(String configString, String translationKey) {
+                this.configString = configString;
+                this.translationKey = translationKey;
+            }
+
+            @Override
+            public String getStringValue() {
+                return this.configString;
+            }
+
+            @Override
+            public String getDisplayName() {
+                return I18n.translate(this.translationKey);
+            }
+
+            @Override
+            public IConfigOptionListEntry cycle(boolean forward) {
+                int id = this.ordinal();
+                if (forward) {
+                    ++id;
+                    if (id >= values().length) {
+                        id = 0;
+                    }
+                } else {
+                    --id;
+                    if (id < 0) {
+                        id = values().length - 1;
+                    }
+                }
+
+                return values()[id % values().length];
+            }
+
+            @Override
+            public IConfigOptionListEntry fromString(String name) {
+                SortInventoryShulkerBoxLastType[] values = values();
+                for (SortInventoryShulkerBoxLastType mode : values) {
+                    if (mode.configString.equalsIgnoreCase(name)) {
+                        return mode;
+                    }
+                }
+                return AUTO;
+            }
+        }
+
         public static final ConfigBoolean SORT_INVENTORY_SUPPORT_EMPTY_SHULKER_BOX_STACK = new TranslatableConfigBoolean(PREFIX, "sortInventorySupportEmptyShulkerBoxStack", false);
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
                 OPEN_CONFIG_GUI,
