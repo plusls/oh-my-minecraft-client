@@ -1,7 +1,6 @@
 package com.plusls.ommc.mixin.feature.highlightPersistentMob;
 
 import com.plusls.ommc.config.Configs;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.EndermanEntity;
 import net.minecraft.entity.mob.MobEntity;

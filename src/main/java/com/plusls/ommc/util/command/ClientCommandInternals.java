@@ -1,9 +1,5 @@
 package com.plusls.ommc.util.command;
 
-import static com.plusls.ommc.util.command.ClientCommandManager.DISPATCHER;
-import static com.plusls.ommc.util.command.ClientCommandManager.argument;
-import static com.plusls.ommc.util.command.ClientCommandManager.literal;
-
 import com.google.common.collect.Iterables;
 import com.mojang.brigadier.AmbiguityConsumer;
 import com.mojang.brigadier.CommandDispatcher;
@@ -33,6 +29,8 @@ import org.apache.logging.log4j.Logger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.plusls.ommc.util.command.ClientCommandManager.*;
 
 // Code from https://github.com/FabricMC/fabric/blob/1.17/fabric-command-api-v1/src/main/java/net/fabricmc/fabric/impl/command/client/ClientCommandInternals.java
 

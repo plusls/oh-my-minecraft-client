@@ -17,7 +17,7 @@ public class MixinClientPlayerInteractionManager {
 
     @Inject(method = "attackBlock",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;breakBlock(Lnet/minecraft/util/math/BlockPos;)Z",
-            ordinal = 0))
+                    ordinal = 0))
     private void addBreakingCooldown(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
         if (Configs.FeatureToggle.FORCE_BREAKING_COOLDOWN.getBooleanValue()) {
             blockBreakingCooldown = 5;

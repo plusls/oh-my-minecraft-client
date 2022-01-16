@@ -1,7 +1,6 @@
 package com.plusls.ommc.mixin.feature.highlightWanderingTrader;
 
 import com.plusls.ommc.config.Configs;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.WanderingTraderEntity;
 import org.spongepowered.asm.mixin.Mixin;
