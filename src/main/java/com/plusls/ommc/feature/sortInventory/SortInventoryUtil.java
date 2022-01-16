@@ -285,9 +285,7 @@ public class SortInventoryUtil {
                     return -1;
                 } else if (a.hasNbt()) {
                     // 如果都有 nbt 的话，确保排序后相邻的物品 nbt 标签一致
-                    if (!ItemStack.areNbtEqual(a, b)) {
-                        return Objects.requireNonNull(a.getNbt()).hashCode() - Objects.requireNonNull(b.getNbt()).hashCode();
-                    }
+                    return Long.signum(((long) Objects.requireNonNull(a.getNbt()).hashCode() - Objects.requireNonNull(b.getNbt()).hashCode()));
                 }
                 // 物品少的排在后面
                 return b.getCount() - a.getCount();
