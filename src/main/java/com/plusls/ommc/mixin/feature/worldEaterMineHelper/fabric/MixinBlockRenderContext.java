@@ -26,7 +26,7 @@ public abstract class MixinBlockRenderContext implements RenderContext {
     private Supplier<Random> randomSupplier;
 
     @Inject(method = "render", at = @At(value = "INVOKE",
-            target = "Lnet/fabricmc/fabric/api/renderer/v1/model/FabricBakedModel;emitBlockQuads", shift = At.Shift.AFTER, ordinal = 0))
+            target = "Lnet/fabricmc/fabric/api/renderer/v1/model/FabricBakedModel;emitBlockQuads(Lnet/minecraft/world/BlockRenderView;Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;Ljava/util/function/Supplier;Lnet/fabricmc/fabric/api/renderer/v1/render/RenderContext;)V", shift = At.Shift.AFTER, ordinal = 0, remap = true))
     private void emitCustomBlockQuads(BlockRenderView blockView, BakedModel model, BlockState state, BlockPos pos, MatrixStack matrixStack, VertexConsumer buffer, Random random, long seed, int overlay, CallbackInfoReturnable<Boolean> cir) {
         WorldEaterMineHelperUtil.emitCustomBlockQuads(blockView, state, pos, randomSupplier, this);
     }
