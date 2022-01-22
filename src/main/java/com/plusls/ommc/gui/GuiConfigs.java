@@ -2,8 +2,6 @@ package com.plusls.ommc.gui;
 
 import com.plusls.ommc.ModInfo;
 import com.plusls.ommc.config.Configs;
-import fi.dy.masa.malilib.config.ConfigType;
-import fi.dy.masa.malilib.config.ConfigUtils;
 import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.gui.GuiConfigsBase;
 import fi.dy.masa.malilib.gui.button.ButtonBase;
@@ -81,8 +79,6 @@ public class GuiConfigs extends GuiConfigsBase {
             configs = Configs.Generic.OPTIONS;
         } else if (tab == ConfigGuiTab.FEATURE_TOGGLE) {
             configs = Configs.FeatureToggle.OPTIONS;
-        } else if (tab == ConfigGuiTab.FEATURE_HOTKEY) {
-            configs = ConfigUtils.createConfigWrapperForType(ConfigType.HOTKEY, Configs.FeatureToggle.OPTIONS);
         } else if (tab == ConfigGuiTab.LISTS) {
             configs = Configs.Lists.OPTIONS;
         } else if (tab == ConfigGuiTab.AdvancedIntegratedServer) {
@@ -98,7 +94,6 @@ public class GuiConfigs extends GuiConfigsBase {
     public enum ConfigGuiTab {
         GENERIC("generic"),
         FEATURE_TOGGLE("feature_toggle"),
-        FEATURE_HOTKEY("feature_hotkey"),
         LISTS("lists"),
         AdvancedIntegratedServer("advanced_integrated_server");
 
