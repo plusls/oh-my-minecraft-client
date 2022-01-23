@@ -137,6 +137,7 @@ public class Configs implements IConfigHandler {
         public static final ConfigBoolean DEBUG = new TranslatableConfigBoolean(PREFIX, "debug", false);
         public static final ConfigBoolean DONT_CLEAR_CHAT_HISTORY = new TranslatableConfigBoolean(PREFIX, "dontClearChatHistory", false);
         public static final ConfigHotkey CLEAR_WAYPOINT = new TranslatableConfigHotkey(PREFIX, "clearWaypoint", "C");
+        public static final ConfigBoolean HIGHLIGHT_PERSISTENT_MOB_CLIENT_MODE = new TranslatableConfigBoolean(PREFIX, "highlightPersistentMobClientMode", true);
         public static final ConfigBoolean PARSE_WAYPOINT_FROM_CHAT = new TranslatableConfigBoolean(PREFIX, "parseWaypointFromChat", true);
         public static final ConfigBoolean FORCE_PARSE_WAYPOINT_FROM_CHAT = new TranslatableConfigBoolean(PREFIX, "forceParseWaypointFromChat", false);
         public static final ConfigHotkey SEND_LOOKING_AT_BLOCK_POS = new TranslatableConfigHotkey(PREFIX, "sendLookingAtBlockPos", "O,P");
@@ -154,6 +155,7 @@ public class Configs implements IConfigHandler {
                 DEBUG,
                 DONT_CLEAR_CHAT_HISTORY,
                 CLEAR_WAYPOINT,
+                HIGHLIGHT_PERSISTENT_MOB_CLIENT_MODE,
                 PARSE_WAYPOINT_FROM_CHAT,
                 FORCE_PARSE_WAYPOINT_FROM_CHAT,
                 SEND_LOOKING_AT_BLOCK_POS,

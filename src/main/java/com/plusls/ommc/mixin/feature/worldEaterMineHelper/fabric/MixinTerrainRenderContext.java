@@ -23,7 +23,7 @@ public abstract class MixinTerrainRenderContext implements RenderContext {
     private TerrainBlockRenderInfo blockInfo;
 
     @Inject(method = "tesselateBlock", at = @At(value = "INVOKE",
-            target = "Lnet/fabricmc/fabric/api/renderer/v1/model/FabricBakedModel;emitBlockQuads", shift = At.Shift.AFTER, ordinal = 0))
+            target = "Lnet/fabricmc/fabric/api/renderer/v1/model/FabricBakedModel;emitBlockQuads(Lnet/minecraft/world/BlockRenderView;Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;Ljava/util/function/Supplier;Lnet/fabricmc/fabric/api/renderer/v1/render/RenderContext;)V", shift = At.Shift.AFTER, ordinal = 0, remap = true))
     private void emitCustomBlockQuads(BlockState blockState, BlockPos blockPos, BakedModel model, MatrixStack matrixStack, CallbackInfoReturnable<Boolean> cir) {
         WorldEaterMineHelperUtil.emitCustomBlockQuads(blockInfo.blockView, blockInfo.blockState, blockInfo.blockPos, blockInfo.randomSupplier, this);
     }
