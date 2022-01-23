@@ -16,6 +16,8 @@
   "ommc.config.generic.dontClearChatHistory.comment": "Don't clear chat history and input history.",
   "ommc.config.generic.clearWaypoint.name": "clearWaypoint",
   "ommc.config.generic.clearWaypoint.comment": "A hotkey to clear highlight waypoint.",
+  "ommc.config.generic.highlightPersistentMobClientMode.name": "highlightPersistentMobClientMode",
+  "ommc.config.generic.highlightPersistentMobClientMode.comment": "Use client data to check persistent mob, such as hand item, custom name. Tips: in local game should disable this option, in server also can use syncAllEntityData in MasaGadget to sync entity data to local.",
   "ommc.config.generic.parseWaypointFromChat.name": "parseWaypointFromChat",
   "ommc.config.generic.parseWaypointFromChat.comment": "Parse waypoint from chat.",
   "ommc.config.generic.forceParseWaypointFromChat.name": "forceParseWaypointFromChat",
