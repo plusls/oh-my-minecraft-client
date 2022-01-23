@@ -19,6 +19,25 @@ import java.util.List;
 public class MixinMinecraftClient {
     private static final List<String> itemBlackList = Arrays.asList("sword", "bow", "trident", "axe", "fishing_rod");
 
+    @SuppressWarnings("unchecked")
+    private static <T extends Entity> T getBestEntity(T entity) {
+        // Only try to fetch the corresponding server world if the entity is in the actual client world.
+        // Otherwise the entity may be for example in Litematica's schematic world.
+        World world = entity.getEntityWorld();
+        MinecraftClient client = MinecraftClient.getInstance();
+        T ret = entity;
+        if (world == client.world) {
+            world = WorldUtils.getBestWorld(client);
+            if (world != null && world != client.world) {
+                Entity bestEntity = world.getEntityById(entity.getId());
+                if (entity.getClass().isInstance(bestEntity)) {
+                    ret = (T) bestEntity;
+                }
+            }
+        }
+        return ret;
+    }
+
     @Inject(method = "hasOutline", at = @At(value = "RETURN"), cancellable = true)
     private void checkWanderingTraderEntity(Entity entity, CallbackInfoReturnable<Boolean> cir) {
         if (Configs.FeatureToggle.HIGHLIGHT_PERSISTENT_MOB.getBooleanValue() && !cir.getReturnValue()) {
@@ -39,24 +58,5 @@ public class MixinMinecraftClient {
                 }
             }
         }
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <T extends Entity> T getBestEntity(T entity) {
-        // Only try to fetch the corresponding server world if the entity is in the actual client world.
-        // Otherwise the entity may be for example in Litematica's schematic world.
-        World world = entity.getEntityWorld();
-        MinecraftClient client = MinecraftClient.getInstance();
-        T ret = entity;
-        if (world == client.world) {
-            world = WorldUtils.getBestWorld(client);
-            if (world != null && world != client.world) {
-                Entity bestEntity = world.getEntityById(entity.getId());
-                if (entity.getClass().isInstance(bestEntity)) {
-                    ret = (T) bestEntity;
-                }
-            }
-        }
-        return ret;
     }
 }
