@@ -200,9 +200,13 @@ public class SortInventoryUtil {
                     // wtf???
                     continue;
                 }
+                if (itemStacks.get(i).getCount() < dstStack.getCount()) {
+                    ret.add(new Pair<>(dstIdx, i));
+                } else {
+                    ret.add(new Pair<>(i, dstIdx));
+                }
                 itemStacks.set(dstIdx, itemStacks.get(i));
                 itemStacks.set(i, dstStack);
-                ret.add(new Pair<>(i, dstIdx));
             }
         }
         return ret;
@@ -220,7 +224,7 @@ public class SortInventoryUtil {
                 continue;
             }
             itemStacks.set(i, new ItemStack(Blocks.AIR));
-            ArrayList<Integer> addItemStackClickList = addItemStack(itemStacks, stack, l, r);
+            ArrayList<Integer> addItemStackClickList = addItemStack(itemStacks, stack, l, i + 1);
             if (!addItemStackClickList.isEmpty()) {
                 ret.add(i);
                 ret.addAll(addItemStackClickList);
@@ -280,8 +284,9 @@ public class SortInventoryUtil {
                     return -1;
                 } else if (a.hasTag()) {
                     // 如果都有 nbt 的话，确保排序后相邻的物品 nbt 标签一致
-                    if (!ItemStack.areTagsEqual(a, b)) {
-                        return Objects.requireNonNull(a.getTag()).hashCode() - Objects.requireNonNull(b.getTag()).hashCode();
+                    int nbtRet = Long.signum(((long) Objects.requireNonNull(a.getTag()).hashCode() - Objects.requireNonNull(b.getTag()).hashCode()));
+                    if (nbtRet != 0) {
+                        return nbtRet;
                     }
                 }
                 // 物品少的排在后面

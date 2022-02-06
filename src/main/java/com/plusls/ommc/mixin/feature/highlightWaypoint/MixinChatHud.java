@@ -9,11 +9,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ChatHud.class)
+@Mixin(value = ChatHud.class, priority = 999)
 public class MixinChatHud {
 
-    @Inject(method = "addMessage(Lnet/minecraft/text/Text;IIZ)V", at = @At(value = "HEAD"))
-    public void modifyMessage(Text message, int messageId, int timestamp, boolean refresh, CallbackInfo ci) {
+    @Inject(method = "addMessage(Lnet/minecraft/text/Text;I)V", at = @At(value = "HEAD"))
+    public void modifyMessage(Text message, int messageId, CallbackInfo ci) {
         if (Configs.Generic.PARSE_WAYPOINT_FROM_CHAT.getBooleanValue()) {
             HighlightWaypointUtil.parseWaypointText(message);
         }
