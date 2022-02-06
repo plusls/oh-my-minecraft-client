@@ -1,5 +1,5 @@
 plugins {
-    id("fabric-loom").version("0.10-SNAPSHOT")
+    id("fabric-loom").version("0.11-SNAPSHOT")
     id("maven-publish")
     id("org.ajoberstar.grgit").version("4.1.0")
     id("com.modrinth.minotaur").version("1.2.1")
@@ -43,6 +43,10 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
     modImplementation("curse.maven:malilib-303119:${project.malilib_version}")
     modImplementation("maven.modrinth:modmenu:${project.mod_menu_version}")
+    // runtime only
+    modRuntimeOnly("curse.maven:lazydfu-433518:${project.lazydfu_version}")
+    modRuntimeOnly("curse.maven:in-game-account-switcher-232676:${project.in_game_account_switcher_version}")
+    modRuntimeOnly("curse.maven:imblockerfabric-399225:${project.imblockerfabric}")
 }
 
 processResources {
