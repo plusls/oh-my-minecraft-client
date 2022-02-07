@@ -32,7 +32,8 @@
   ],
   "custom": {
     "compat": {
-      "sodium": ">=0.4.0-alpha5+build.9"
+      "sodium": ">=0.4.0-alpha5+build.9",
+      "canvas": ">=1.0.2282"
     }
   },
   "depends": {
