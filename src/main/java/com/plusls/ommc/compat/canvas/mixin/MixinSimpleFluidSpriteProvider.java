@@ -11,6 +11,7 @@ import net.minecraft.tag.FluidTags;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockRenderView;
+import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
@@ -25,11 +26,13 @@ public abstract class MixinSimpleFluidSpriteProvider {
     private boolean isLava;
     private final Sprite[] lavaSourceSpites = new Sprite[3];
 
+    @Dynamic
     @Inject(method = "<init>", at = @At(value = "RETURN"))
     private void preInit(Identifier stillSpriteName, Identifier flowingSpriteName, Identifier overlaySpriteName, CallbackInfo ci) {
         this.isLava = stillSpriteName.toString().equals("minecraft:block/lava_still");
     }
 
+    @Dynamic
     @Inject(method = "getFluidSprites", at = @At(value = "RETURN"), cancellable = true)
     private void setLavaSprite(BlockRenderView view, BlockPos pos, FluidState state, CallbackInfoReturnable<Sprite[]> cir) {
         if (this.isLava) {
