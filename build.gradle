@@ -47,7 +47,6 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
     modImplementation("curse.maven:malilib-303119:${project.malilib_version}")
     modImplementation("maven.modrinth:modmenu:${project.mod_menu_version}")
-    modImplementation("io.vram:frex-fabric-mc118:6.0.240")
     // runtime only
     modRuntimeOnly("curse.maven:lazydfu-433518:${project.lazydfu_version}")
     modRuntimeOnly("curse.maven:in-game-account-switcher-232676:${project.in_game_account_switcher_version}")

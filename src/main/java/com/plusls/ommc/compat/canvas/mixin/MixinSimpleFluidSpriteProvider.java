@@ -1,8 +1,9 @@
 package com.plusls.ommc.compat.canvas.mixin;
 
+import com.plusls.ommc.compat.Dependencies;
+import com.plusls.ommc.compat.Dependency;
 import com.plusls.ommc.config.Configs;
 import com.plusls.ommc.feature.highlightLavaSource.LavaSourceResourceLoader;
-import io.vram.frex.impl.model.SimpleFluidSpriteProvider;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.fluid.FluidState;
@@ -11,12 +12,15 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockRenderView;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(value = SimpleFluidSpriteProvider.class, remap = false)
+@Dependencies(dependencyList = @Dependency(modId = "frex", version = "*"))
+@Pseudo
+@Mixin(targets = "io.vram.frex.impl.model.SimpleFluidSpriteProvider", remap = false)
 public abstract class MixinSimpleFluidSpriteProvider {
     private boolean isLava;
     private final Sprite[] lavaSourceSpites = new Sprite[3];

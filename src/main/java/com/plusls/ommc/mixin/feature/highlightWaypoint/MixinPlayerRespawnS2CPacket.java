@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PlayerRespawnS2CPacket.class)
 public class MixinPlayerRespawnS2CPacket {
-    @Inject(method = "apply", at = @At(value = "HEAD"))
+    @Inject(method = "apply*", at = @At(value = "HEAD"))
     void postApply(ClientPlayPacketListener clientPlayPacketListener, CallbackInfo ci) {
         HighlightWaypointUtil.postRespawn((PlayerRespawnS2CPacket) (Object) this);
     }
