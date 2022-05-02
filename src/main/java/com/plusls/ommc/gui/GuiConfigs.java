@@ -9,11 +9,10 @@ import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.gui.button.IButtonActionListener;
 import fi.dy.masa.malilib.util.KeyCodes;
 import fi.dy.masa.malilib.util.StringUtils;
-import net.minecraft.client.MinecraftClient;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import net.minecraft.client.Minecraft;
 
 public class GuiConfigs extends GuiConfigsBase {
     public static ConfigGuiTab tab = ConfigGuiTab.FEATURE_TOGGLE;
@@ -30,11 +29,11 @@ public class GuiConfigs extends GuiConfigsBase {
         int x = 10;
         int y = 26;
         int rows = 1;
-        if (tab == ConfigGuiTab.AdvancedIntegratedServer && !MinecraftClient.getInstance().isIntegratedServerRunning()) {
+        if (tab == ConfigGuiTab.AdvancedIntegratedServer && !Minecraft.getInstance().hasSingleplayerServer()) {
             tab = ConfigGuiTab.FEATURE_TOGGLE;
         }
         for (ConfigGuiTab tab : ConfigGuiTab.values()) {
-            if (tab == ConfigGuiTab.AdvancedIntegratedServer && !MinecraftClient.getInstance().isIntegratedServerRunning()) {
+            if (tab == ConfigGuiTab.AdvancedIntegratedServer && !Minecraft.getInstance().hasSingleplayerServer()) {
                 continue;
             }
             int width = this.getStringWidth(tab.getDisplayName()) + 10;

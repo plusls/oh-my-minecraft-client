@@ -1,28 +1,39 @@
 package com.plusls.ommc.feature.highlithtWaypoint;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.math.Matrix3f;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Vector3f;
 import com.plusls.ommc.config.Configs;
+import com.plusls.ommc.mixin.accessor.AccessorTextComponent;
+import com.plusls.ommc.mixin.accessor.AccessorTranslatableComponent;
 import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.option.Option;
-import net.minecraft.client.render.*;
-import net.minecraft.client.render.block.entity.BeaconBlockEntityRenderer;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.Entity;
-import net.minecraft.network.packet.s2c.play.PlayerRespawnS2CPacket;
-import net.minecraft.screen.PlayerScreenHandler;
-import net.minecraft.text.*;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Pair;
-import net.minecraft.util.math.*;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.Option;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BeaconRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.*;
+import net.minecraft.network.protocol.game.ClientboundRespawnPacket;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.util.Tuple;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -44,7 +55,7 @@ public class HighlightWaypointUtil {
     public static Pattern pattern3 = Pattern.compile("\\[(-?\\d+)(,\\s*-?\\d+)(,\\s*-?\\d+)]", Pattern.CASE_INSENSITIVE);
     public static Pattern pattern4 = Pattern.compile("\\((-?\\d+)(,\\s*-?\\d+)(,\\s*-?\\d+)\\)", Pattern.CASE_INSENSITIVE);
     @Nullable
-    public static RegistryKey<World> currentWorld = null;
+    public static ResourceKey<Level> currentWorld = null;
 
     public static void init() {
         ClientCommandManager.DISPATCHER.register(ClientCommandManager.literal(HIGHLIGHT_COMMAND).then(
@@ -67,7 +78,7 @@ public class HighlightWaypointUtil {
                         )
                 )
         ));
-        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> currentWorld = Objects.requireNonNull(client.world).getRegistryKey());
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> currentWorld = Objects.requireNonNull(client.level).dimension());
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
             currentWorld = null;
             highlightPos = null;
@@ -75,12 +86,12 @@ public class HighlightWaypointUtil {
         WorldRenderEvents.END.register(context -> HighlightWaypointUtil.drawWaypoint(context.matrixStack(), context.tickDelta()));
     }
 
-    public static void postRespawn(PlayerRespawnS2CPacket packet) {
-        RegistryKey<World> newDimension = packet.getDimension();
+    public static void postRespawn(ClientboundRespawnPacket packet) {
+        ResourceKey<Level> newDimension = packet.getDimension();
         if (highlightPos != null && currentWorld != newDimension) {
-            if (currentWorld == World.OVERWORLD && newDimension == World.NETHER) {
+            if (currentWorld == Level.OVERWORLD && newDimension == Level.NETHER) {
                 highlightPos = new BlockPos(highlightPos.getX() / 8, highlightPos.getY(), highlightPos.getZ() / 8);
-            } else if (currentWorld == World.NETHER && newDimension == World.OVERWORLD) {
+            } else if (currentWorld == Level.NETHER && newDimension == Level.OVERWORLD) {
                 highlightPos = new BlockPos(highlightPos.getX() * 8, highlightPos.getY(), highlightPos.getZ() * 8);
             } else {
                 highlightPos = null;
@@ -89,19 +100,19 @@ public class HighlightWaypointUtil {
         currentWorld = newDimension;
     }
 
-    public static ArrayList<Pair<Integer, String>> getWaypointStrings(String message) {
-        ArrayList<Pair<Integer, String>> ret = new ArrayList<>();
+    public static ArrayList<Tuple<Integer, String>> getWaypointStrings(String message) {
+        ArrayList<Tuple<Integer, String>> ret = new ArrayList<>();
         if ((message.contains("[") && message.contains("]")) || (message.contains("(") && message.contains(")"))) {
             getWaypointStringsByPattern(message, ret, pattern1);
             getWaypointStringsByPattern(message, ret, pattern2);
             getWaypointStringsByPattern(message, ret, pattern3);
             getWaypointStringsByPattern(message, ret, pattern4);
         }
-        ret.sort(Comparator.comparingInt(Pair::getLeft));
+        ret.sort(Comparator.comparingInt(Tuple::getA));
         return ret;
     }
 
-    private static void getWaypointStringsByPattern(String message, ArrayList<Pair<Integer, String>> ret, Pattern pattern) {
+    private static void getWaypointStringsByPattern(String message, ArrayList<Tuple<Integer, String>> ret, Pattern pattern) {
         Matcher matcher = pattern.matcher(message);
         while (matcher.find()) {
             String match = matcher.group();
@@ -109,7 +120,7 @@ public class HighlightWaypointUtil {
             if (pos == null) {
                 continue;
             }
-            ret.add(new Pair<>(matcher.start(), match));
+            ret.add(new Tuple<>(matcher.start(), match));
         }
     }
 
@@ -152,20 +163,20 @@ public class HighlightWaypointUtil {
         return new BlockPos(x, y, z);
     }
 
-    public static void parseWaypointText(Text chat) {
+    public static void parseWaypointText(Component chat) {
         if (chat.getSiblings().size() > 0) {
-            for (Text text : chat.getSiblings()) {
+            for (Component text : chat.getSiblings()) {
                 parseWaypointText(text);
             }
         }
-        if (chat instanceof TranslatableText) {
-            Object[] args = ((TranslatableText) chat).getArgs();
+        if (chat instanceof TranslatableComponent) {
+            Object[] args = ((TranslatableComponent) chat).getArgs();
             boolean updateTranslatableText = false;
             for (int i = 0; i < args.length; ++i) {
-                if (args[i] instanceof Text) {
-                    parseWaypointText((Text) args[i]);
+                if (args[i] instanceof Component) {
+                    parseWaypointText((Component) args[i]);
                 } else if (args[i] instanceof String) {
-                    Text text = new LiteralText((String) args[i]);
+                    Component text = new TextComponent((String) args[i]);
                     if (updateWaypointsText(text)) {
                         args[i] = text;
                         updateTranslatableText = true;
@@ -174,61 +185,61 @@ public class HighlightWaypointUtil {
             }
             if (updateTranslatableText) {
                 // refresh cache
-                ((TranslatableText) chat).languageCache = null;
+                ((AccessorTranslatableComponent) chat).setDecomposedWith(null);
             }
         }
         updateWaypointsText(chat);
     }
 
 
-    public static boolean updateWaypointsText(Text chat) {
-        if (!(chat instanceof LiteralText literalChatText)) {
+    public static boolean updateWaypointsText(Component chat) {
+        if (!(chat instanceof TextComponent literalChatText)) {
             return false;
         }
 
 
-        String message = literalChatText.string;
-        ArrayList<Pair<Integer, String>> waypointPairs = getWaypointStrings(message);
+        String message = ((AccessorTextComponent) literalChatText).getText();
+        ArrayList<Tuple<Integer, String>> waypointPairs = getWaypointStrings(message);
         if (waypointPairs.size() > 0) {
             Style style = chat.getStyle();
             TextColor color = style.getColor();
             ClickEvent clickEvent = style.getClickEvent();
             if (color == null) {
-                color = TextColor.fromFormatting(Formatting.GREEN);
+                color = TextColor.fromLegacyFormat(ChatFormatting.GREEN);
             }
-            ArrayList<LiteralText> texts = new ArrayList<>();
+            ArrayList<TextComponent> texts = new ArrayList<>();
             int prevIdx = 0;
-            for (Pair<Integer, String> waypointPair : waypointPairs) {
-                String waypointString = waypointPair.getRight();
-                int waypointIdx = waypointPair.getLeft();
-                LiteralText prevText = new LiteralText(message.substring(prevIdx, waypointIdx));
-                prevText.setStyle(style);
+            for (Tuple<Integer, String> waypointPair : waypointPairs) {
+                String waypointString = waypointPair.getB();
+                int waypointIdx = waypointPair.getA();
+                TextComponent prevText = new TextComponent(message.substring(prevIdx, waypointIdx));
+                prevText.withStyle(style);
                 texts.add(prevText);
 
-                LiteralText clickableWaypoint = new LiteralText(waypointString);
+                TextComponent clickableWaypoint = new TextComponent(waypointString);
                 Style chatStyle = clickableWaypoint.getStyle();
                 BlockPos pos = Objects.requireNonNull(parseWaypoint(waypointString.substring(1, waypointString.length() - 1)));
-                TranslatableText hover = new TranslatableText("ommc.highlight_waypoint.tooltip");
+                TranslatableComponent hover = new TranslatableComponent("ommc.highlight_waypoint.tooltip");
                 if (clickEvent == null || Configs.Generic.FORCE_PARSE_WAYPOINT_FROM_CHAT.getBooleanValue()) {
                     clickEvent = new ClickEvent(ClickEvent.Action.RUN_COMMAND,
                             String.format("/%s %d %d %d", HIGHLIGHT_COMMAND, pos.getX(), pos.getY(), pos.getZ()));
                 }
                 chatStyle = chatStyle.withClickEvent(clickEvent)
                         .withColor(color).withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hover));
-                clickableWaypoint.setStyle(chatStyle);
+                clickableWaypoint.withStyle(chatStyle);
                 texts.add(clickableWaypoint);
                 prevIdx = waypointIdx + waypointString.length();
             }
             if (prevIdx < message.length() - 1) {
-                LiteralText lastText = new LiteralText(message.substring(prevIdx));
+                TextComponent lastText = new TextComponent(message.substring(prevIdx));
                 lastText.setStyle(style);
                 texts.add(lastText);
             }
             for (int i = 0; i < texts.size(); ++i) {
                 literalChatText.getSiblings().add(i, texts.get(i));
             }
-            literalChatText.string = "";
-            literalChatText.setStyle(Style.EMPTY);
+            ((AccessorTextComponent) literalChatText).setText("");
+            literalChatText.withStyle(Style.EMPTY);
             return true;
         }
         return false;
@@ -243,23 +254,23 @@ public class HighlightWaypointUtil {
 
 
     private static boolean isPointedAt(BlockPos pos, double distance, Entity cameraEntity, float tickDelta) {
-        Vec3d cameraPos = cameraEntity.getCameraPosVec(tickDelta);
+        Vec3 cameraPos = cameraEntity.getEyePosition(tickDelta);
         double degrees = 5.0 + Math.min((5.0 / distance), 5.0);
         double angle = degrees * 0.0174533;
         double size = Math.sin(angle) * distance;
-        Vec3d cameraPosPlusDirection = cameraEntity.getRotationVec(tickDelta);
-        Vec3d cameraPosPlusDirectionTimesDistance = cameraPos.add(cameraPosPlusDirection.getX() * distance, cameraPosPlusDirection.getY() * distance, cameraPosPlusDirection.getZ() * distance);
-        Box axisalignedbb = new Box(pos.getX() + 0.5f - size, pos.getY() + 0.5f - size, pos.getZ() + 0.5f - size,
+        Vec3 cameraPosPlusDirection = cameraEntity.getViewVector(tickDelta);
+        Vec3 cameraPosPlusDirectionTimesDistance = cameraPos.add(cameraPosPlusDirection.x() * distance, cameraPosPlusDirection.y() * distance, cameraPosPlusDirection.z() * distance);
+        AABB axisalignedbb = new AABB(pos.getX() + 0.5f - size, pos.getY() + 0.5f - size, pos.getZ() + 0.5f - size,
                 pos.getX() + 0.5f + size, pos.getY() + 0.5f + size, pos.getZ() + 0.5f + size);
-        Optional<Vec3d> raycastResult = axisalignedbb.raycast(cameraPos, cameraPosPlusDirectionTimesDistance);
+        Optional<Vec3> raycastResult = axisalignedbb.clip(cameraPos, cameraPosPlusDirectionTimesDistance);
         return axisalignedbb.contains(cameraPos) ? distance >= 1.0 : raycastResult.isPresent();
     }
 
-    public static void drawWaypoint(MatrixStack matrixStack, float tickDelta) {
+    public static void drawWaypoint(PoseStack matrixStack, float tickDelta) {
         // 多线程可能会出锅？
         BlockPos highlightPos = HighlightWaypointUtil.highlightPos;
         if (highlightPos != null) {
-            MinecraftClient mc = MinecraftClient.getInstance();
+            Minecraft mc = Minecraft.getInstance();
             Entity cameraEntity = Objects.requireNonNull(mc.getCameraEntity());
             // 半透明
             RenderSystem.enableBlend();
@@ -279,18 +290,18 @@ public class HighlightWaypointUtil {
 
     // code from BeaconBlockEntityRenderer
     @SuppressWarnings("all")
-    public static void renderBeam(MatrixStack matrices, VertexConsumerProvider vertexConsumers, Identifier textureId, float tickDelta, float heightScale, long worldTime, int yOffset, int maxY, float[] color, float innerRadius, float outerRadius) {
+    public static void renderBeam(PoseStack matrices, MultiBufferSource vertexConsumers, ResourceLocation textureId, float tickDelta, float heightScale, long worldTime, int yOffset, int maxY, float[] color, float innerRadius, float outerRadius) {
         int i = yOffset + maxY;
-        matrices.push();
+        matrices.pushPose();
         matrices.translate(0.5D, 0.0D, 0.5D);
         float f = (float) Math.floorMod(worldTime, 40) + tickDelta;
         float g = maxY < 0 ? f : -f;
-        float h = MathHelper.fractionalPart(g * 0.2F - (float) MathHelper.floor(g * 0.1F));
+        float h = Mth.frac(g * 0.2F - (float) Mth.floor(g * 0.1F));
         float j = color[0];
         float k = color[1];
         float l = color[2];
-        matrices.push();
-        matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(f * 2.25F - 45.0F));
+        matrices.pushPose();
+        matrices.mulPose(Vector3f.YP.rotationDegrees(f * 2.25F - 45.0F));
         float y = 0.0F;
         float ab = 0.0F;
         float ac = -innerRadius;
@@ -303,8 +314,8 @@ public class HighlightWaypointUtil {
         float aj = (float) maxY * heightScale * (0.5F / innerRadius) + ai;
         // Change layer to getTextSeeThrough
         // it works, but why?
-        renderBeamLayer(matrices, vertexConsumers.getBuffer(RenderLayer.getTextSeeThrough(textureId)), j, k, l, 1.0F, yOffset, i, 0.0F, innerRadius, innerRadius, 0.0F, ac, 0.0F, 0.0F, t, 0.0F, 1.0F, aj, ai);
-        matrices.pop();
+        renderBeamLayer(matrices, vertexConsumers.getBuffer(RenderType.textSeeThrough(textureId)), j, k, l, 1.0F, yOffset, i, 0.0F, innerRadius, innerRadius, 0.0F, ac, 0.0F, 0.0F, t, 0.0F, 1.0F, aj, ai);
+        matrices.popPose();
         y = -outerRadius;
         float z = -outerRadius;
         ab = -outerRadius;
@@ -313,8 +324,8 @@ public class HighlightWaypointUtil {
         ah = 1.0F;
         ai = -1.0F + h;
         aj = (float) maxY * heightScale + ai;
-        renderBeamLayer(matrices, vertexConsumers.getBuffer(RenderLayer.getBeaconBeam(textureId, true)), j, k, l, 0.125F, yOffset, i, y, z, outerRadius, ab, ac, outerRadius, outerRadius, outerRadius, 0.0F, 1.0F, aj, ai);
-        matrices.pop();
+        renderBeamLayer(matrices, vertexConsumers.getBuffer(RenderType.beaconBeam(textureId, true)), j, k, l, 0.125F, yOffset, i, y, z, outerRadius, ab, ac, outerRadius, outerRadius, outerRadius, 0.0F, 1.0F, aj, ai);
+        matrices.popPose();
     }
 
     private static void renderBeamFace(Matrix4f modelMatrix, Matrix3f normalMatrix, VertexConsumer vertices, float red, float green, float blue, float alpha, int yOffset, int height, float x1, float z1, float x2, float z2, float u1, float u2, float v1, float v2) {
@@ -325,27 +336,27 @@ public class HighlightWaypointUtil {
     }
 
     private static void renderBeamVertex(Matrix4f modelMatrix, Matrix3f normalMatrix, VertexConsumer vertices, float red, float green, float blue, float alpha, int y, float x, float z, float u, float v) {
-        vertices.vertex(modelMatrix, x, (float) y, z).color(red, green, blue, alpha).texture(u, v).overlay(OverlayTexture.DEFAULT_UV).light(15728880).normal(normalMatrix, 0.0F, 1.0F, 0.0F).next();
+        vertices.vertex(modelMatrix, x, (float) y, z).color(red, green, blue, alpha).uv(u, v).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880).normal(normalMatrix, 0.0F, 1.0F, 0.0F).endVertex();
     }
 
     @SuppressWarnings("all")
-    private static void renderBeamLayer(MatrixStack matrices, VertexConsumer vertices, float red, float green, float blue, float alpha, int yOffset, int height, float x1, float z1, float x2, float z2, float x3, float z3, float x4, float z4, float u1, float u2, float v1, float v2) {
-        MatrixStack.Entry entry = matrices.peek();
-        Matrix4f matrix4f = entry.getPositionMatrix();
-        Matrix3f matrix3f = entry.getNormalMatrix();
+    private static void renderBeamLayer(PoseStack matrices, VertexConsumer vertices, float red, float green, float blue, float alpha, int yOffset, int height, float x1, float z1, float x2, float z2, float x3, float z3, float x4, float z4, float u1, float u2, float v1, float v2) {
+        PoseStack.Pose entry = matrices.last();
+        Matrix4f matrix4f = entry.pose();
+        Matrix3f matrix3f = entry.normal();
         renderBeamFace(matrix4f, matrix3f, vertices, red, green, blue, alpha, yOffset, height, x1, z1, x2, z2, u1, u2, v1, v2);
         renderBeamFace(matrix4f, matrix3f, vertices, red, green, blue, alpha, yOffset, height, x4, z4, x3, z3, u1, u2, v1, v2);
         renderBeamFace(matrix4f, matrix3f, vertices, red, green, blue, alpha, yOffset, height, x2, z2, x4, z4, u1, u2, v1, v2);
         renderBeamFace(matrix4f, matrix3f, vertices, red, green, blue, alpha, yOffset, height, x3, z3, x1, z1, u1, u2, v1, v2);
     }
 
-    public static void renderLabel(MatrixStack matrixStack, double distance, Entity cameraEntity, float tickDelta, boolean isPointedAt, BlockPos pos) {
-        MinecraftClient mc = MinecraftClient.getInstance();
+    public static void renderLabel(PoseStack matrixStack, double distance, Entity cameraEntity, float tickDelta, boolean isPointedAt, BlockPos pos) {
+        Minecraft mc = Minecraft.getInstance();
 
         String name = String.format("x:%d, y:%d, z:%d (%dm)", pos.getX(), pos.getY(), pos.getZ(), (int) distance);
-        double baseX = pos.getX() - MathHelper.lerp(tickDelta, cameraEntity.prevX, cameraEntity.getX());
-        double baseY = pos.getY() - MathHelper.lerp(tickDelta, cameraEntity.prevY, cameraEntity.getY()) - 1.5;
-        double baseZ = pos.getZ() - MathHelper.lerp(tickDelta, cameraEntity.prevZ, cameraEntity.getZ());
+        double baseX = pos.getX() - Mth.lerp(tickDelta, cameraEntity.xo, cameraEntity.getX());
+        double baseY = pos.getY() - Mth.lerp(tickDelta, cameraEntity.yo, cameraEntity.getY()) - 1.5;
+        double baseZ = pos.getZ() - Mth.lerp(tickDelta, cameraEntity.zo, cameraEntity.getZ());
         // 当前渲染的最大距离
         double maxDistance = Option.RENDER_DISTANCE.get(mc.options) * 16;
         double adjustedDistance = distance;
@@ -357,17 +368,17 @@ public class HighlightWaypointUtil {
         }
         // 根据调节后的距离决定绘制的大小
         float scale = (float) (adjustedDistance * 0.1f + 1.0f) * 0.0266f;
-        matrixStack.push();
+        matrixStack.pushPose();
         // 当前绘制位置是以玩家为中心的，转移到目的地
         matrixStack.translate(baseX, baseY, baseZ);
 
         if (lastBeamTime >= System.currentTimeMillis()) {
             // 画信标光柱
-            VertexConsumerProvider.Immediate vertexConsumerProvider0 = mc.getBufferBuilders().getEffectVertexConsumers();
+            MultiBufferSource.BufferSource vertexConsumerProvider0 = mc.renderBuffers().crumblingBufferSource();
             float[] color = {1.0f, 0.0f, 0.0f};
-            renderBeam(matrixStack, vertexConsumerProvider0, BeaconBlockEntityRenderer.BEAM_TEXTURE,
-                    tickDelta, 1.0f, Objects.requireNonNull(mc.world).getTime(), (int) (baseY - 512), 1024, color, 0.2F, 0.25F);
-            vertexConsumerProvider0.draw();
+            renderBeam(matrixStack, vertexConsumerProvider0, BeaconRenderer.BEAM_LOCATION,
+                    tickDelta, 1.0f, Objects.requireNonNull(mc.level).getGameTime(), (int) (baseY - 512), 1024, color, 0.2F, 0.25F);
+            vertexConsumerProvider0.endBatch();
 
             // 画完后会关闭半透明，需要手动打开
             RenderSystem.enableBlend();
@@ -377,13 +388,13 @@ public class HighlightWaypointUtil {
         matrixStack.translate(0.5f, 0.5f, 0.5f);
 
         // 在玩家正对着的平面进行绘制
-        matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-cameraEntity.getYaw()));
-        matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(mc.getEntityRenderDispatcher().camera.getPitch()));
+        matrixStack.mulPose(Vector3f.YP.rotationDegrees(-cameraEntity.getYRot()));
+        matrixStack.mulPose(Vector3f.XP.rotationDegrees(mc.getEntityRenderDispatcher().camera.getXRot()));
         // 缩放绘制的大小，让 waypoint 根据距离缩放
         matrixStack.scale(-scale, -scale, -scale);
-        Matrix4f matrix4f = matrixStack.peek().getPositionMatrix();
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder vertexBuffer = tessellator.getBuffer();
+        Matrix4f matrix4f = matrixStack.last().pose();
+        Tesselator tessellator = Tesselator.getInstance();
+        BufferBuilder vertexBuffer = tessellator.getBuilder();
         // 透明度
         float fade = distance < 5.0 ? 1.0f : (float) distance / 5.0f;
         fade = Math.min(fade, 1.0f);
@@ -398,57 +409,57 @@ public class HighlightWaypointUtil {
         float textFieldG = 0.0f;
         float textFieldB = 0.0f;
         // 图标
-        Sprite icon = HighlightWaypointResourceLoader.targetIdSprite;
+        TextureAtlasSprite icon = HighlightWaypointResourceLoader.targetIdSprite;
         // 不设置渲染不出
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
-        RenderSystem.setShaderTexture(0, PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
+        RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
 
         // 渲染图标
         RenderSystem.enableTexture();
-        vertexBuffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
-        vertexBuffer.vertex(matrix4f, -xWidth, -yWidth, 0.0f).texture(icon.getMinU(), icon.getMinV()).color(iconR, iconG, iconB, fade).next();
-        vertexBuffer.vertex(matrix4f, -xWidth, yWidth, 0.0f).texture(icon.getMinU(), icon.getMaxV()).color(iconR, iconG, iconB, fade).next();
-        vertexBuffer.vertex(matrix4f, xWidth, yWidth, 0.0f).texture(icon.getMaxU(), icon.getMaxV()).color(iconR, iconG, iconB, fade).next();
-        vertexBuffer.vertex(matrix4f, xWidth, -yWidth, 0.0f).texture(icon.getMaxU(), icon.getMinV()).color(iconR, iconG, iconB, fade).next();
-        tessellator.draw();
+        vertexBuffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+        vertexBuffer.vertex(matrix4f, -xWidth, -yWidth, 0.0f).uv(icon.getU0(), icon.getV0()).color(iconR, iconG, iconB, fade).endVertex();
+        vertexBuffer.vertex(matrix4f, -xWidth, yWidth, 0.0f).uv(icon.getU0(), icon.getV1()).color(iconR, iconG, iconB, fade).endVertex();
+        vertexBuffer.vertex(matrix4f, xWidth, yWidth, 0.0f).uv(icon.getU1(), icon.getV1()).color(iconR, iconG, iconB, fade).endVertex();
+        vertexBuffer.vertex(matrix4f, xWidth, -yWidth, 0.0f).uv(icon.getU1(), icon.getV0()).color(iconR, iconG, iconB, fade).endVertex();
+        tessellator.end();
         RenderSystem.disableTexture();
 
-        TextRenderer textRenderer = mc.textRenderer;
+        Font textRenderer = mc.font;
         if (isPointedAt && textRenderer != null) {
             // 渲染高度
             int elevateBy = -19;
             RenderSystem.enablePolygonOffset();
-            int halfStringWidth = textRenderer.getWidth(name) / 2;
+            int halfStringWidth = textRenderer.width(name) / 2;
             RenderSystem.setShader(GameRenderer::getPositionColorShader);
 
             // 渲染内框
             RenderSystem.polygonOffset(1.0f, 11.0f);
-            vertexBuffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
-            vertexBuffer.vertex(matrix4f, -halfStringWidth - 2, -2 + elevateBy, 0.0f).color(textFieldR, textFieldG, textFieldB, 0.6f * fade).next();
-            vertexBuffer.vertex(matrix4f, -halfStringWidth - 2, 9 + elevateBy, 0.0f).color(textFieldR, textFieldG, textFieldB, 0.6f * fade).next();
-            vertexBuffer.vertex(matrix4f, halfStringWidth + 2, 9 + elevateBy, 0.0f).color(textFieldR, textFieldG, textFieldB, 0.6f * fade).next();
-            vertexBuffer.vertex(matrix4f, halfStringWidth + 2, -2 + elevateBy, 0.0f).color(textFieldR, textFieldG, textFieldB, 0.6f * fade).next();
-            tessellator.draw();
+            vertexBuffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+            vertexBuffer.vertex(matrix4f, -halfStringWidth - 2, -2 + elevateBy, 0.0f).color(textFieldR, textFieldG, textFieldB, 0.6f * fade).endVertex();
+            vertexBuffer.vertex(matrix4f, -halfStringWidth - 2, 9 + elevateBy, 0.0f).color(textFieldR, textFieldG, textFieldB, 0.6f * fade).endVertex();
+            vertexBuffer.vertex(matrix4f, halfStringWidth + 2, 9 + elevateBy, 0.0f).color(textFieldR, textFieldG, textFieldB, 0.6f * fade).endVertex();
+            vertexBuffer.vertex(matrix4f, halfStringWidth + 2, -2 + elevateBy, 0.0f).color(textFieldR, textFieldG, textFieldB, 0.6f * fade).endVertex();
+            tessellator.end();
 
             // 渲染外框
             RenderSystem.polygonOffset(1.0f, 9.0f);
-            vertexBuffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
-            vertexBuffer.vertex(matrix4f, -halfStringWidth - 1, -1 + elevateBy, 0.0f).color(0.0f, 0.0f, 0.0f, 0.15f * fade).next();
-            vertexBuffer.vertex(matrix4f, -halfStringWidth - 1, 8 + elevateBy, 0.0f).color(0.0f, 0.0f, 0.0f, 0.15f * fade).next();
-            vertexBuffer.vertex(matrix4f, halfStringWidth + 1, 8 + elevateBy, 0.0f).color(0.0f, 0.0f, 0.0f, 0.15f * fade).next();
-            vertexBuffer.vertex(matrix4f, halfStringWidth + 1, -1 + elevateBy, 0.0f).color(0.0f, 0.0f, 0.0f, 0.15f * fade).next();
-            tessellator.draw();
+            vertexBuffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+            vertexBuffer.vertex(matrix4f, -halfStringWidth - 1, -1 + elevateBy, 0.0f).color(0.0f, 0.0f, 0.0f, 0.15f * fade).endVertex();
+            vertexBuffer.vertex(matrix4f, -halfStringWidth - 1, 8 + elevateBy, 0.0f).color(0.0f, 0.0f, 0.0f, 0.15f * fade).endVertex();
+            vertexBuffer.vertex(matrix4f, halfStringWidth + 1, 8 + elevateBy, 0.0f).color(0.0f, 0.0f, 0.0f, 0.15f * fade).endVertex();
+            vertexBuffer.vertex(matrix4f, halfStringWidth + 1, -1 + elevateBy, 0.0f).color(0.0f, 0.0f, 0.0f, 0.15f * fade).endVertex();
+            tessellator.end();
             RenderSystem.disablePolygonOffset();
 
             // 渲染文字
             RenderSystem.enableTexture();
-            VertexConsumerProvider.Immediate vertexConsumerProvider = mc.getBufferBuilders().getEffectVertexConsumers();
+            MultiBufferSource.BufferSource vertexConsumerProvider = mc.renderBuffers().crumblingBufferSource();
             int textColor = (int) (255.0f * fade) << 24 | 0xCCCCCC;
             RenderSystem.disableDepthTest();
-            textRenderer.draw(new LiteralText(name), (float) (-textRenderer.getWidth(name) / 2), elevateBy, textColor, false, matrix4f, vertexConsumerProvider, true, 0, 0xF000F0);
-            vertexConsumerProvider.draw();
+            textRenderer.drawInBatch(new TextComponent(name), (float) (-textRenderer.width(name) / 2), elevateBy, textColor, false, matrix4f, vertexConsumerProvider, true, 0, 0xF000F0);
+            vertexConsumerProvider.endBatch();
         }
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        matrixStack.pop();
+        matrixStack.popPose();
     }
 }

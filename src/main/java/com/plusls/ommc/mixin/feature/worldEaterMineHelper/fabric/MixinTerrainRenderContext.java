@@ -1,13 +1,14 @@
 package com.plusls.ommc.mixin.feature.worldEaterMineHelper.fabric;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.plusls.ommc.feature.worldEaterMineHelper.WorldEaterMineHelperUtil;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.fabricmc.fabric.impl.client.indigo.renderer.render.TerrainBlockRenderInfo;
 import net.fabricmc.fabric.impl.client.indigo.renderer.render.TerrainRenderContext;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,9 +23,15 @@ public abstract class MixinTerrainRenderContext implements RenderContext {
     @Shadow
     private TerrainBlockRenderInfo blockInfo;
 
-    @Inject(method = "tesselateBlock", at = @At(value = "INVOKE",
-            target = "Lnet/fabricmc/fabric/api/renderer/v1/model/FabricBakedModel;emitBlockQuads(Lnet/minecraft/world/BlockRenderView;Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;Ljava/util/function/Supplier;Lnet/fabricmc/fabric/api/renderer/v1/render/RenderContext;)V", shift = At.Shift.AFTER, ordinal = 0, remap = true))
-    private void emitCustomBlockQuads(BlockState blockState, BlockPos blockPos, BakedModel model, MatrixStack matrixStack, CallbackInfoReturnable<Boolean> cir) {
+    @Dynamic
+    @Inject(method = {
+            "tessellateBlock", // For fabric-renderer-indigo 0.5.0 and above
+            "tesselateBlock" // For fabric-renderer-indigo 0.5.0 below
+    },
+            at = @At(value = "INVOKE",
+                    target = "Lnet/fabricmc/fabric/api/renderer/v1/model/FabricBakedModel;emitBlockQuads(Lnet/minecraft/world/level/BlockAndTintGetter;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;Ljava/util/function/Supplier;Lnet/fabricmc/fabric/api/renderer/v1/render/RenderContext;)V",
+                    shift = At.Shift.AFTER, ordinal = 0, remap = true))
+    private void emitCustomBlockQuads(BlockState blockState, BlockPos blockPos, BakedModel model, PoseStack matrixStack, CallbackInfoReturnable<Boolean> cir) {
         WorldEaterMineHelperUtil.emitCustomBlockQuads(blockInfo.blockView, blockInfo.blockState, blockInfo.blockPos, blockInfo.randomSupplier, this);
     }
 }

@@ -2,18 +2,18 @@ package com.plusls.ommc.feature.blockModelNoOffset;
 
 import com.plusls.ommc.config.Configs;
 import fi.dy.masa.malilib.util.restrictions.UsageRestriction;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.BlockView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 public class BlockModelNoOffsetUtil {
-    public static Vec3d blockModelNoOffset(BlockState blockState, BlockView world, BlockPos pos) {
+    public static Vec3 blockModelNoOffset(BlockState blockState, BlockGetter world, BlockPos pos) {
         if (shouldNoOffset(blockState)) {
-            return Vec3d.ZERO;
+            return Vec3.ZERO;
         } else {
-            return blockState.getModelOffset(world, pos);
+            return blockState.getOffset(world, pos);
         }
     }
 
@@ -21,7 +21,7 @@ public class BlockModelNoOffsetUtil {
         if (!Configs.FeatureToggle.BLOCK_MODEL_NO_OFFSET.getBooleanValue()) {
             return false;
         }
-        String blockId = Registry.BLOCK.getId(blockState.getBlock()).toString();
+        String blockId = Registry.BLOCK.getKey(blockState.getBlock()).toString();
         String blockName = blockState.getBlock().getName().getString();
 
         if (Configs.Lists.BLOCK_MODEL_NO_OFFSET_LIST_TYPE.getOptionListValue() == UsageRestriction.ListType.WHITELIST) {

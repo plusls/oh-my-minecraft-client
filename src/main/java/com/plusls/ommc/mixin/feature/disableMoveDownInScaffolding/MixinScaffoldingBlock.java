@@ -1,16 +1,16 @@
 package com.plusls.ommc.mixin.feature.disableMoveDownInScaffolding;
 
 import com.plusls.ommc.config.Configs;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ScaffoldingBlock;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.item.Item;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.ScaffoldingBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -22,21 +22,21 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class MixinScaffoldingBlock {
     @Shadow
     @Final
-    private static VoxelShape NORMAL_OUTLINE_SHAPE;
+    private static VoxelShape STABLE_SHAPE;
 
     @Inject(method = "getCollisionShape", at = @At(value = "RETURN"), cancellable = true)
-    private void setNormalOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context, CallbackInfoReturnable<VoxelShape> cir) {
-        if (cir.getReturnValue() != NORMAL_OUTLINE_SHAPE) {
+    private void setNormalOutlineShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context, CallbackInfoReturnable<VoxelShape> cir) {
+        if (cir.getReturnValue() != STABLE_SHAPE) {
             if (Configs.FeatureToggle.DISABLE_MOVE_DOWN_IN_SCAFFOLDING.getBooleanValue() &&
-                    context.isDescending() && context.isAbove(VoxelShapes.fullCube(), pos, true)) {
-                assert MinecraftClient.getInstance().player != null;
-                Item item = MinecraftClient.getInstance().player.getMainHandStack().getItem();
-                String itemId = Registry.ITEM.getId(item).toString();
-                String itemName = item.getName().getString();
+                    context.isDescending() && context.isAbove(Shapes.block(), pos, true)) {
+                assert Minecraft.getInstance().player != null;
+                Item item = Minecraft.getInstance().player.getMainHandItem().getItem();
+                String itemId = Registry.ITEM.getKey(item).toString();
+                String itemName = item.getDescription().getString();
                 if (Configs.Lists.MOVE_DOWN_IN_SCAFFOLDING_WHITELIST.getStrings().stream().anyMatch(s -> itemId.contains(s) || itemName.contains(s))) {
                     return;
                 }
-                cir.setReturnValue(NORMAL_OUTLINE_SHAPE);
+                cir.setReturnValue(STABLE_SHAPE);
             }
         }
     }

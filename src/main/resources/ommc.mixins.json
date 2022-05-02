@@ -5,6 +5,11 @@
   "compatibilityLevel": "JAVA_17",
   "plugin": "com.plusls.ommc.OmmcMixinPlugin",
   "client": [
+    "accessor.AccessorAbstractContainerScreen",
+    "accessor.AccessorBlockModel",
+    "accessor.AccessorBlockStateBase",
+    "accessor.AccessorTextComponent",
+    "accessor.AccessorTranslatableComponent",
     "advancedIntegratedServer.MixinIntegratedServer",
     "advancedIntegratedServer.MixinOpenToLanScreen",
     "feature.autoSwitchElytra.MixinClientPlayerEntity",
@@ -25,7 +30,6 @@
     "feature.highlightWaypoint.MixinPlayerRespawnS2CPacket",
     "feature.preventIntentionalGameDesign.MixinClientPlayerInteractionManager",
     "feature.removeBreakCooldown.MixinClientPlayerInteractionManager",
-    "feature.worldEaterMineHelper.MixinBlockRenderManager",
     "feature.worldEaterMineHelper.MixinJsonUnbakedModel",
     "feature.worldEaterMineHelper.fabric.MixinBlockRenderContext",
     "feature.worldEaterMineHelper.fabric.MixinTerrainRenderContext"

@@ -1,34 +1,33 @@
 package com.plusls.ommc.feature.autoSwitchElytra;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.slot.SlotActionType;
-
 import java.util.ArrayList;
 import java.util.function.Predicate;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.item.ItemStack;
 
 public class AutoSwitchElytraUtil {
     public static final int CHEST_SLOT_IDX = 6;
 
-    public static boolean myCheckFallFlying(PlayerEntity player) {
-        return !player.isOnGround() && !player.isFallFlying() && !player.isTouchingWater() && !player.hasStatusEffect(StatusEffects.LEVITATION);
+    public static boolean myCheckFallFlying(Player player) {
+        return !player.isOnGround() && !player.isFallFlying() && !player.isInWater() && !player.hasEffect(MobEffects.LEVITATION);
     }
 
-    public static void autoSwitch(int sourceSlot, MinecraftClient client, ClientPlayerEntity clientPlayerEntity, Predicate<ItemStack> check) {
-        if (client.interactionManager == null) {
+    public static void autoSwitch(int sourceSlot, Minecraft client, LocalPlayer clientPlayerEntity, Predicate<ItemStack> check) {
+        if (client.gameMode == null) {
             return;
         }
-        if (clientPlayerEntity.currentScreenHandler != clientPlayerEntity.playerScreenHandler) {
-            clientPlayerEntity.closeHandledScreen();
+        if (clientPlayerEntity.containerMenu != clientPlayerEntity.inventoryMenu) {
+            clientPlayerEntity.closeContainer();
         }
-        ScreenHandler screenHandler = clientPlayerEntity.currentScreenHandler;
+        AbstractContainerMenu screenHandler = clientPlayerEntity.containerMenu;
         ArrayList<ItemStack> itemStacks = new ArrayList<>();
         for (int i = 0; i < screenHandler.slots.size(); ++i) {
-            itemStacks.add(screenHandler.slots.get(i).getStack().copy());
+            itemStacks.add(screenHandler.slots.get(i).getItem().copy());
         }
 
         int idxToSwitch = -1;
@@ -39,9 +38,9 @@ public class AutoSwitchElytraUtil {
             }
         }
         if (idxToSwitch != -1) {
-            client.interactionManager.clickSlot(screenHandler.syncId, idxToSwitch, 0, SlotActionType.PICKUP, clientPlayerEntity);
-            client.interactionManager.clickSlot(screenHandler.syncId, sourceSlot, 0, SlotActionType.PICKUP, clientPlayerEntity);
-            client.interactionManager.clickSlot(screenHandler.syncId, idxToSwitch, 0, SlotActionType.PICKUP, clientPlayerEntity);
+            client.gameMode.handleInventoryMouseClick(screenHandler.containerId, idxToSwitch, 0, ClickType.PICKUP, clientPlayerEntity);
+            client.gameMode.handleInventoryMouseClick(screenHandler.containerId, sourceSlot, 0, ClickType.PICKUP, clientPlayerEntity);
+            client.gameMode.handleInventoryMouseClick(screenHandler.containerId, idxToSwitch, 0, ClickType.PICKUP, clientPlayerEntity);
         }
     }
 }

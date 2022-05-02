@@ -1,37 +1,37 @@
 package com.plusls.ommc.mixin.feature.preventIntentionalGameDesign;
 
 import com.plusls.ommc.config.Configs;
-import net.minecraft.block.BedBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.RespawnAnchorBlock;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.network.ClientPlayerInteractionManager;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.multiplayer.MultiPlayerGameMode;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.RespawnAnchorBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(ClientPlayerInteractionManager.class)
+@Mixin(MultiPlayerGameMode.class)
 public class MixinClientPlayerInteractionManager {
-    @Inject(method = "interactBlock",
+    @Inject(method = "useItemOn",
             at = @At(value = "INVOKE",
-                    target = "Lnet/minecraft/util/ActionResult;isAccepted()Z",
+                    target = "Lnet/minecraft/world/InteractionResult;consumesAction()Z",
                     ordinal = 0),
             cancellable = true)
-    private void preventIntentionalGameDesign(ClientPlayerEntity player, ClientWorld world, Hand hand, BlockHitResult hitResult, CallbackInfoReturnable<ActionResult> cir) {
+    private void preventIntentionalGameDesign(LocalPlayer player, ClientLevel world, InteractionHand hand, BlockHitResult hitResult, CallbackInfoReturnable<InteractionResult> cir) {
         if (!Configs.FeatureToggle.PREVENT_INTENTIONAL_GAME_DESIGN.getBooleanValue()) {
             return;
         }
         BlockPos blockPos = hitResult.getBlockPos();
         BlockState blockState = world.getBlockState(blockPos);
-        if ((blockState.getBlock() instanceof BedBlock && !world.getDimension().isBedWorking()) ||
-                (blockState.getBlock() instanceof RespawnAnchorBlock && !world.getDimension().isRespawnAnchorWorking())) {
-            cir.setReturnValue(ActionResult.SUCCESS);
+        if ((blockState.getBlock() instanceof BedBlock && !world.dimensionType().bedWorks()) ||
+                (blockState.getBlock() instanceof RespawnAnchorBlock && !world.dimensionType().respawnAnchorWorks())) {
+            cir.setReturnValue(InteractionResult.SUCCESS);
         }
     }
 }

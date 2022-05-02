@@ -1,43 +1,43 @@
 package com.plusls.ommc.feature.sortInventory;
 
 import com.plusls.ommc.config.Configs;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.network.ClientPlayerInteractionManager;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.BundleItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.screen.slot.SlotActionType;
-import net.minecraft.util.Pair;
+import com.plusls.ommc.mixin.accessor.AccessorAbstractContainerScreen;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.multiplayer.MultiPlayerGameMode;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.util.Tuple;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 
 public class SortInventoryUtil {
     private static boolean allShulkerBox;
 
     @Nullable
-    public static Pair<Integer, Integer> getSortRange(ScreenHandler screenHandler, Slot mouseSlot) {
-        int mouseIdx = mouseSlot.id;
-        if (mouseIdx == 0 && mouseSlot.getIndex() != 0) {
-            mouseIdx = mouseSlot.getIndex();
+    public static Tuple<Integer, Integer> getSortRange(AbstractContainerMenu screenHandler, Slot mouseSlot) {
+        int mouseIdx = mouseSlot.index;
+        if (mouseIdx == 0 && mouseSlot.getContainerSlot() != 0) {
+            mouseIdx = mouseSlot.getContainerSlot();
         }
 
         int l = mouseIdx, r = mouseIdx + 1;
 
-        Class<?> clazz = screenHandler.slots.get(mouseIdx).inventory.getClass();
+        Class<?> clazz = screenHandler.slots.get(mouseIdx).container.getClass();
         for (int i = mouseIdx - 1; i >= 0; --i) {
-            if (clazz != screenHandler.slots.get(i).inventory.getClass()) {
+            if (clazz != screenHandler.slots.get(i).container.getClass()) {
                 l = i + 1;
                 break;
             } else if (i == 0) {
@@ -45,7 +45,7 @@ public class SortInventoryUtil {
             }
         }
         for (int i = mouseIdx + 1; i < screenHandler.slots.size(); ++i) {
-            if (clazz != screenHandler.slots.get(i).inventory.getClass()) {
+            if (clazz != screenHandler.slots.get(i).container.getClass()) {
                 r = i;
                 break;
             } else if (i == screenHandler.slots.size() - 1) {
@@ -53,19 +53,19 @@ public class SortInventoryUtil {
             }
         }
 
-        if (mouseSlot.inventory instanceof PlayerInventory) {
+        if (mouseSlot.container instanceof Inventory) {
             if (l == 5 && r == 46) {
                 if (mouseIdx >= 9 && mouseIdx < 36) {
-                    return new Pair<>(9, 36);
+                    return new Tuple<>(9, 36);
                 } else if (mouseIdx >= 36 && mouseIdx < 45) {
-                    return new Pair<>(36, 45);
+                    return new Tuple<>(36, 45);
                 }
                 return null;
             } else if (r - l == 36) {
                 if (mouseIdx >= l && mouseIdx < l + 27) {
-                    return new Pair<>(l, l + 27);
+                    return new Tuple<>(l, l + 27);
                 } else {
-                    return new Pair<>(l + 27, r);
+                    return new Tuple<>(l + 27, r);
                 }
             }
         }
@@ -74,63 +74,63 @@ public class SortInventoryUtil {
         if (l + 1 == r) {
             return null;
         }
-        return new Pair<>(l, r);
+        return new Tuple<>(l, r);
     }
 
     public static boolean sort() {
-        MinecraftClient client = MinecraftClient.getInstance();
-        if (!(client.currentScreen instanceof HandledScreen<?> handledScreen)) {
+        Minecraft client = Minecraft.getInstance();
+        if (!(client.screen instanceof AbstractContainerScreen<?> handledScreen)) {
             return false;
         }
 
-        double x = client.mouse.getX() * client.getWindow().getScaledWidth() / client.getWindow().getWidth();
-        double y = client.mouse.getY() * client.getWindow().getScaledHeight() / client.getWindow().getHeight();
-        Slot mouseSlot = handledScreen.getSlotAt(x, y);
+        double x = client.mouseHandler.xpos() * client.getWindow().getGuiScaledWidth() / client.getWindow().getScreenWidth();
+        double y = client.mouseHandler.ypos() * client.getWindow().getGuiScaledHeight() / client.getWindow().getScreenHeight();
+        Slot mouseSlot = ((AccessorAbstractContainerScreen) handledScreen).callFindSlot(x, y);
         if (mouseSlot == null) {
             return false;
         }
 
-        ClientPlayerEntity player = client.player;
-        if (client.interactionManager == null || player == null) {
+        LocalPlayer player = client.player;
+        if (client.gameMode == null || player == null) {
             return false;
         }
-        ScreenHandler screenHandler = player.currentScreenHandler;
-        Pair<Integer, Integer> sortRange = getSortRange(screenHandler, mouseSlot);
+        AbstractContainerMenu screenHandler = player.containerMenu;
+        Tuple<Integer, Integer> sortRange = getSortRange(screenHandler, mouseSlot);
         if (sortRange == null) {
             return false;
         }
         ArrayList<ItemStack> itemStacks = new ArrayList<>();
-        ItemStack cursorStack = screenHandler.getCursorStack().copy();
+        ItemStack cursorStack = screenHandler.getCarried().copy();
 
         for (int i = 0; i < screenHandler.slots.size(); ++i) {
-            itemStacks.add(screenHandler.slots.get(i).getStack().copy());
+            itemStacks.add(screenHandler.slots.get(i).getItem().copy());
         }
-        ArrayList<Integer> mergeQueue = mergeItems(cursorStack, itemStacks, sortRange.getLeft(), sortRange.getRight());
-        ArrayList<Pair<Integer, Integer>> swapQueue = quickSort(itemStacks, sortRange.getLeft(), sortRange.getRight());
+        ArrayList<Integer> mergeQueue = mergeItems(cursorStack, itemStacks, sortRange.getA(), sortRange.getB());
+        ArrayList<Tuple<Integer, Integer>> swapQueue = quickSort(itemStacks, sortRange.getA(), sortRange.getB());
 
-        doClick(player, screenHandler.syncId, client.interactionManager, mergeQueue, swapQueue);
+        doClick(player, screenHandler.containerId, client.gameMode, mergeQueue, swapQueue);
         return !mergeQueue.isEmpty() || !swapQueue.isEmpty();
     }
 
-    public static void doClick(PlayerEntity player, int syncId, @NotNull ClientPlayerInteractionManager interactionManager, List<Integer> mergeQueue, List<Pair<Integer, Integer>> swapQueue) {
+    public static void doClick(Player player, int syncId, @NotNull MultiPlayerGameMode interactionManager, List<Integer> mergeQueue, List<Tuple<Integer, Integer>> swapQueue) {
         for (Integer slotId : mergeQueue) {
-            if (slotId < 0 && slotId != ScreenHandler.EMPTY_SPACE_SLOT_INDEX) {
+            if (slotId < 0 && slotId != AbstractContainerMenu.SLOT_CLICKED_OUTSIDE) {
                 // 放入打捆包需要右键
-                interactionManager.clickSlot(syncId, -slotId, 1, SlotActionType.PICKUP, player);
+                interactionManager.handleInventoryMouseClick(syncId, -slotId, 1, ClickType.PICKUP, player);
             } else {
-                interactionManager.clickSlot(syncId, slotId, 0, SlotActionType.PICKUP, player);
+                interactionManager.handleInventoryMouseClick(syncId, slotId, 0, ClickType.PICKUP, player);
             }
         }
-        for (Pair<Integer, Integer> slotIdPair : swapQueue) {
-            interactionManager.clickSlot(syncId, slotIdPair.getLeft(), 0, SlotActionType.PICKUP, player);
-            interactionManager.clickSlot(syncId, slotIdPair.getRight(), 0, SlotActionType.PICKUP, player);
-            interactionManager.clickSlot(syncId, slotIdPair.getLeft(), 0, SlotActionType.PICKUP, player);
+        for (Tuple<Integer, Integer> slotIdPair : swapQueue) {
+            interactionManager.handleInventoryMouseClick(syncId, slotIdPair.getA(), 0, ClickType.PICKUP, player);
+            interactionManager.handleInventoryMouseClick(syncId, slotIdPair.getB(), 0, ClickType.PICKUP, player);
+            interactionManager.handleInventoryMouseClick(syncId, slotIdPair.getA(), 0, ClickType.PICKUP, player);
         }
     }
 
     private static boolean canStackAddMore(ItemStack existingStack, ItemStack stack) {
         return !existingStack.isEmpty() &&
-                ItemStack.canCombine(existingStack, stack) &&
+                ItemStack.isSameItemSameTags(existingStack, stack) &&
                 ShulkerBoxItemUtil.isStackable(existingStack) &&
                 existingStack.getCount() < ShulkerBoxItemUtil.getMaxCount(existingStack) &&
                 existingStack.getCount() < 64;
@@ -151,36 +151,38 @@ public class SortInventoryUtil {
                 }
                 ret.add(i);
                 if (addNum >= stackToAdd.getCount()) {
-                    stack.increment(stackToAdd.getCount());
-                    stackToAdd.decrement(stackToAdd.getCount());
+                    stack.grow(stackToAdd.getCount());
+                    stackToAdd.shrink(stackToAdd.getCount());
                     break;
                 } else {
-                    stack.increment(addNum);
-                    stackToAdd.decrement(addNum);
-                }
-            } else if (stack.getItem() instanceof BundleItem) {
-                NbtCompound nbtCompound = stack.getOrCreateNbt();
-                NbtList nbtList = nbtCompound.getList("Items", NbtElement.COMPOUND_TYPE);
-                Optional<NbtCompound> optional = BundleItem.canMergeStack(stackToAdd, nbtList);
-                if (optional.isPresent()) {
-                    stackToAdd.decrement(BundleItem.addToBundle(stack, stackToAdd));
-                    ret.add(-i);
-                    if (stackToAdd.isEmpty()) {
-                        break;
-                    }
+                    stack.grow(addNum);
+                    stackToAdd.shrink(addNum);
                 }
             }
+            // TODO
+//            else if (stack.getItem() instanceof BundleItem) {
+//                CompoundTag nbtCompound = stack.getOrCreateTag();
+//                ListTag nbtList = nbtCompound.getList("Items", Tag.TAG_COMPOUND);
+//                Optional<CompoundTag> optional = BundleItem.getMatchingItem(stackToAdd, nbtList);
+//                if (optional.isPresent()) {
+//                    stackToAdd.shrink(BundleItem.add(stack, stackToAdd));
+//                    ret.add(-i);
+//                    if (stackToAdd.isEmpty()) {
+//                        break;
+//                    }
+//                }
+//            }
         }
         return ret;
     }
 
     private static int getItemId(ItemStack itemStack) {
-        return Item.getRawId(itemStack.getItem());
+        return Item.getId(itemStack.getItem());
     }
 
-    private static ArrayList<Pair<Integer, Integer>> quickSort(ArrayList<ItemStack> itemStacks, int l, int r) {
+    private static ArrayList<Tuple<Integer, Integer>> quickSort(ArrayList<ItemStack> itemStacks, int l, int r) {
         // sort [l, r)
-        ArrayList<Pair<Integer, Integer>> ret = new ArrayList<>();
+        ArrayList<Tuple<Integer, Integer>> ret = new ArrayList<>();
         ArrayList<ItemStack> sortedItemStacks = new ArrayList<>();
         allShulkerBox = true;
         for (int i = l; i < r; ++i) {
@@ -207,9 +209,9 @@ public class SortInventoryUtil {
                     continue;
                 }
                 if (itemStacks.get(i).getCount() < dstStack.getCount()) {
-                    ret.add(new Pair<>(dstIdx, i));
+                    ret.add(new Tuple<>(dstIdx, i));
                 } else {
-                    ret.add(new Pair<>(i, dstIdx));
+                    ret.add(new Tuple<>(i, dstIdx));
                 }
                 itemStacks.set(dstIdx, itemStacks.get(i));
                 itemStacks.set(i, dstStack);
@@ -273,7 +275,7 @@ public class SortInventoryUtil {
                 }
             }
             if (ShulkerBoxItemUtil.isShulkerBoxBlockItem(a) && ShulkerBoxItemUtil.isShulkerBoxBlockItem(b) && a.getItem() == b.getItem()) {
-                return -ShulkerBoxItemUtil.cmpShulkerBox(a.getNbt(), b.getNbt());
+                return -ShulkerBoxItemUtil.cmpShulkerBox(a.getTag(), b.getTag());
             }
             if (a.isEmpty() && !b.isEmpty()) {
                 return 1;
@@ -284,13 +286,13 @@ public class SortInventoryUtil {
             }
             if (aId == bId) {
                 // 有 nbt 标签的排在前面
-                if (!a.hasNbt() && b.hasNbt()) {
+                if (!a.hasTag() && b.hasTag()) {
                     return 1;
-                } else if (a.hasNbt() && !b.hasNbt()) {
+                } else if (a.hasTag() && !b.hasTag()) {
                     return -1;
-                } else if (a.hasNbt()) {
+                } else if (a.hasTag()) {
                     // 如果都有 nbt 的话，确保排序后相邻的物品 nbt 标签一致
-                    int nbtRet = Long.signum(((long) Objects.requireNonNull(a.getNbt()).hashCode() - Objects.requireNonNull(b.getNbt()).hashCode()));
+                    int nbtRet = Long.signum(((long) Objects.requireNonNull(a.getTag()).hashCode() - Objects.requireNonNull(b.getTag()).hashCode()));
                     if (nbtRet != 0) {
                         return nbtRet;
                     }

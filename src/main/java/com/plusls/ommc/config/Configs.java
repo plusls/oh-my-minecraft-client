@@ -18,15 +18,6 @@ import fi.dy.masa.malilib.hotkeys.KeybindSettings;
 import fi.dy.masa.malilib.util.FileUtils;
 import fi.dy.masa.malilib.util.JsonUtils;
 import fi.dy.masa.malilib.util.restrictions.UsageRestriction;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerInteractionManager;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.entity.Entity;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 
@@ -34,6 +25,15 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.MultiPlayerGameMode;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 
 public class Configs implements IConfigHandler {
     private static final String CONFIG_FILE_NAME = ModInfo.MOD_ID + ".json";
@@ -62,12 +62,12 @@ public class Configs implements IConfigHandler {
         if (!OLD_WORLD_EATER_MINE_HELPER_WHITELIST.equals(Lists.WORLD_EATER_MINE_HELPER_WHITELIST.getStrings()) ||
                 !OLD_BLOCK_MODEL_NO_OFFSET_BLACKLIST.equals(Lists.BLOCK_MODEL_NO_OFFSET_BLACKLIST.getStrings()) ||
                 !OLD_BLOCK_MODEL_NO_OFFSET_WHITELIST.equals(Lists.BLOCK_MODEL_NO_OFFSET_WHITELIST.getStrings())) {
-            MinecraftClient.getInstance().worldRenderer.reload();
+            Minecraft.getInstance().levelRenderer.allChanged();
             dirty = true;
         }
 
         if (!OLD_FALLBACK_LANGUAGE_LIST.equals(Lists.FALLBACK_LANGUAGE_LIST.getStrings())) {
-            MinecraftClient.getInstance().reloadResources();
+            Minecraft.getInstance().reloadResourcePacks();
             dirty = true;
         }
 
@@ -170,15 +170,15 @@ public class Configs implements IConfigHandler {
                 return true;
             });
             SEND_LOOKING_AT_BLOCK_POS.getKeybind().setCallback((keyAction, iKeybind) -> {
-                MinecraftClient client = MinecraftClient.getInstance();
+                Minecraft client = Minecraft.getInstance();
                 Entity cameraEntity = client.getCameraEntity();
-                ClientPlayerInteractionManager clientPlayerInteractionManager = client.interactionManager;
+                MultiPlayerGameMode clientPlayerInteractionManager = client.gameMode;
                 if (cameraEntity != null && clientPlayerInteractionManager != null) {
-                    HitResult hitresult = cameraEntity.raycast(clientPlayerInteractionManager.getReachDistance(), client.getTickDelta(), false);
+                    HitResult hitresult = cameraEntity.pick(clientPlayerInteractionManager.getPickRange(), client.getFrameTime(), false);
                     if (hitresult.getType() == HitResult.Type.BLOCK) {
                         BlockPos lookPos = ((BlockHitResult) hitresult).getBlockPos();
                         if (client.player != null) {
-                            client.player.sendChatMessage(String.format("[%d, %d, %d]", lookPos.getX(), lookPos.getY(), lookPos.getZ()));
+                            client.player.chat(String.format("[%d, %d, %d]", lookPos.getX(), lookPos.getY(), lookPos.getZ()));
                         }
                     }
                 }
@@ -192,9 +192,9 @@ public class Configs implements IConfigHandler {
             });
             SORT_INVENTORY.getKeybind().setCallback((keyAction, iKeybind) -> {
                 if (SortInventoryUtil.sort()) {
-                    MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                 } else {
-                    MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.BLOCK_DISPENSER_FAIL, 1.0F));
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.DISPENSER_FAIL, 1.0F));
                 }
                 return false;
             });
@@ -226,7 +226,7 @@ public class Configs implements IConfigHandler {
 
             @Override
             public String getDisplayName() {
-                return I18n.translate(this.translationKey);
+                return I18n.get(this.translationKey);
             }
 
             @Override
@@ -303,14 +303,14 @@ public class Configs implements IConfigHandler {
         );
 
         static {
-            BLOCK_MODEL_NO_OFFSET.setValueChangeCallback(config -> MinecraftClient.getInstance().worldRenderer.reload());
+            BLOCK_MODEL_NO_OFFSET.setValueChangeCallback(config -> Minecraft.getInstance().levelRenderer.allChanged());
             HIGHLIGHT_LAVA_SOURCE.setValueChangeCallback(config -> {
                 ModInfo.LOGGER.debug("set HIGHLIGHT_LAVA_SOURCE {}", config.getBooleanValue());
-                MinecraftClient.getInstance().worldRenderer.reload();
+                Minecraft.getInstance().levelRenderer.allChanged();
             });
             WORLD_EATER_MINE_HELPER.setValueChangeCallback(config -> {
                 ModInfo.LOGGER.debug("set WORLD_EATER_MINE_HELPER {}", config.getBooleanValue());
-                MinecraftClient.getInstance().worldRenderer.reload();
+                Minecraft.getInstance().levelRenderer.allChanged();
             });
         }
     }
@@ -342,7 +342,7 @@ public class Configs implements IConfigHandler {
         );
 
         static {
-            BLOCK_MODEL_NO_OFFSET_LIST_TYPE.setValueChangeCallback(config -> MinecraftClient.getInstance().worldRenderer.reload());
+            BLOCK_MODEL_NO_OFFSET_LIST_TYPE.setValueChangeCallback(config -> Minecraft.getInstance().levelRenderer.allChanged());
         }
 
     }
@@ -364,20 +364,20 @@ public class Configs implements IConfigHandler {
         static {
             ONLINE_MODE.setValueChangeCallback(config -> {
                 ModInfo.LOGGER.debug("set ONLINE_MODE {}", config.getBooleanValue());
-                if (MinecraftClient.getInstance().isIntegratedServerRunning()) {
-                    Objects.requireNonNull(MinecraftClient.getInstance().getServer()).setOnlineMode(ONLINE_MODE.getBooleanValue());
+                if (Minecraft.getInstance().hasSingleplayerServer()) {
+                    Objects.requireNonNull(Minecraft.getInstance().getSingleplayerServer()).setUsesAuthentication(ONLINE_MODE.getBooleanValue());
                 }
             });
             PVP.setValueChangeCallback(config -> {
                 ModInfo.LOGGER.debug("set PVP {}", config.getBooleanValue());
-                if (MinecraftClient.getInstance().isIntegratedServerRunning()) {
-                    Objects.requireNonNull(MinecraftClient.getInstance().getServer()).setPvpEnabled(PVP.getBooleanValue());
+                if (Minecraft.getInstance().hasSingleplayerServer()) {
+                    Objects.requireNonNull(Minecraft.getInstance().getSingleplayerServer()).setPvpAllowed(PVP.getBooleanValue());
                 }
             });
             FLIGHT.setValueChangeCallback(config -> {
                 ModInfo.LOGGER.debug("set FLIGHT {}", config.getBooleanValue());
-                if (MinecraftClient.getInstance().isIntegratedServerRunning()) {
-                    Objects.requireNonNull(MinecraftClient.getInstance().getServer()).setFlightEnabled(PVP.getBooleanValue());
+                if (Minecraft.getInstance().hasSingleplayerServer()) {
+                    Objects.requireNonNull(Minecraft.getInstance().getSingleplayerServer()).setFlightAllowed(PVP.getBooleanValue());
                 }
             });
         }

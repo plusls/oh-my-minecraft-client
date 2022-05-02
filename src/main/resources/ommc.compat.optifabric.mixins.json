@@ -5,6 +5,7 @@
   "client": [
   ],
   "mixins": [
-    "MixinBlockModelRenderer"
+    "MixinBlockModelRenderer",
+    "MixinBlockRenderManager"
   ]
 }

@@ -1,15 +1,10 @@
-package com.plusls.ommc.mixin.feature.worldEaterMineHelper;
+package com.plusls.ommc.compat.optifabric.mixin;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.plusls.ommc.feature.worldEaterMineHelper.BlockModelRendererContext;
 import com.plusls.ommc.feature.worldEaterMineHelper.WorldEaterMineHelperUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.block.BlockRenderManager;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockRenderView;
+import com.plusls.ommc.mixin.accessor.AccessorBlockStateBase;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -17,34 +12,40 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Random;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 
 // 兼容 opt
-@Mixin(BlockRenderManager.class)
+@Mixin(BlockRenderDispatcher.class)
 public class MixinBlockRenderManager {
     private final ThreadLocal<BlockModelRendererContext> ommcRenderContext = ThreadLocal.withInitial(BlockModelRendererContext::new);
     private final ThreadLocal<Integer> ommcOriginalLuminance = ThreadLocal.withInitial(() -> -1);
 
-    @Inject(method = "renderDamage", at = @At(value = "HEAD"))
-    private void initRenderContext0(BlockState state, BlockPos pos, BlockRenderView world, MatrixStack matrix,
+    @Inject(method = "renderBreakingTexture", at = @At(value = "HEAD"))
+    private void initRenderContext0(BlockState state, BlockPos pos, BlockAndTintGetter world, PoseStack matrix,
                                     VertexConsumer vertexConsumer, CallbackInfo ci) {
         BlockModelRendererContext context = ommcRenderContext.get();
         context.pos = pos;
         context.state = state;
     }
 
-    @Inject(method = "renderDamage", at = @At(value = "RETURN"))
-    private void clearRenderContext0(BlockState state, BlockPos pos, BlockRenderView world, MatrixStack matrix,
+    @Inject(method = "renderBreakingTexture", at = @At(value = "RETURN"))
+    private void clearRenderContext0(BlockState state, BlockPos pos, BlockAndTintGetter world, PoseStack matrix,
                                      VertexConsumer vertexConsumer, CallbackInfo ci) {
         ommcRenderContext.get().clear();
         int originalLuminance = ommcOriginalLuminance.get();
         if (originalLuminance != -1) {
-            state.luminance = originalLuminance;
+            ((AccessorBlockStateBase)state).setLightEmission(originalLuminance);
             ommcOriginalLuminance.set(-1);
         }
     }
 
-    @Inject(method = "renderBlock", at = @At(value = "HEAD"))
-    private void initRenderContext1(BlockState state, BlockPos pos, BlockRenderView world, MatrixStack matrix,
+    @Inject(method = "renderBatched", at = @At(value = "HEAD"))
+    private void initRenderContext1(BlockState state, BlockPos pos, BlockAndTintGetter world, PoseStack matrix,
                                     VertexConsumer vertexConsumer, boolean cull, Random random,
                                     CallbackInfoReturnable<Boolean> cir) {
         BlockModelRendererContext context = ommcRenderContext.get();
@@ -52,19 +53,19 @@ public class MixinBlockRenderManager {
         context.state = state;
     }
 
-    @Inject(method = "renderBlock", at = @At(value = "RETURN"))
-    private void clearRenderContext1(BlockState state, BlockPos pos, BlockRenderView world, MatrixStack matrix,
+    @Inject(method = "renderBatched", at = @At(value = "RETURN"))
+    private void clearRenderContext1(BlockState state, BlockPos pos, BlockAndTintGetter world, PoseStack matrix,
                                      VertexConsumer vertexConsumer, boolean cull, Random random,
                                      CallbackInfoReturnable<Boolean> cir) {
         ommcRenderContext.get().clear();
         int originalLuminance = ommcOriginalLuminance.get();
         if (originalLuminance != -1) {
-            state.luminance = originalLuminance;
+            ((AccessorBlockStateBase)state).setLightEmission(originalLuminance);
             ommcOriginalLuminance.set(-1);
         }
     }
 
-    @Inject(method = "getModel", at = @At(value = "RETURN"), cancellable = true)
+    @Inject(method = "getBlockModel", at = @At(value = "RETURN"), cancellable = true)
     private void useCustomModel(BlockState state, CallbackInfoReturnable<BakedModel> cir) {
         BlockModelRendererContext context = ommcRenderContext.get();
         if (context.pos == null) {
@@ -74,8 +75,8 @@ public class MixinBlockRenderManager {
         if (WorldEaterMineHelperUtil.shouldUseCustomModel(state, context.pos)) {
             BakedModel model = WorldEaterMineHelperUtil.customFullModels.get(block);
             if (model != null) {
-                ommcOriginalLuminance.set(context.state.luminance);
-                state.luminance = 15;
+                ommcOriginalLuminance.set(((AccessorBlockStateBase)state).getLightEmission());
+                ((AccessorBlockStateBase)state).setLightEmission(15);
                 cir.setReturnValue(model);
             }
         }
