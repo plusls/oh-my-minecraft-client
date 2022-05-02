@@ -1,7 +1,5 @@
-package com.plusls.ommc.compat.canvas.mixin;
+package com.plusls.ommc.feature.highlightLavaSource.canvas;
 
-import com.plusls.ommc.compat.Dependencies;
-import com.plusls.ommc.compat.Dependency;
 import com.plusls.ommc.config.Configs;
 import com.plusls.ommc.feature.highlightLavaSource.LavaSourceResourceLoader;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -18,8 +16,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import top.hendrixshen.magiclib.dependency.annotation.Dependencies;
+import top.hendrixshen.magiclib.dependency.annotation.Dependency;
 
-@Dependencies(dependencyList = @Dependency(modId = "frex", version = "*"))
+
+// TODO
+@Dependencies(and = @Dependency("frex"))
 @Pseudo
 @Mixin(targets = "io.vram.frex.impl.model.SimpleFluidSpriteProvider", remap = false)
 public abstract class MixinSimpleFluidSpriteProvider {
@@ -40,7 +42,7 @@ public abstract class MixinSimpleFluidSpriteProvider {
                 lavaSourceSpites[0] = LavaSourceResourceLoader.lavaSourceSpites[0];
                 lavaSourceSpites[1] = LavaSourceResourceLoader.lavaSourceSpites[1];
             }
-            if (Configs.FeatureToggle.HIGHLIGHT_LAVA_SOURCE.getBooleanValue() && state.is(FluidTags.LAVA) &&
+            if (Configs.highlightLavaSource && state.is(FluidTags.LAVA) &&
                     view.getBlockState(pos).getValue(LiquidBlock.LEVEL) == 0) {
                 cir.setReturnValue(lavaSourceSpites);
             }

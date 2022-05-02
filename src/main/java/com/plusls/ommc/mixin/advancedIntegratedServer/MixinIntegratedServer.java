@@ -28,17 +28,17 @@ public abstract class MixinIntegratedServer extends MinecraftServer {
     @ModifyArg(method = "initServer",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/server/IntegratedServer;setUsesAuthentication(Z)V", ordinal = 0), index = 0)
     private boolean modifySetOnlineModeArg(boolean onlineMode) {
-        return Configs.AdvancedIntegratedServer.ONLINE_MODE.getBooleanValue();
+        return Configs.onlineMode;
     }
 
     @ModifyArg(method = "initServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/server/IntegratedServer;setPvpAllowed(Z)V", ordinal = 0), index = 0)
     private boolean modifySetPvpEnabledArg(boolean arg) {
-        return Configs.AdvancedIntegratedServer.PVP.getBooleanValue();
+        return Configs.pvp;
     }
 
     @ModifyArg(method = "initServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/server/IntegratedServer;setFlightAllowed(Z)V", ordinal = 0), index = 0)
     private boolean modifySetFlightEnabledArg(boolean arg) {
-        return Configs.AdvancedIntegratedServer.FLIGHT.getBooleanValue();
+        return Configs.flight;
     }
 
 }

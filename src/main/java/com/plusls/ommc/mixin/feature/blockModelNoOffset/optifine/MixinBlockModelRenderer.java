@@ -1,20 +1,19 @@
-package com.plusls.ommc.mixin.feature.blockModelNoOffset.fabric;
+package com.plusls.ommc.mixin.feature.blockModelNoOffset.optifine;
 
 
-import com.plusls.ommc.compat.Dependencies;
-import com.plusls.ommc.compat.Dependency;
 import com.plusls.ommc.feature.blockModelNoOffset.BlockModelNoOffsetUtil;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import top.hendrixshen.magiclib.dependency.annotation.Dependencies;
+import top.hendrixshen.magiclib.dependency.annotation.Dependency;
 
-@Dependencies(dependencyList = @Dependency(modId = "optifabric", version = "*"))
+@Dependencies(and = @Dependency("optifabric"))
 @Mixin(ModelBlockRenderer.class)
 public class MixinBlockModelRenderer {
 

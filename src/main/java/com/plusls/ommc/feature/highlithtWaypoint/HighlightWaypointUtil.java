@@ -149,9 +149,15 @@ public class HighlightWaypointUtil {
                 }
 
                 switch (key) {
-                    case "x" -> x = Integer.parseInt(value.strip());
-                    case "y" -> y = Integer.parseInt(value.strip());
-                    case "z" -> z = Integer.parseInt(value.strip());
+                    case "x":
+                        x = Integer.parseInt(value.replace(" ", ""));
+                        break;
+                    case "y":
+                        y = Integer.parseInt(value.replace(" ", ""));
+                        break;
+                    case "z":
+                        z = Integer.parseInt(value.replace(" ", ""));
+                        break;
                 }
             }
 
@@ -193,10 +199,10 @@ public class HighlightWaypointUtil {
 
 
     public static boolean updateWaypointsText(Component chat) {
-        if (!(chat instanceof TextComponent literalChatText)) {
+        if (!(chat instanceof TextComponent)) {
             return false;
         }
-
+        TextComponent literalChatText = (TextComponent) chat;
 
         String message = ((AccessorTextComponent) literalChatText).getText();
         ArrayList<Tuple<Integer, String>> waypointPairs = getWaypointStrings(message);
@@ -220,7 +226,7 @@ public class HighlightWaypointUtil {
                 Style chatStyle = clickableWaypoint.getStyle();
                 BlockPos pos = Objects.requireNonNull(parseWaypoint(waypointString.substring(1, waypointString.length() - 1)));
                 TranslatableComponent hover = new TranslatableComponent("ommc.highlight_waypoint.tooltip");
-                if (clickEvent == null || Configs.Generic.FORCE_PARSE_WAYPOINT_FROM_CHAT.getBooleanValue()) {
+                if (clickEvent == null || Configs.forceParseWaypointFromChat) {
                     clickEvent = new ClickEvent(ClickEvent.Action.RUN_COMMAND,
                             String.format("/%s %d %d %d", HIGHLIGHT_COMMAND, pos.getX(), pos.getY(), pos.getZ()));
                 }

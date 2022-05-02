@@ -30,7 +30,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
 
     @Inject(method = "maybeBackOffFromEdge", at = @At(value = "FIELD", target = "Lnet/minecraft/world/phys/Vec3;x:D", opcode = Opcodes.GETFIELD, ordinal = 0))
     private void setStepHeight(Vec3 movement, MoverType type, CallbackInfoReturnable<Vec3> cir) {
-        if (!Configs.FeatureToggle.BETTER_SNEAKING.getBooleanValue() || !this.level.isClientSide()) {
+        if (!Configs.betterSneaking || !this.level.isClientSide()) {
             return;
         }
         prevStepHeight = this.maxUpStep;
@@ -39,7 +39,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
 
     @Inject(method = "maybeBackOffFromEdge", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;<init>(DDD)V", ordinal = 0))
     private void restoreStepHeight(Vec3 movement, MoverType type, CallbackInfoReturnable<Vec3> cir) {
-        if (!Configs.FeatureToggle.BETTER_SNEAKING.getBooleanValue() || !this.level.isClientSide() || Math.abs(prevStepHeight - DEFAULT_STEP_HEIGHT) <= 0.001) {
+        if (!Configs.betterSneaking || !this.level.isClientSide() || Math.abs(prevStepHeight - DEFAULT_STEP_HEIGHT) <= 0.001) {
             return;
         }
         this.maxUpStep = prevStepHeight;
@@ -50,16 +50,17 @@ public abstract class MixinPlayerEntity extends LivingEntity {
     private boolean myIsSpaceEmpty(Level world, Entity entity, AABB box) {
         boolean retOld = world.noCollision(entity, box.move(0, this.maxUpStep - prevStepHeight, 0));
         boolean retNew = world.noCollision(entity, box);
-        if (Configs.FeatureToggle.BETTER_SNEAKING.getBooleanValue() && this.level.isClientSide() && (retOld && !retNew) &&
+        if (Configs.betterSneaking && this.level.isClientSide() && (retOld && !retNew) &&
                 world.getFluidState(this.blockPosition().below()).getType() instanceof LavaFluid) {
             return true;
         }
         return retNew;
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Inject(method = "isAboveGround", at = @At(value = "HEAD"))
     private void setStepHeight(CallbackInfoReturnable<Boolean> cir) {
-        if (!Configs.FeatureToggle.BETTER_SNEAKING.getBooleanValue() || !this.level.isClientSide()) {
+        if (!Configs.betterSneaking || !this.level.isClientSide()) {
             return;
         }
         Player playerEntity = (Player) (Object) this;
@@ -69,7 +70,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
 
     @Inject(method = "isAboveGround", at = @At(value = "RETURN"))
     private void restoreStepHeight(CallbackInfoReturnable<Boolean> cir) {
-        if (!Configs.FeatureToggle.BETTER_SNEAKING.getBooleanValue() || !this.level.isClientSide() || Math.abs(prevStepHeight - DEFAULT_STEP_HEIGHT) <= 0.001) {
+        if (!Configs.betterSneaking || !this.level.isClientSide() || Math.abs(prevStepHeight - DEFAULT_STEP_HEIGHT) <= 0.001) {
             return;
         }
         this.maxUpStep = prevStepHeight;

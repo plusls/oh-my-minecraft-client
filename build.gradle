@@ -1,92 +1,34 @@
 plugins {
-    id("fabric-loom").version("0.11-SNAPSHOT")
     id("maven-publish")
+    id("fabric-loom").version("0.12-SNAPSHOT").apply(false)
+    // https://github.com/Juuxel/LoomQuiltflower
+    id("io.github.juuxel.loom-quiltflower").version("1.7.0").apply(false)
+    // https://github.com/ReplayMod/preprocessor
+    // https://github.com/Fallen-Breath/preprocessor
+    id("com.replaymod.preprocess").version("b7207cffa9")
     id("org.ajoberstar.grgit").version("4.1.0")
-    id("com.modrinth.minotaur").version("1.2.1")
 }
 
-setSourceCompatibility(JavaVersion.toVersion(project.java_version))
-setTargetCompatibility(JavaVersion.toVersion(project.java_version))
-String real_version = "${project.mod_version}"
+preprocess {
+    def mc114 = createNode("1.14.4", 1_14_04, "mojang")
+    def mc115 = createNode("1.15.2", 1_15_02, "mojang")
+    def mc116 = createNode("1.16.5", 1_16_05, "mojang")
+    def mc117 = createNode("1.17.1", 1_17_01, "mojang")
+    def mc118 = createNode("1.18.2", 1_18_02, "mojang") // root
+    def mcSnapshot = createNode("snapshot", 1_19_00, "mojang")
+
+    mc114.link(mc115, null)
+    mc115.link(mc116, null)
+    mc116.link(mc117, null)
+    mc117.link(mc118, null)
+    mc118.link(mcSnapshot, null)
+}
+
+String realVersion = "${project.mod_version}"
 
 if (project.pre_release != "") {
-    real_version += "-${project.pre_release}+"
-    if (project.pre_release == "alpha" && !grgit.status().clean) {
-        real_version += new Date().format("yyyyMMdd.HHmmss") + ".dirty." + grgit.head().abbreviatedId
-    } else {
-        real_version += grgit.head().abbreviatedId
-    }
+    realVersion += "-${project.pre_release}+"
+    realVersion += grgit.head().abbreviatedId
 }
 
-setArchivesBaseName("${project.archives_base_name}-${project.minecraft_version}")
-setVersion(real_version)
-setGroup(project.maven_group)
-
-repositories {
-    maven {
-        url = "https://www.cursemaven.com"
-    }
-    maven {
-        url = "https://api.modrinth.com/maven"
-    }
-    maven {
-        name = "vram"
-        url = "https://maven.vram.io/"
-    }
-    mavenCentral()
-}
-
-
-dependencies {
-    minecraft("com.mojang:minecraft:${project.minecraft_version}")
-    //mappings("net.fabricmc:yarn:${project.minecraft_version}+build.${project.yarn_mappings}:v2")
-    mappings(loom.officialMojangMappings())
-    modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
-    modImplementation("curse.maven:malilib-303119:${project.malilib_version}")
-    modImplementation("maven.modrinth:modmenu:${project.mod_menu_version}")
-    // runtime only
-    modRuntimeOnly("curse.maven:lazydfu-433518:${project.lazydfu_version}")
-    modRuntimeOnly("curse.maven:in-game-account-switcher-232676:${project.in_game_account_switcher_version}")
-    modRuntimeOnly("curse.maven:imblockerfabric-399225:${project.imblockerfabric}")
-}
-
-processResources {
-    inputs.property("version", real_version)
-    filesMatching("fabric.mod.json") {
-        expand(["version": real_version])
-    }
-}
-
-tasks.withType(JavaCompile).configureEach {
-    it.options.release.set(Integer.parseInt(project.java_version as String))
-}
-
-java {
-    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-    // if it is present.
-    // If you remove this line, sources will not be generated.
-    // withSourcesJar()
-}
-
-jar {
-    from("LICENSE") {
-        rename({ return "${it}_${project.archives_base_name}" })
-    }
-}
-
-import com.modrinth.minotaur.TaskModrinthUpload
-
-task publishModrinth(type: TaskModrinthUpload) {
-    onlyIf {
-        System.getenv("MODRINTH") // Only attempt to run this task if the MODRINTH variable is set, otherwise SKIP it
-    }
-    token = System.getenv("MODRINTH")
-    changelog = System.getenv("CHANGELOG")
-    projectId = "oQgSAEhD"
-    versionNumber = "${project.mod_version}-${project.minecraft_version}"
-    // On fabric, use "remapJar" instead of "jar"
-    uploadFile = remapJar
-    addGameVersion(project.minecraft_version as String)
-    addLoader("fabric")
-}
+version = realVersion

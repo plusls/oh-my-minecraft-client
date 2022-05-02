@@ -32,7 +32,7 @@ public class MixinClientPlayerInteractionManager {
     private boolean shouldFlatDigger(BlockPos pos) {
         Level world = Minecraft.getInstance().level;
         Player player = Minecraft.getInstance().player;
-        if (Configs.FeatureToggle.FLAT_DIGGER.getBooleanValue() &&
+        if (Configs.flatDigger &&
                 world != null && player != null) {
             return !player.isShiftKeyDown() && pos.getY() < player.getBlockY();
         }

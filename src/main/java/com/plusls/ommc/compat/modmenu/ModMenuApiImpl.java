@@ -1,17 +1,22 @@
 package com.plusls.ommc.compat.modmenu;
 
+import com.plusls.ommc.ModInfo;
 import com.plusls.ommc.gui.GuiConfigs;
-import com.terraformersmc.modmenu.api.ConfigScreenFactory;
-import com.terraformersmc.modmenu.api.ModMenuApi;
+import top.hendrixshen.magiclib.compat.modmenu.ModMenuCompatApi;
 
-public class ModMenuApiImpl implements ModMenuApi {
+public class ModMenuApiImpl implements ModMenuCompatApi {
     @Override
-    public ConfigScreenFactory<?> getModConfigScreenFactory() {
-
+    public ConfigScreenFactoryCompat<?> getConfigScreenFactoryCompat() {
         return (screen) -> {
-            GuiConfigs gui = new GuiConfigs();
-            gui.setParent(screen);
+            GuiConfigs gui = GuiConfigs.getInstance();
+            gui.setParentGui(screen);
             return gui;
         };
     }
+
+    @Override
+    public String getModIdCompat() {
+        return ModInfo.CURRENT_MOD_ID;
+    }
+
 }

@@ -2,8 +2,8 @@
   "required": true,
   "minVersion": "0.8",
   "package": "com.plusls.ommc.mixin",
-  "compatibilityLevel": "JAVA_17",
-  "plugin": "com.plusls.ommc.OmmcMixinPlugin",
+  "compatibilityLevel": "JAVA_8",
+  "plugin": "top.hendrixshen.magiclib.MagicMixinPlugin",
   "client": [
     "accessor.AccessorAbstractContainerScreen",
     "accessor.AccessorBlockModel",
@@ -36,5 +36,9 @@
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "mixins": [
+    "feature.blockModelNoOffset.optifine.MixinBlockModelRenderer",
+    "feature.worldEaterMineHelper.optifine.MixinBlockRenderManager"
+  ]
 }

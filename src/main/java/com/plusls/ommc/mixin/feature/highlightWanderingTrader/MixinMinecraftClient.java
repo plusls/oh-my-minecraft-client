@@ -13,7 +13,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class MixinMinecraftClient {
     @Inject(method = "shouldEntityAppearGlowing", at = @At(value = "RETURN"), cancellable = true)
     private void checkWanderingTraderEntity(Entity entity, CallbackInfoReturnable<Boolean> cir) {
-        if (Configs.FeatureToggle.HIGHLIGHT_WANDERING_TRADER.getBooleanValue() && !cir.getReturnValue()) {
+        // TODO
+        if (Configs.highlightWanderingTrader && !cir.getReturnValue()) {
             if (entity instanceof WanderingTrader) {
                 cir.setReturnValue(true);
             }

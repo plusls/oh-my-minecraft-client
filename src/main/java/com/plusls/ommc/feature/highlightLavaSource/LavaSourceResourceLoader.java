@@ -18,6 +18,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.function.Function;
 
 public class LavaSourceResourceLoader implements SimpleSynchronousResourceReloadListener {
@@ -46,7 +48,7 @@ public class LavaSourceResourceLoader implements SimpleSynchronousResourceReload
     }
 
     @Override
-    public void onResourceManagerReload(ResourceManager manager) {
+    public void onResourceManagerReload(@NotNull ResourceManager manager) {
         final Function<ResourceLocation, TextureAtlasSprite> atlas = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS);
         lavaSourceStillSprite = atlas.apply(stillSpriteId);
         lavaSourceFlowSprite = atlas.apply(flowingSpriteId);
@@ -58,7 +60,7 @@ public class LavaSourceResourceLoader implements SimpleSynchronousResourceReload
         defaultLavaSourceSpites[1] = defaultLavaSourceFlowSprite;
         FluidRenderHandler lavaSourceRenderHandler = (view, pos, state) -> {
 
-            if (view != null && pos != null && Configs.FeatureToggle.HIGHLIGHT_LAVA_SOURCE.getBooleanValue()) {
+            if (view != null && pos != null && Configs.highlightLavaSource) {
                 BlockState blockState = view.getBlockState(pos);
                 if (blockState.hasProperty(LiquidBlock.LEVEL) && blockState.getValue(LiquidBlock.LEVEL) == 0) {
                     return lavaSourceSpites;

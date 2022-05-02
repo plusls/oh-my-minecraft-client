@@ -18,16 +18,16 @@ public class BlockModelNoOffsetUtil {
     }
 
     public static boolean shouldNoOffset(BlockState blockState) {
-        if (!Configs.FeatureToggle.BLOCK_MODEL_NO_OFFSET.getBooleanValue()) {
+        if (!Configs.blockModelNoOffset) {
             return false;
         }
         String blockId = Registry.BLOCK.getKey(blockState.getBlock()).toString();
         String blockName = blockState.getBlock().getName().getString();
 
-        if (Configs.Lists.BLOCK_MODEL_NO_OFFSET_LIST_TYPE.getOptionListValue() == UsageRestriction.ListType.WHITELIST) {
-            return Configs.Lists.BLOCK_MODEL_NO_OFFSET_WHITELIST.getStrings().stream().anyMatch(s -> blockId.contains(s) || blockName.contains(s));
-        } else if (Configs.Lists.BLOCK_MODEL_NO_OFFSET_LIST_TYPE.getOptionListValue() == UsageRestriction.ListType.BLACKLIST) {
-            return Configs.Lists.BLOCK_MODEL_NO_OFFSET_BLACKLIST.getStrings().stream().noneMatch(s -> blockId.contains(s) || blockName.contains(s));
+        if (Configs.blockModelNoOffsetListType == UsageRestriction.ListType.WHITELIST) {
+            return Configs.blockModelNoOffsetWhitelist.stream().anyMatch(s -> blockId.contains(s) || blockName.contains(s));
+        } else if (Configs.blockModelNoOffsetListType == UsageRestriction.ListType.BLACKLIST) {
+            return Configs.blockModelNoOffsetBlacklist.stream().noneMatch(s -> blockId.contains(s) || blockName.contains(s));
         }
         return false;
     }

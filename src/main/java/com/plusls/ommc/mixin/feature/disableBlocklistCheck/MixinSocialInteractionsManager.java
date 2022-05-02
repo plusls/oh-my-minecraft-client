@@ -13,7 +13,7 @@ import net.minecraft.client.gui.screens.social.PlayerSocialManager;
 public class MixinSocialInteractionsManager {
     @Inject(method = "isBlocked", at = @At("HEAD"), cancellable = true)
     public void disableBlocklistCheck(UUID uuid, CallbackInfoReturnable<Boolean> cir) {
-        if (Configs.FeatureToggle.DISABLE_BLOCKLIST_CHECK.getBooleanValue()) {
+        if (Configs.disableBlocklistCheck ) {
             cir.setReturnValue(false);
         }
     }

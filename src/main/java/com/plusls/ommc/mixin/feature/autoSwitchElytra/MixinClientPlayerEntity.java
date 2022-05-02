@@ -30,9 +30,10 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayer {
         super(world, profile);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Inject(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getItemBySlot(Lnet/minecraft/world/entity/EquipmentSlot;)Lnet/minecraft/world/item/ItemStack;", ordinal = 0))
     private void autoSwitchElytra(CallbackInfo ci) {
-        if (!Configs.FeatureToggle.AUTO_SWITCH_ELYTRA.getBooleanValue()) {
+        if (!Configs.autoSwitchElytra) {
             return;
         }
         ItemStack chestItemStack = this.getItemBySlot(EquipmentSlot.CHEST);
@@ -42,9 +43,10 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayer {
         AutoSwitchElytraUtil.autoSwitch(AutoSwitchElytraUtil.CHEST_SLOT_IDX, this.minecraft, (LocalPlayer) (Object) this, itemStack -> itemStack.is(Items.ELYTRA));
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Inject(method = "aiStep", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/client/player/LocalPlayer;isFallFlying()Z", ordinal = 0))
     private void autoSwitchChest(CallbackInfo ci) {
-        if (!Configs.FeatureToggle.AUTO_SWITCH_ELYTRA.getBooleanValue()) {
+        if (!Configs.autoSwitchElytra) {
             return;
         }
         ItemStack chestItemStack = this.getItemBySlot(EquipmentSlot.CHEST);

@@ -17,7 +17,7 @@ public class PreventWastageOfWaterHandler implements UseItemCallback {
 
     @Override
     public InteractionResultHolder<ItemStack> interact(Player player, Level world, InteractionHand hand) {
-        return (Configs.FeatureToggle.PREVENT_WASTAGE_OF_WATER.getBooleanValue()
+        return (Configs.preventWastageOfWater
                 && world.isClientSide
                 && player.getItemInHand(hand).getItem() == Items.WATER_BUCKET
                 && world.dimensionType().ultraWarm())

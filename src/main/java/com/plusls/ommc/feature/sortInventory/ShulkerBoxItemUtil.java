@@ -52,7 +52,7 @@ public class ShulkerBoxItemUtil {
     }
 
     public static int getMaxCount(ItemStack itemStack) {
-        if (Configs.Generic.SORT_INVENTORY_SUPPORT_EMPTY_SHULKER_BOX_STACK.getBooleanValue() &&
+        if (Configs.sortInventorySupportEmptyShulkerBoxStack &&
                 ShulkerBoxItemUtil.isEmptyShulkerBoxItem(itemStack)) {
             return ShulkerBoxItemUtil.SHULKERBOX_MAX_STACK_AMOUNT;
         } else {

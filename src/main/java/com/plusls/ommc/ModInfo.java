@@ -1,22 +1,40 @@
 package com.plusls.ommc;
 
 import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.Optional;
+import top.hendrixshen.magiclib.config.ConfigHandler;
+import top.hendrixshen.magiclib.language.I18n;
 
 public class ModInfo {
     public static String MOD_ID = "ommc";
-    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
-    public static String MOD_VERSION;
 
-    static {
-        Optional<ModContainer> modContainerOptional = FabricLoader.getInstance().getModContainer(MOD_ID);
-        modContainerOptional.ifPresent(modContainer -> MOD_VERSION = modContainer.getMetadata().getVersion().getFriendlyString());
+    //#if MC > 11802
+    //$$ public static final String CURRENT_MOD_ID = MOD_ID + "-22w17a";
+    //#elseif MC > 11701
+    public static final String CURRENT_MOD_ID = MOD_ID + "-1_18_2";
+    //#elseif MC > 11605
+    //$$ public static final String CURRENT_MOD_ID = MOD_ID + "-1_17_1";
+    //#elseif MC > 11502
+    //$$ public static final String CURRENT_MOD_ID = MOD_ID + "-1_16_5";
+    //#elseif MC > 11404
+    //$$ public static final String CURRENT_MOD_ID = MOD_ID + "-1_15_2";
+    //#else
+    //$$ public static final String CURRENT_MOD_ID = MOD_ID + "-1_14_4";
+    //#endif
+
+    public static final String MOD_NAME = FabricLoader.getInstance().getModContainer(CURRENT_MOD_ID)
+            .orElseThrow(RuntimeException::new).getMetadata().getName();
+    public static final String MOD_VERSION = FabricLoader.getInstance().getModContainer(CURRENT_MOD_ID)
+            .orElseThrow(RuntimeException::new).getMetadata().getVersion().getFriendlyString();
+    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
+    public static ConfigHandler configHandler;
+
+    public static String translate(String key, Object... objects) {
+        return I18n.get(ModInfo.MOD_ID + "." + key, objects);
     }
+
 
     public static boolean isModLoaded(String modid) {
         return FabricLoader.getInstance().isModLoaded(modid);

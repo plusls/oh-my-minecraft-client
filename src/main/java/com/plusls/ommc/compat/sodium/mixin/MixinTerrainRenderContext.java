@@ -1,7 +1,5 @@
 package com.plusls.ommc.compat.sodium.mixin;
 
-import com.plusls.ommc.compat.Dependencies;
-import com.plusls.ommc.compat.Dependency;
 import com.plusls.ommc.feature.blockModelNoOffset.BlockModelNoOffsetUtil;
 import com.plusls.ommc.feature.worldEaterMineHelper.WorldEaterMineHelperUtil;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
@@ -16,11 +14,14 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import top.hendrixshen.magiclib.dependency.annotation.Dependencies;
+import top.hendrixshen.magiclib.dependency.annotation.Dependency;
 
 import java.util.Random;
 import java.util.function.Supplier;
 
-@Dependencies(dependencyList = @Dependency(modId = "sodium", version = ">=0.5"))
+// TODO
+@Dependencies(and = @Dependency(value = "sodium", versionPredicate = ">=0.5"))
 @Pseudo
 @Mixin(targets = "me.jellysquid.mods.sodium.render.renderer.TerrainRenderContext", remap = false)
 public class MixinTerrainRenderContext {

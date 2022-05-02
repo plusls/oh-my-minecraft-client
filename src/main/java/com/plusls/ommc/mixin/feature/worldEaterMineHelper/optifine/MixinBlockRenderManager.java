@@ -1,4 +1,4 @@
-package com.plusls.ommc.compat.modmenu.mixin;
+package com.plusls.ommc.mixin.feature.worldEaterMineHelper.optifine;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -18,8 +18,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import top.hendrixshen.magiclib.dependency.annotation.Dependencies;
+import top.hendrixshen.magiclib.dependency.annotation.Dependency;
 
 // 兼容 opt
+@Dependencies(and = @Dependency("optifabric"))
 @Mixin(BlockRenderDispatcher.class)
 public class MixinBlockRenderManager {
     private final ThreadLocal<BlockModelRendererContext> ommcRenderContext = ThreadLocal.withInitial(BlockModelRendererContext::new);

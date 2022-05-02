@@ -34,12 +34,12 @@ public class MixinClientPlayerInteractionManager {
     private boolean shouldDisableBreakScaffolding(BlockPos pos) {
         Level world = Minecraft.getInstance().level;
         Player player = Minecraft.getInstance().player;
-        if (Configs.FeatureToggle.DISABLE_BREAK_SCAFFOLDING.getBooleanValue() &&
+        if (Configs.disableBreakScaffolding &&
                 world != null && world.getBlockState(pos).is(Blocks.SCAFFOLDING) &&
                 player != null) {
             String itemId = Registry.ITEM.getKey(player.getMainHandItem().getItem()).toString();
             String itemName = player.getMainHandItem().getItem().getDescription().getString();
-            return Configs.Lists.BREAK_SCAFFOLDING_WHITELIST.getStrings().stream().noneMatch(s -> itemId.contains(s) || itemName.contains(s));
+            return Configs.breakScaffoldingWhiteList.stream().noneMatch(s -> itemId.contains(s) || itemName.contains(s));
         }
         return false;
     }

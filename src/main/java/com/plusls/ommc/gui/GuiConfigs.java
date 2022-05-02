@@ -2,126 +2,22 @@ package com.plusls.ommc.gui;
 
 import com.plusls.ommc.ModInfo;
 import com.plusls.ommc.config.Configs;
-import fi.dy.masa.malilib.config.IConfigBase;
-import fi.dy.masa.malilib.gui.GuiConfigsBase;
-import fi.dy.masa.malilib.gui.button.ButtonBase;
-import fi.dy.masa.malilib.gui.button.ButtonGeneric;
-import fi.dy.masa.malilib.gui.button.IButtonActionListener;
-import fi.dy.masa.malilib.util.KeyCodes;
-import fi.dy.masa.malilib.util.StringUtils;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import net.minecraft.client.Minecraft;
+import top.hendrixshen.magiclib.config.ConfigManager;
+import top.hendrixshen.magiclib.gui.ConfigGui;
 
-public class GuiConfigs extends GuiConfigsBase {
-    public static ConfigGuiTab tab = ConfigGuiTab.FEATURE_TOGGLE;
+public class GuiConfigs extends ConfigGui {
 
-    public GuiConfigs() {
-        super(10, 50, ModInfo.MOD_ID, null, StringUtils.translate(String.format("%s.gui.title.configs", ModInfo.MOD_ID), ModInfo.MOD_VERSION));
+    private static GuiConfigs INSTANCE;
+
+    private GuiConfigs(String identifier, String defaultTab, ConfigManager configManager) {
+        super(identifier, defaultTab, configManager, () -> ModInfo.translate("gui.title.configs", ModInfo.MOD_VERSION));
     }
 
-    @Override
-    public void initGui() {
-        super.initGui();
-        this.clearOptions();
 
-        int x = 10;
-        int y = 26;
-        int rows = 1;
-        if (tab == ConfigGuiTab.AdvancedIntegratedServer && !Minecraft.getInstance().hasSingleplayerServer()) {
-            tab = ConfigGuiTab.FEATURE_TOGGLE;
+    public static GuiConfigs getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new GuiConfigs(ModInfo.MOD_ID, Configs.ConfigCategory.GENERIC, ConfigManager.get(ModInfo.MOD_ID));
         }
-        for (ConfigGuiTab tab : ConfigGuiTab.values()) {
-            if (tab == ConfigGuiTab.AdvancedIntegratedServer && !Minecraft.getInstance().hasSingleplayerServer()) {
-                continue;
-            }
-            int width = this.getStringWidth(tab.getDisplayName()) + 10;
-            if (x >= this.width - width - 10) {
-                x = 10;
-                y += 22;
-                rows++;
-            }
-
-            x += this.createButton(x, y, width, tab);
-        }
-
-        if (rows > 1) {
-            int scrollbarPosition = Objects.requireNonNull(this.getListWidget()).getScrollbar().getValue();
-            this.setListPosition(this.getListX(), 50 + (rows - 1) * 22);
-            this.reCreateListWidget();
-            this.getListWidget().getScrollbar().setValue(scrollbarPosition);
-            this.getListWidget().refreshEntries();
-        }
-    }
-
-    private int createButton(int x, int y, int width, ConfigGuiTab tab) {
-        ButtonGeneric button = new ButtonGeneric(x, y, width, 20, tab.getDisplayName());
-        button.setEnabled(GuiConfigs.tab != tab);
-        this.addButton(button, new ButtonListenerConfigTabs(tab, this));
-        return button.getWidth() + 2;
-    }
-
-    @Override
-    public boolean onKeyTyped(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == KeyCodes.KEY_ESCAPE) {
-            Configs.checkIsStringListChanged();
-        }
-        return super.onKeyTyped(keyCode, scanCode, modifiers);
-    }
-
-    @Override
-    public List<ConfigOptionWrapper> getConfigs() {
-        List<? extends IConfigBase> configs;
-        ConfigGuiTab tab = GuiConfigs.tab;
-        if (tab == ConfigGuiTab.GENERIC) {
-            configs = Configs.Generic.OPTIONS;
-        } else if (tab == ConfigGuiTab.FEATURE_TOGGLE) {
-            configs = Configs.FeatureToggle.OPTIONS;
-        } else if (tab == ConfigGuiTab.LISTS) {
-            configs = Configs.Lists.OPTIONS;
-        } else if (tab == ConfigGuiTab.AdvancedIntegratedServer) {
-            configs = Configs.AdvancedIntegratedServer.OPTIONS;
-        } else {
-            return Collections.emptyList();
-        }
-
-        Configs.checkIsStringListChanged();
-        return ConfigOptionWrapper.createFor(configs);
-    }
-
-    public enum ConfigGuiTab {
-        GENERIC("generic"),
-        FEATURE_TOGGLE("feature_toggle"),
-        LISTS("lists"),
-        AdvancedIntegratedServer("advanced_integrated_server");
-
-        private final String name;
-
-        ConfigGuiTab(String name) {
-            this.name = name;
-        }
-
-        public String getDisplayName() {
-            return StringUtils.translate(String.format("%s.gui.button.config_gui.%s", ModInfo.MOD_ID, name));
-        }
-    }
-
-    private static class ButtonListenerConfigTabs implements IButtonActionListener {
-        private final GuiConfigs parent;
-        private final ConfigGuiTab tab;
-
-        public ButtonListenerConfigTabs(ConfigGuiTab tab, GuiConfigs parent) {
-            this.tab = tab;
-            this.parent = parent;
-        }
-
-        @Override
-        public void actionPerformedWithButton(ButtonBase button, int mouseButton) {
-            GuiConfigs.tab = this.tab;
-            this.parent.reCreateListWidget(); // apply the new config width
-            Objects.requireNonNull(this.parent.getListWidget()).resetScrollbarPosition();
-            this.parent.initGui();
-        }
+        return INSTANCE;
     }
 }

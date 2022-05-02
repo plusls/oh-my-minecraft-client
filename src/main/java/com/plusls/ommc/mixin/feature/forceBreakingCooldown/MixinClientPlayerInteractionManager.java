@@ -20,7 +20,7 @@ public class MixinClientPlayerInteractionManager {
                     target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;destroyBlock(Lnet/minecraft/core/BlockPos;)Z",
                     ordinal = 1))
     private void addBreakingCooldown(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
-        if (Configs.FeatureToggle.FORCE_BREAKING_COOLDOWN.getBooleanValue()) {
+        if (Configs.forceBreakingCooldown) {
             destroyDelay = 5;
         }
     }

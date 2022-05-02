@@ -17,7 +17,7 @@ public class RealSneakingEventHandler {
             if (minecraftClient.player.maxUpStep - MIN_STEP_HEIGHT >= 0.00001) {
                 prevStepHeight = minecraftClient.player.maxUpStep;
             }
-            if (Configs.FeatureToggle.REAL_SNEAKING.getBooleanValue() && minecraftClient.player.isShiftKeyDown()) {
+            if (Configs.realSneaking && minecraftClient.player.isShiftKeyDown()) {
                 minecraftClient.player.maxUpStep = MIN_STEP_HEIGHT;
             } else {
                 minecraftClient.player.maxUpStep = prevStepHeight;

@@ -12,7 +12,7 @@ public class MixinOpenToLanScreen {
             at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/util/HttpUtil;getAvailablePort()I", ordinal = 0, remap = true),
             ordinal = 0, remap = false)
     private int modifyPort(int port) {
-        int ret = Configs.AdvancedIntegratedServer.PORT.getIntegerValue();
+        int ret = Configs.port;
         if (ret == 0) {
             ret = port;
         }

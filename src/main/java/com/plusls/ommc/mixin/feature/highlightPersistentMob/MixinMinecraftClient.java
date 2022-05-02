@@ -2,6 +2,11 @@ package com.plusls.ommc.mixin.feature.highlightPersistentMob;
 
 import com.plusls.ommc.config.Configs;
 import fi.dy.masa.malilib.util.WorldUtils;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.Registry;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -9,11 +14,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Arrays;
 import java.util.List;
-import net.minecraft.client.Minecraft;
-import net.minecraft.core.Registry;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.level.Level;
 
 @Mixin(Minecraft.class)
 public class MixinMinecraftClient {
@@ -40,7 +40,7 @@ public class MixinMinecraftClient {
 
     @Inject(method = "shouldEntityAppearGlowing", at = @At(value = "RETURN"), cancellable = true)
     private void checkWanderingTraderEntity(Entity entity, CallbackInfoReturnable<Boolean> cir) {
-        if (Configs.FeatureToggle.HIGHLIGHT_PERSISTENT_MOB.getBooleanValue() && !cir.getReturnValue()) {
+        if (Configs.highlightPersistentMob && !cir.getReturnValue()) {
             entity = getBestEntity(entity);
             if (entity instanceof Mob) {
                 Mob mobEntity = (Mob) entity;
@@ -48,7 +48,7 @@ public class MixinMinecraftClient {
                     cir.setReturnValue(true);
                     return;
                 }
-                if (!Configs.Generic.HIGHLIGHT_PERSISTENT_MOB_CLIENT_MODE.getBooleanValue()) {
+                if (!Configs.highlightPersistentMobClientMode) {
                     return;
                 }
                 String mainHandItemName = Registry.ITEM.getKey(mobEntity.getMainHandItem().getItem()).toString();

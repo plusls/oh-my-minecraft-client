@@ -1,7 +1,5 @@
 package com.plusls.ommc.compat.sodium.mixin;
 
-import com.plusls.ommc.compat.Dependencies;
-import com.plusls.ommc.compat.Dependency;
 import com.plusls.ommc.feature.blockModelNoOffset.BlockModelNoOffsetUtil;
 import com.plusls.ommc.feature.worldEaterMineHelper.BlockModelRendererContext;
 import com.plusls.ommc.feature.worldEaterMineHelper.WorldEaterMineHelperUtil;
@@ -17,8 +15,11 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import top.hendrixshen.magiclib.dependency.annotation.Dependencies;
+import top.hendrixshen.magiclib.dependency.annotation.Dependency;
 
-@Dependencies(dependencyList = @Dependency(modId = "sodium", version = "*"))
+// TODO
+@Dependencies(and = @Dependency("sodium"))
 @Pseudo
 @Mixin(targets = "me.jellysquid.mods.sodium.client.render.pipeline.BlockRenderer", remap = false)
 public class MixinBlockRenderer {

@@ -24,7 +24,7 @@ public class MixinClientPlayerInteractionManager {
                     ordinal = 0),
             cancellable = true)
     private void preventIntentionalGameDesign(LocalPlayer player, ClientLevel world, InteractionHand hand, BlockHitResult hitResult, CallbackInfoReturnable<InteractionResult> cir) {
-        if (!Configs.FeatureToggle.PREVENT_INTENTIONAL_GAME_DESIGN.getBooleanValue()) {
+        if (!Configs.preventIntentionalGameDesign) {
             return;
         }
         BlockPos blockPos = hitResult.getBlockPos();

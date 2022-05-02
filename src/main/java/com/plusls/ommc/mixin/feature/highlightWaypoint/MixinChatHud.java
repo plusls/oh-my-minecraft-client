@@ -14,7 +14,7 @@ public class MixinChatHud {
 
     @Inject(method = "addMessage(Lnet/minecraft/network/chat/Component;I)V", at = @At(value = "HEAD"))
     public void modifyMessage(Component message, int messageId, CallbackInfo ci) {
-        if (Configs.Generic.PARSE_WAYPOINT_FROM_CHAT.getBooleanValue()) {
+        if (Configs.parseWaypointFromChat) {
             HighlightWaypointUtil.parseWaypointText(message);
         }
     }

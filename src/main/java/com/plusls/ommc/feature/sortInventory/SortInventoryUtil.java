@@ -79,10 +79,10 @@ public class SortInventoryUtil {
 
     public static boolean sort() {
         Minecraft client = Minecraft.getInstance();
-        if (!(client.screen instanceof AbstractContainerScreen<?> handledScreen)) {
+        if (!(client.screen instanceof AbstractContainerScreen<?>)) {
             return false;
         }
-
+        AbstractContainerScreen<?> handledScreen = (AbstractContainerScreen<?>) client.screen;
         double x = client.mouseHandler.xpos() * client.getWindow().getGuiScaledWidth() / client.getWindow().getScreenWidth();
         double y = client.mouseHandler.ypos() * client.getWindow().getGuiScaledHeight() / client.getWindow().getScreenHeight();
         Slot mouseSlot = ((AccessorAbstractContainerScreen) handledScreen).callFindSlot(x, y);
@@ -266,8 +266,8 @@ public class SortInventoryUtil {
         public int compare(ItemStack a, ItemStack b) {
             int aId = getItemId(a);
             int bId = getItemId(b);
-            if (Configs.Generic.SORT_INVENTORY_SHULKER_BOX_LAST.getOptionListValue() == Configs.Generic.SortInventoryShulkerBoxLastType.TRUE ||
-                    (Configs.Generic.SORT_INVENTORY_SHULKER_BOX_LAST.getOptionListValue() == Configs.Generic.SortInventoryShulkerBoxLastType.AUTO && !allShulkerBox)) {
+            if (Configs.sortInventoryShulkerBoxLast == Configs.SortInventoryShulkerBoxLastType.TRUE ||
+                    (Configs.sortInventoryShulkerBoxLast == Configs.SortInventoryShulkerBoxLastType.AUTO && !allShulkerBox)) {
                 if (ShulkerBoxItemUtil.isShulkerBoxBlockItem(a) && !ShulkerBoxItemUtil.isShulkerBoxBlockItem(b)) {
                     return 1;
                 } else if (!ShulkerBoxItemUtil.isShulkerBoxBlockItem(a) && ShulkerBoxItemUtil.isShulkerBoxBlockItem(b)) {

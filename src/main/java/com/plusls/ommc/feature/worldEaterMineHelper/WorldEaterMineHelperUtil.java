@@ -13,6 +13,7 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -25,13 +26,13 @@ public class WorldEaterMineHelperUtil {
     public static boolean blockInWorldEaterMineHelperWhitelist(Block block) {
         String blockName = block.getName().getString();
         String blockId = Registry.BLOCK.getKey(block).toString();
-        return Configs.Lists.WORLD_EATER_MINE_HELPER_WHITELIST.getStrings().stream().anyMatch(s -> blockId.contains(s) || blockName.contains(s));
+        return Configs.worldEaterMineHelperWhitelist.stream().anyMatch(s -> blockId.contains(s) || blockName.contains(s));
     }
 
     public static boolean shouldUseCustomModel(BlockState blockState, BlockPos pos) {
         Block block = blockState.getBlock();
         // ModInfo.LOGGER.debug("test model {} {}", pos, block);
-        if (Configs.FeatureToggle.WORLD_EATER_MINE_HELPER.getBooleanValue() && blockInWorldEaterMineHelperWhitelist(block)) {
+        if (Configs.worldEaterMineHelper && blockInWorldEaterMineHelperWhitelist(block)) {
             ClientLevel world = Minecraft.getInstance().level;
             if (world != null) {
                 int x = pos.getX();
@@ -59,10 +60,10 @@ public class WorldEaterMineHelperUtil {
         if (WorldEaterMineHelperUtil.shouldUseCustomModel(state, pos)) {
             FabricBakedModel customModel = (FabricBakedModel) WorldEaterMineHelperUtil.customFullModels.get(block);
             if (customModel != null) {
-                int luminance = ((AccessorBlockStateBase)state).getLightEmission();
-                ((AccessorBlockStateBase)state).setLightEmission(15);
+                int luminance = ((AccessorBlockStateBase) state).getLightEmission();
+                ((AccessorBlockStateBase) state).setLightEmission(15);
                 customModel.emitBlockQuads(blockView, state, pos, randomSupplier, context);
-                ((AccessorBlockStateBase)state).setLightEmission(luminance);
+                ((AccessorBlockStateBase) state).setLightEmission(luminance);
                 return;
             }
         }
@@ -74,10 +75,10 @@ public class WorldEaterMineHelperUtil {
         if (WorldEaterMineHelperUtil.shouldUseCustomModel(state, pos)) {
             FabricBakedModel customModel = (FabricBakedModel) WorldEaterMineHelperUtil.customModels.get(block);
             if (customModel != null) {
-                int luminance = ((AccessorBlockStateBase)state).getLightEmission();
-                ((AccessorBlockStateBase)state).setLightEmission(15);
+                int luminance = ((AccessorBlockStateBase) state).getLightEmission();
+                ((AccessorBlockStateBase) state).setLightEmission(15);
                 customModel.emitBlockQuads(blockView, state, pos, randomSupplier, context);
-                ((AccessorBlockStateBase)state).setLightEmission(luminance);
+                ((AccessorBlockStateBase) state).setLightEmission(luminance);
             }
         }
     }
