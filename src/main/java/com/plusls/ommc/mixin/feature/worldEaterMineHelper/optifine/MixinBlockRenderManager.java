@@ -1,4 +1,4 @@
-package com.plusls.ommc.compat.optifabric.mixin;
+package com.plusls.ommc.compat.modmenu.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;

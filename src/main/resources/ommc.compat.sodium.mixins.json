@@ -1,9 +1,0 @@
-{
-  "parent": "ommc.mixins.json",
-  "package": "com.plusls.ommc.compat.sodium.mixin",
-  "plugin": "com.plusls.ommc.OmmcCompatMixinPlugin",
-  "client": [
-    "MixinBlockRenderer",
-    "MixinTerrainRenderContext"
-  ]
-}

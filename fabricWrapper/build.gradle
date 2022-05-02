@@ -1,0 +1,80 @@
+plugins {
+    id('java-library')
+}
+apply(plugin: "maven-publish")
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+archivesBaseName = project.archives_base_name
+version = project.parent.version
+group = project.maven_group
+
+
+def fabric_subprojects = project.parent.subprojects.findAll({
+    it.name != "fabricWrapper"
+})
+
+fabric_subprojects.collect {
+    evaluationDependsOn(":${it.name}")
+}
+
+jar {
+    dependsOn(fabric_subprojects.collect {
+        it.tasks.remapJar
+    })
+
+    doFirst {
+        delete fileTree("build/tmp/submods/META-INF/jars")
+        copy {
+            from {
+                fabric_subprojects.collect {
+                    it.remapJar.outputs.files
+                }
+            }
+            into("build/tmp/submods/META-INF/jars")
+        }
+    }
+
+    from("../LICENSE")
+    from("build/tmp/submods")
+}
+
+import groovy.json.JsonBuilder
+
+processResources {
+    // disable cache
+    outputs.upToDateWhen { false }
+    var jars = []
+    fabric_subprojects.each({
+        jars.add(["file": "META-INF/jars/${project.archives_base_name}-${it.minecraft_version}-${project.version}.jar"])
+    })
+    filesMatching("fabric.mod.json") {
+        expand(["mod_version"     : project.version,
+                "mod_id"          : project.mod_id,
+                "mod_name"        : project.mod_name,
+                "mod_homepage"    : project.mod_homepage,
+                "mod_sources"     : project.mod_sources,
+                "mod_license"     : project.mod_license,
+                "magiclib_version": project.magiclib_version,
+                "sub_jars"        : new JsonBuilder(jars).toPrettyString(),
+        ])
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = project.mod_id
+            version = project.version
+            from(components.java)
+        }
+    }
+
+    repositories {
+        mavenLocal()
+        maven {
+            url("$rootDir/publish")
+        }
+    }
+}

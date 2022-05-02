@@ -1,4 +1,4 @@
-package com.plusls.ommc.compat.optifabric.mixin;
+package com.plusls.ommc.mixin.feature.blockModelNoOffset.fabric;
 
 
 import com.plusls.ommc.compat.Dependencies;
