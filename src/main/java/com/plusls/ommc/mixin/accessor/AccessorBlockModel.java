@@ -1,7 +1,6 @@
 package com.plusls.ommc.mixin.accessor;
 
 import net.minecraft.client.renderer.block.model.BlockModel;
-import org.checkerframework.checker.units.qual.A;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.gen.Accessor;
