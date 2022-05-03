@@ -25,17 +25,19 @@ jobs:
       - name: make gradle wrapper executable
         if: ${{ runner.os != 'Windows' }}
         run: chmod +x ./gradlew
+      - name: preprocessResources
+        run: ./gradlew preprocessResources
       - name: build
         run: ./gradlew build
       - name: Find correct JAR
         id: findjar
         if: ${{ runner.os == 'Linux' && matrix.java == '17' }}
         run: |
-          output="$(find build/libs/ ! -name "*-dev.jar" ! -name "*-sources.jar" -type f -printf "%f\n")"
+          output="$(find fabricWrapper/build/libs/ ! -name "*-dev.jar" ! -name "*-sources.jar" -type f -printf "%f\n")"
           echo "::set-output name=jarname::$output"
       - name: capture build artifacts
         if: ${{ runner.os == 'Linux' && matrix.java == '17' }}
         uses: actions/upload-artifact@v2
         with:
           name: ${{ steps.findjar.outputs.jarname }}
-          path: build/libs/${{ steps.findjar.outputs.jarname }}
+          path: fabricWrapper/build/libs/${{ steps.findjar.outputs.jarname }}
