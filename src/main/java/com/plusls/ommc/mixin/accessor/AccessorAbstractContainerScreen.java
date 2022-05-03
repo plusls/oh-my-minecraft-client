@@ -9,5 +9,5 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface AccessorAbstractContainerScreen {
 
     @Invoker
-    Slot callFindSlot(double d, double e);
+    Slot invokeFindSlot(double d, double e);
 }

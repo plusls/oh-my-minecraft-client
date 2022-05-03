@@ -6,6 +6,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
+import com.plusls.ommc.ModInfo;
 import com.plusls.ommc.config.Configs;
 import com.plusls.ommc.mixin.accessor.AccessorTextComponent;
 import com.plusls.ommc.mixin.accessor.AccessorTranslatableComponent;
@@ -14,7 +15,6 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.Option;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -35,6 +35,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import top.hendrixshen.magiclib.compat.minecraft.network.chat.ComponentCompatApi;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -42,6 +43,12 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+//#if MC > 11802
+//$$ import net.minecraft.network.chat.contents.*;
+//#else
+import net.minecraft.client.Option;
+//#endif
 
 // from fabric-voxel map
 public class HighlightWaypointUtil {
@@ -175,14 +182,26 @@ public class HighlightWaypointUtil {
                 parseWaypointText(text);
             }
         }
+        //#if MC > 11802
+        //$$ ComponentContents componentContents = chat.getContents();
+        //#endif
+        //#if MC > 11802
+        //$$ if (componentContents instanceof TranslatableContents) {
+        //#else
         if (chat instanceof TranslatableComponent) {
+            //#endif
+
+            //#if MC > 11802
+            //$$ Object[] args = ((TranslatableContents) componentContents).getArgs();
+            //#else
             Object[] args = ((TranslatableComponent) chat).getArgs();
+            //#endif
             boolean updateTranslatableText = false;
             for (int i = 0; i < args.length; ++i) {
                 if (args[i] instanceof Component) {
                     parseWaypointText((Component) args[i]);
                 } else if (args[i] instanceof String) {
-                    Component text = new TextComponent((String) args[i]);
+                    Component text = ComponentCompatApi.literal((String) args[i]);
                     if (updateWaypointsText(text)) {
                         args[i] = text;
                         updateTranslatableText = true;
@@ -199,12 +218,21 @@ public class HighlightWaypointUtil {
 
 
     public static boolean updateWaypointsText(Component chat) {
+        //#if MC > 11802
+        //$$ ComponentContents componentContents = chat.getContents();
+        //$$ if (!(componentContents instanceof LiteralContents)) {
+        //#else
         if (!(chat instanceof TextComponent)) {
+            //#endif
             return false;
         }
+        //#if MC > 11802
+        //$$ LiteralContents literalChatText = (LiteralContents) componentContents;
+        //#else
         TextComponent literalChatText = (TextComponent) chat;
+        //#endif
 
-        String message = ((AccessorTextComponent) literalChatText).getText();
+        String message = ((AccessorTextComponent) (Object) literalChatText).getText();
         ArrayList<Tuple<Integer, String>> waypointPairs = getWaypointStrings(message);
         if (waypointPairs.size() > 0) {
             Style style = chat.getStyle();
@@ -213,19 +241,19 @@ public class HighlightWaypointUtil {
             if (color == null) {
                 color = TextColor.fromLegacyFormat(ChatFormatting.GREEN);
             }
-            ArrayList<TextComponent> texts = new ArrayList<>();
+            ArrayList<Component> texts = new ArrayList<>();
             int prevIdx = 0;
             for (Tuple<Integer, String> waypointPair : waypointPairs) {
                 String waypointString = waypointPair.getB();
                 int waypointIdx = waypointPair.getA();
-                TextComponent prevText = new TextComponent(message.substring(prevIdx, waypointIdx));
+                MutableComponent prevText = ComponentCompatApi.literal(message.substring(prevIdx, waypointIdx));
                 prevText.withStyle(style);
                 texts.add(prevText);
 
-                TextComponent clickableWaypoint = new TextComponent(waypointString);
+                MutableComponent clickableWaypoint = ComponentCompatApi.literal(waypointString);
                 Style chatStyle = clickableWaypoint.getStyle();
                 BlockPos pos = Objects.requireNonNull(parseWaypoint(waypointString.substring(1, waypointString.length() - 1)));
-                TranslatableComponent hover = new TranslatableComponent("ommc.highlight_waypoint.tooltip");
+                MutableComponent hover = ComponentCompatApi.literal(ModInfo.translate("highlight_waypoint.tooltip"));
                 if (clickEvent == null || Configs.forceParseWaypointFromChat) {
                     clickEvent = new ClickEvent(ClickEvent.Action.RUN_COMMAND,
                             String.format("/%s %d %d %d", HIGHLIGHT_COMMAND, pos.getX(), pos.getY(), pos.getZ()));
@@ -237,15 +265,15 @@ public class HighlightWaypointUtil {
                 prevIdx = waypointIdx + waypointString.length();
             }
             if (prevIdx < message.length() - 1) {
-                TextComponent lastText = new TextComponent(message.substring(prevIdx));
+                MutableComponent lastText = ComponentCompatApi.literal(message.substring(prevIdx));
                 lastText.setStyle(style);
                 texts.add(lastText);
             }
             for (int i = 0; i < texts.size(); ++i) {
-                literalChatText.getSiblings().add(i, texts.get(i));
+                chat.getSiblings().add(i, texts.get(i));
             }
-            ((AccessorTextComponent) literalChatText).setText("");
-            literalChatText.withStyle(Style.EMPTY);
+            ((AccessorTextComponent) (Object) literalChatText).setText("");
+            ((MutableComponent)chat).withStyle(Style.EMPTY);
             return true;
         }
         return false;
@@ -364,7 +392,11 @@ public class HighlightWaypointUtil {
         double baseY = pos.getY() - Mth.lerp(tickDelta, cameraEntity.yo, cameraEntity.getY()) - 1.5;
         double baseZ = pos.getZ() - Mth.lerp(tickDelta, cameraEntity.zo, cameraEntity.getZ());
         // 当前渲染的最大距离
+        //#if MC >= 11802
+        //$$ double maxDistance = Minecraft.getInstance().options.renderDistance().get();
+        //#else
         double maxDistance = Option.RENDER_DISTANCE.get(mc.options) * 16;
+        //#endif
         double adjustedDistance = distance;
         if (distance > maxDistance) {
             baseX = baseX / distance * maxDistance;
@@ -462,7 +494,7 @@ public class HighlightWaypointUtil {
             MultiBufferSource.BufferSource vertexConsumerProvider = mc.renderBuffers().crumblingBufferSource();
             int textColor = (int) (255.0f * fade) << 24 | 0xCCCCCC;
             RenderSystem.disableDepthTest();
-            textRenderer.drawInBatch(new TextComponent(name), (float) (-textRenderer.width(name) / 2), elevateBy, textColor, false, matrix4f, vertexConsumerProvider, true, 0, 0xF000F0);
+            textRenderer.drawInBatch(ComponentCompatApi.literal(name), (float) (-textRenderer.width(name) / 2), elevateBy, textColor, false, matrix4f, vertexConsumerProvider, true, 0, 0xF000F0);
             vertexConsumerProvider.endBatch();
         }
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);

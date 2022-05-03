@@ -10,11 +10,28 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+//#if MC > 11802
+//$$ import net.minecraft.network.protocol.Packet;
+//$$ import net.minecraft.network.protocol.game.ServerGamePacketListener;
+//$$ import net.minecraft.world.level.block.state.BlockState;
+//#endif
+
 @Mixin(MultiPlayerGameMode.class)
 public class MixinClientPlayerInteractionManager {
     @Shadow
     private int destroyDelay;
 
+    //#if MC > 11802
+    //$$ @Inject(method = "method_41930",
+    //$$         at = @At(value = "INVOKE",
+    //$$                 target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;destroyBlock(Lnet/minecraft/core/BlockPos;)Z",
+    //$$                 ordinal = 0))
+    //$$ private void addBreakingCooldown(BlockState blockState, BlockPos blockPos, Direction direction, int i, CallbackInfoReturnable<Packet<ServerGamePacketListener>> cir) {
+    //$$     if (Configs.forceBreakingCooldown) {
+    //$$         destroyDelay = 5;
+    //$$     }
+    //$$ }
+    //#else
     @Inject(method = "startDestroyBlock",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;destroyBlock(Lnet/minecraft/core/BlockPos;)Z",
@@ -24,4 +41,5 @@ public class MixinClientPlayerInteractionManager {
             destroyDelay = 5;
         }
     }
+    //#endif
 }

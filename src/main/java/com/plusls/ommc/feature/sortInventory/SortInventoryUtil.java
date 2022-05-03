@@ -85,7 +85,7 @@ public class SortInventoryUtil {
         AbstractContainerScreen<?> handledScreen = (AbstractContainerScreen<?>) client.screen;
         double x = client.mouseHandler.xpos() * client.getWindow().getGuiScaledWidth() / client.getWindow().getScreenWidth();
         double y = client.mouseHandler.ypos() * client.getWindow().getGuiScaledHeight() / client.getWindow().getScreenHeight();
-        Slot mouseSlot = ((AccessorAbstractContainerScreen) handledScreen).callFindSlot(x, y);
+        Slot mouseSlot = ((AccessorAbstractContainerScreen) handledScreen).invokeFindSlot(x, y);
         if (mouseSlot == null) {
             return false;
         }

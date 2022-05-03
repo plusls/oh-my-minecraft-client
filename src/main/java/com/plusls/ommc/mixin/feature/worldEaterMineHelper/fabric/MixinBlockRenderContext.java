@@ -19,16 +19,33 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Random;
 import java.util.function.Supplier;
 
+//#if MC > 11802
+//$$ import net.minecraft.util.RandomSource;
+//#endif
+
 @Mixin(value = BlockRenderContext.class, remap = false)
 public abstract class MixinBlockRenderContext implements RenderContext {
     @Final
     @Shadow
+    //#if MC > 11802
+    //$$ private Supplier<RandomSource> randomSupplier;
+    //#else
     private Supplier<Random> randomSupplier;
+    //#endif
 
     @Inject(method = "render", at = @At(value = "INVOKE",
             target = "Lnet/fabricmc/fabric/api/renderer/v1/model/FabricBakedModel;emitBlockQuads(Lnet/minecraft/world/level/BlockAndTintGetter;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;Ljava/util/function/Supplier;Lnet/fabricmc/fabric/api/renderer/v1/render/RenderContext;)V",
             shift = At.Shift.AFTER, ordinal = 0, remap = true))
-    private void emitCustomBlockQuads(BlockAndTintGetter blockView, BakedModel model, BlockState state, BlockPos pos, PoseStack matrixStack, VertexConsumer buffer, Random random, long seed, int overlay, CallbackInfoReturnable<Boolean> cir) {
+    private void emitCustomBlockQuads(BlockAndTintGetter blockView, BakedModel model,
+                                      BlockState state, BlockPos pos, PoseStack matrixStack,
+                                      VertexConsumer buffer,
+                                      //#if MC > 11802
+                                      //$$ RandomSource random,
+                                      //#else
+                                      Random random,
+                                      //#endif
+                                      long seed, int overlay,
+                                      CallbackInfoReturnable<Boolean> cir) {
         WorldEaterMineHelperUtil.emitCustomBlockQuads(blockView, state, pos, randomSupplier, this);
     }
 }

@@ -2,6 +2,7 @@ package com.plusls.ommc.feature.worldEaterMineHelper;
 
 import com.plusls.ommc.config.Configs;
 import com.plusls.ommc.mixin.accessor.AccessorBlockStateBase;
+import com.plusls.ommc.util.MiscUtil;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.client.Minecraft;
@@ -55,29 +56,29 @@ public class WorldEaterMineHelperUtil {
         return false;
     }
 
-    static public void emitCustomFullBlockQuads(FabricBakedModel model, BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+    static public void emitCustomFullBlockQuads(FabricBakedModel model, BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<?> randomSupplier, RenderContext context) {
         Block block = state.getBlock();
         if (WorldEaterMineHelperUtil.shouldUseCustomModel(state, pos)) {
             FabricBakedModel customModel = (FabricBakedModel) WorldEaterMineHelperUtil.customFullModels.get(block);
             if (customModel != null) {
                 int luminance = ((AccessorBlockStateBase) state).getLightEmission();
                 ((AccessorBlockStateBase) state).setLightEmission(15);
-                customModel.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+                customModel.emitBlockQuads(blockView, state, pos, MiscUtil.cast(randomSupplier), context);
                 ((AccessorBlockStateBase) state).setLightEmission(luminance);
                 return;
             }
         }
-        model.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+        model.emitBlockQuads(blockView, state, pos, MiscUtil.cast(randomSupplier), context);
     }
 
-    static public void emitCustomBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+    static public void emitCustomBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<?> randomSupplier, RenderContext context) {
         Block block = state.getBlock();
         if (WorldEaterMineHelperUtil.shouldUseCustomModel(state, pos)) {
             FabricBakedModel customModel = (FabricBakedModel) WorldEaterMineHelperUtil.customModels.get(block);
             if (customModel != null) {
                 int luminance = ((AccessorBlockStateBase) state).getLightEmission();
                 ((AccessorBlockStateBase) state).setLightEmission(15);
-                customModel.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+                customModel.emitBlockQuads(blockView, state, pos, MiscUtil.cast(randomSupplier), context);
                 ((AccessorBlockStateBase) state).setLightEmission(luminance);
             }
         }

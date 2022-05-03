@@ -5,21 +5,25 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.plusls.ommc.feature.worldEaterMineHelper.BlockModelRendererContext;
 import com.plusls.ommc.feature.worldEaterMineHelper.WorldEaterMineHelperUtil;
 import com.plusls.ommc.mixin.accessor.AccessorBlockStateBase;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.Random;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import top.hendrixshen.magiclib.dependency.annotation.Dependencies;
 import top.hendrixshen.magiclib.dependency.annotation.Dependency;
+
+import java.util.Random;
+
+//#if MC > 11802
+//$$ import net.minecraft.util.RandomSource;
+//#endif
 
 // 兼容 opt
 @Dependencies(and = @Dependency("optifabric"))
@@ -42,14 +46,19 @@ public class MixinBlockRenderManager {
         ommcRenderContext.get().clear();
         int originalLuminance = ommcOriginalLuminance.get();
         if (originalLuminance != -1) {
-            ((AccessorBlockStateBase)state).setLightEmission(originalLuminance);
+            ((AccessorBlockStateBase) state).setLightEmission(originalLuminance);
             ommcOriginalLuminance.set(-1);
         }
     }
 
     @Inject(method = "renderBatched", at = @At(value = "HEAD"))
     private void initRenderContext1(BlockState state, BlockPos pos, BlockAndTintGetter world, PoseStack matrix,
-                                    VertexConsumer vertexConsumer, boolean cull, Random random,
+                                    VertexConsumer vertexConsumer, boolean cull,
+                                    //#if MC > 11802
+                                    //$$ RandomSource random,
+                                    //#else
+                                    Random random,
+                                    //#endif
                                     CallbackInfoReturnable<Boolean> cir) {
         BlockModelRendererContext context = ommcRenderContext.get();
         context.pos = pos;
@@ -58,12 +67,17 @@ public class MixinBlockRenderManager {
 
     @Inject(method = "renderBatched", at = @At(value = "RETURN"))
     private void clearRenderContext1(BlockState state, BlockPos pos, BlockAndTintGetter world, PoseStack matrix,
-                                     VertexConsumer vertexConsumer, boolean cull, Random random,
+                                     VertexConsumer vertexConsumer, boolean cull,
+                                     //#if MC > 11802
+                                     //$$ RandomSource random,
+                                     //#else
+                                     Random random,
+                                     //#endif
                                      CallbackInfoReturnable<Boolean> cir) {
         ommcRenderContext.get().clear();
         int originalLuminance = ommcOriginalLuminance.get();
         if (originalLuminance != -1) {
-            ((AccessorBlockStateBase)state).setLightEmission(originalLuminance);
+            ((AccessorBlockStateBase) state).setLightEmission(originalLuminance);
             ommcOriginalLuminance.set(-1);
         }
     }
@@ -78,8 +92,8 @@ public class MixinBlockRenderManager {
         if (WorldEaterMineHelperUtil.shouldUseCustomModel(state, context.pos)) {
             BakedModel model = WorldEaterMineHelperUtil.customFullModels.get(block);
             if (model != null) {
-                ommcOriginalLuminance.set(((AccessorBlockStateBase)state).getLightEmission());
-                ((AccessorBlockStateBase)state).setLightEmission(15);
+                ommcOriginalLuminance.set(((AccessorBlockStateBase) state).getLightEmission());
+                ((AccessorBlockStateBase) state).setLightEmission(15);
                 cir.setReturnValue(model);
             }
         }

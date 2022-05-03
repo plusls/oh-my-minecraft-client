@@ -81,7 +81,7 @@ public class Configs {
     @Config(category = ConfigCategory.GENERIC)
     public static boolean forceParseWaypointFromChat = false;
 
-    @Hotkey(hotkey = "G,C")
+    @Hotkey(hotkey = "O,C")
     @Config(category = ConfigCategory.GENERIC)
     public static ConfigHotkey openConfigGui;
 

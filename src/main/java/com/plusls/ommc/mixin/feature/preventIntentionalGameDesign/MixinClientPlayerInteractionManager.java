@@ -19,11 +19,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(MultiPlayerGameMode.class)
 public class MixinClientPlayerInteractionManager {
     @Inject(method = "useItemOn",
-            at = @At(value = "INVOKE",
-                    target = "Lnet/minecraft/world/InteractionResult;consumesAction()Z",
-                    ordinal = 0),
+            at = @At(value = "HEAD"),
             cancellable = true)
-    private void preventIntentionalGameDesign(LocalPlayer player, ClientLevel world, InteractionHand hand, BlockHitResult hitResult, CallbackInfoReturnable<InteractionResult> cir) {
+    private void preventIntentionalGameDesign(LocalPlayer player,
+                                              //#if MC <= 11802
+                                              ClientLevel world,
+                                              //#endif
+                                              InteractionHand hand, BlockHitResult hitResult, CallbackInfoReturnable<InteractionResult> cir) {
+        //#if MC > 11802
+        //$$ ClientLevel world = (ClientLevel) player.getLevel();
+        //#endif
         if (!Configs.preventIntentionalGameDesign) {
             return;
         }

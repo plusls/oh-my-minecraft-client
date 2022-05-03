@@ -28,21 +28,9 @@ dependencies {
     minecraft("com.mojang:minecraft:${project.minecraft_version}")
     mappings(loom.officialMojangMappings())
 
-    modImplementation("curse.maven:minihud-244260:${project.minihud_version}")
-    modImplementation("curse.maven:tweakeroo-297344:${project.tweakeroo_version}")
-    modImplementation("curse.maven:litematica-308892:${project.litematica_version}")
-    modImplementation("curse.maven:itemscroller-242064:${project.itemscroller_version}")
-
-    if (project.name != "snapshot" &&
-            project.name != "1.15.2" &&
-            project.name != "1.14.4") {
-        modImplementation("net.earthcomputer.multiconnect:multiconnect-api:${project.multiconnect_version}") {
-            transitive = false
-        }
-        include("net.earthcomputer.multiconnect:multiconnect-api:${project.multiconnect_version}")
+    modImplementation("top.hendrixshen:magiclib-${project.minecraft_version.replace(".", "_")}:${project.magiclib_version}") {
+        exclude group: 'curse.maven', module: 'in-game-account-switcher-232676'
     }
-
-    modImplementation("top.hendrixshen:magiclib-${project.minecraft_version.replace(".", "_")}:${project.magiclib_version}")
     runtimeOnly(project(path: ":fabricWrapper"))
 }
 
