@@ -1,19 +1,14 @@
 package com.plusls.ommc.config;
 
 import com.google.common.collect.Lists;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.plusls.ommc.ModInfo;
 import com.plusls.ommc.feature.highlithtWaypoint.HighlightWaypointUtil;
 import com.plusls.ommc.feature.sortInventory.SortInventoryUtil;
 import com.plusls.ommc.gui.GuiConfigs;
-import fi.dy.masa.malilib.config.ConfigUtils;
 import fi.dy.masa.malilib.config.IConfigOptionListEntry;
 import fi.dy.masa.malilib.config.options.ConfigBoolean;
 import fi.dy.masa.malilib.config.options.ConfigHotkey;
 import fi.dy.masa.malilib.hotkeys.KeybindSettings;
-import fi.dy.masa.malilib.util.FileUtils;
-import fi.dy.masa.malilib.util.JsonUtils;
 import fi.dy.masa.malilib.util.restrictions.UsageRestriction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
@@ -32,7 +27,6 @@ import top.hendrixshen.magiclib.config.annotation.Config;
 import top.hendrixshen.magiclib.config.annotation.Hotkey;
 import top.hendrixshen.magiclib.config.annotation.Numeric;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -223,16 +217,21 @@ public class Configs {
     @Config(category = ConfigCategory.ADVANCED_INTEGRATED_SERVER)
     public static int port = 0;
 
+    private static boolean first = true;
 
     public static void postDeserialize(ConfigHandler configHandler) {
-        if (debug) {
-            Configurator.setLevel(ModInfo.MOD_ID, Level.toLevel("DEBUG"));
+        if (first) {
+            if (debug) {
+                Configurator.setLevel(ModInfo.MOD_ID, Level.toLevel("DEBUG"));
+            }
+            updateOldStringList();
+            first = false;
         }
+        checkIsStringListChanged();
     }
 
 
     public static void init(ConfigManager cm) {
-        updateOldStringList();
 
         // GENERIC
         cm.setValueChangeCallback("debug", option -> {
