@@ -23,9 +23,12 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 import top.hendrixshen.magiclib.config.ConfigHandler;
 import top.hendrixshen.magiclib.config.ConfigManager;
+import top.hendrixshen.magiclib.config.Option;
 import top.hendrixshen.magiclib.config.annotation.Config;
 import top.hendrixshen.magiclib.config.annotation.Hotkey;
 import top.hendrixshen.magiclib.config.annotation.Numeric;
+import top.hendrixshen.magiclib.dependency.annotation.Dependencies;
+import top.hendrixshen.magiclib.dependency.annotation.OptionDependencyPredicate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -203,16 +206,19 @@ public class Configs {
 
     // ADVANCED_INTEGRATED_SERVER
     @Hotkey
+    @Dependencies(predicate = SinglePlayerServerOptionPredicate.class)
     @Config(category = ConfigCategory.ADVANCED_INTEGRATED_SERVER)
     public static boolean onlineMode = true;
 
-    // ADVANCED_INTEGRATED_SERVER
+    @Dependencies(predicate = SinglePlayerServerOptionPredicate.class)
     @Config(category = ConfigCategory.ADVANCED_INTEGRATED_SERVER)
     public static boolean pvp = true;
 
+    @Dependencies(predicate = SinglePlayerServerOptionPredicate.class)
     @Config(category = ConfigCategory.ADVANCED_INTEGRATED_SERVER)
     public static boolean flight = true;
 
+    @Dependencies(predicate = SinglePlayerServerOptionPredicate.class)
     @Numeric(minValue = 0, maxValue = 65535)
     @Config(category = ConfigCategory.ADVANCED_INTEGRATED_SERVER)
     public static int port = 0;
@@ -380,5 +386,12 @@ public class Configs {
         public static final String FEATURE_TOGGLE = "feature_toggle";
         public static final String LISTS = "lists";
         public static final String ADVANCED_INTEGRATED_SERVER = "advanced_integrated_server";
+    }
+
+    public static class SinglePlayerServerOptionPredicate implements OptionDependencyPredicate {
+        @Override
+        public boolean test(Option option) {
+            return Minecraft.getInstance().hasSingleplayerServer();
+        }
     }
 }
