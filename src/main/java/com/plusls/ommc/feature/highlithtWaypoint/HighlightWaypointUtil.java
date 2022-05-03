@@ -35,6 +35,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import top.hendrixshen.magiclib.compat.minecraft.blaze3d.vertex.VertexFormatCompatApi;
 import top.hendrixshen.magiclib.compat.minecraft.network.chat.ComponentCompatApi;
 
 import java.util.ArrayList;
@@ -449,12 +450,16 @@ public class HighlightWaypointUtil {
         // 图标
         TextureAtlasSprite icon = HighlightWaypointResourceLoader.targetIdSprite;
         // 不设置渲染不出
+        //#if MC > 11605
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
         RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
+        //#else
+        //$$ RenderSystem.bindTexture(Objects.requireNonNull(mc.getTextureManager().getTexture(InventoryMenu.BLOCK_ATLAS)).getId());
+        //#endif
 
         // 渲染图标
         RenderSystem.enableTexture();
-        vertexBuffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+        vertexBuffer.begin(VertexFormatCompatApi.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
         vertexBuffer.vertex(matrix4f, -xWidth, -yWidth, 0.0f).uv(icon.getU0(), icon.getV0()).color(iconR, iconG, iconB, fade).endVertex();
         vertexBuffer.vertex(matrix4f, -xWidth, yWidth, 0.0f).uv(icon.getU0(), icon.getV1()).color(iconR, iconG, iconB, fade).endVertex();
         vertexBuffer.vertex(matrix4f, xWidth, yWidth, 0.0f).uv(icon.getU1(), icon.getV1()).color(iconR, iconG, iconB, fade).endVertex();
@@ -468,11 +473,13 @@ public class HighlightWaypointUtil {
             int elevateBy = -19;
             RenderSystem.enablePolygonOffset();
             int halfStringWidth = textRenderer.width(name) / 2;
+            //#if MC > 11605
             RenderSystem.setShader(GameRenderer::getPositionColorShader);
+            //#endif
 
             // 渲染内框
             RenderSystem.polygonOffset(1.0f, 11.0f);
-            vertexBuffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+            vertexBuffer.begin(VertexFormatCompatApi.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
             vertexBuffer.vertex(matrix4f, -halfStringWidth - 2, -2 + elevateBy, 0.0f).color(textFieldR, textFieldG, textFieldB, 0.6f * fade).endVertex();
             vertexBuffer.vertex(matrix4f, -halfStringWidth - 2, 9 + elevateBy, 0.0f).color(textFieldR, textFieldG, textFieldB, 0.6f * fade).endVertex();
             vertexBuffer.vertex(matrix4f, halfStringWidth + 2, 9 + elevateBy, 0.0f).color(textFieldR, textFieldG, textFieldB, 0.6f * fade).endVertex();
@@ -481,7 +488,7 @@ public class HighlightWaypointUtil {
 
             // 渲染外框
             RenderSystem.polygonOffset(1.0f, 9.0f);
-            vertexBuffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+            vertexBuffer.begin(VertexFormatCompatApi.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
             vertexBuffer.vertex(matrix4f, -halfStringWidth - 1, -1 + elevateBy, 0.0f).color(0.0f, 0.0f, 0.0f, 0.15f * fade).endVertex();
             vertexBuffer.vertex(matrix4f, -halfStringWidth - 1, 8 + elevateBy, 0.0f).color(0.0f, 0.0f, 0.0f, 0.15f * fade).endVertex();
             vertexBuffer.vertex(matrix4f, halfStringWidth + 1, 8 + elevateBy, 0.0f).color(0.0f, 0.0f, 0.0f, 0.15f * fade).endVertex();
@@ -497,7 +504,9 @@ public class HighlightWaypointUtil {
             textRenderer.drawInBatch(ComponentCompatApi.literal(name), (float) (-textRenderer.width(name) / 2), elevateBy, textColor, false, matrix4f, vertexConsumerProvider, true, 0, 0xF000F0);
             vertexConsumerProvider.endBatch();
         }
+        //#if MC > 11605
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        //#endif
         matrixStack.popPose();
     }
 }

@@ -17,6 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import top.hendrixshen.magiclib.compat.minecraft.world.item.ItemStackCompatApi;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -24,6 +25,10 @@ import java.util.List;
 import java.util.Objects;
 
 public class SortInventoryUtil {
+
+    // from AbstractContainerMenu.SLOT_CLICKED_OUTSIDE
+    final public static int SLOT_CLICKED_OUTSIDE = -999;
+
     private static boolean allShulkerBox;
 
     @Nullable
@@ -100,7 +105,11 @@ public class SortInventoryUtil {
             return false;
         }
         ArrayList<ItemStack> itemStacks = new ArrayList<>();
+        //#if MC > 11605
         ItemStack cursorStack = screenHandler.getCarried().copy();
+        //#else
+        //$$ ItemStack cursorStack = player.inventory.getCarried().copy();
+        //#endif
 
         for (int i = 0; i < screenHandler.slots.size(); ++i) {
             itemStacks.add(screenHandler.slots.get(i).getItem().copy());
@@ -114,7 +123,7 @@ public class SortInventoryUtil {
 
     public static void doClick(Player player, int syncId, @NotNull MultiPlayerGameMode interactionManager, List<Integer> mergeQueue, List<Tuple<Integer, Integer>> swapQueue) {
         for (Integer slotId : mergeQueue) {
-            if (slotId < 0 && slotId != AbstractContainerMenu.SLOT_CLICKED_OUTSIDE) {
+            if (slotId < 0 && slotId != SLOT_CLICKED_OUTSIDE) {
                 // 放入打捆包需要右键
                 interactionManager.handleInventoryMouseClick(syncId, -slotId, 1, ClickType.PICKUP, player);
             } else {
@@ -130,7 +139,7 @@ public class SortInventoryUtil {
 
     private static boolean canStackAddMore(ItemStack existingStack, ItemStack stack) {
         return !existingStack.isEmpty() &&
-                ItemStack.isSameItemSameTags(existingStack, stack) &&
+                ItemStackCompatApi.isSameItemSameTags(existingStack, stack) &&
                 ShulkerBoxItemUtil.isStackable(existingStack) &&
                 existingStack.getCount() < ShulkerBoxItemUtil.getMaxCount(existingStack) &&
                 existingStack.getCount() < 64;

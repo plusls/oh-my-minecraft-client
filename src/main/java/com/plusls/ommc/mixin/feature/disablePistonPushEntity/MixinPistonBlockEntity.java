@@ -17,7 +17,11 @@ import java.util.List;
 @Mixin(PistonMovingBlockEntity.class)
 public class MixinPistonBlockEntity {
     @Redirect(method = "moveCollidedEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;getEntities(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/AABB;)Ljava/util/List;", ordinal = 0))
+    //#if MC > 11605
     private static List<Entity> removeNoPlayerEntity(Level world, Entity except, AABB box) {
+    //#else
+    //$$ private List<Entity> removeNoPlayerEntity(Level world, Entity except, AABB box) {
+    //#endif
         if (world.isClientSide() && Configs.disablePistonPushEntity) {
             LocalPlayer playerEntity = Minecraft.getInstance().player;
             if (playerEntity != null && !playerEntity.isSpectator() &&
