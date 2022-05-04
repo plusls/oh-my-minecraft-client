@@ -112,9 +112,8 @@ public class Configs {
     @Config(category = ConfigCategory.FEATURE_TOGGLE)
     public static boolean betterSneaking = false;
 
-    @Dependencies(and = @Dependency(value = "minecraft", versionPredicate = ">1.15.2"))
     @Hotkey
-    @Config(category = ConfigCategory.FEATURE_TOGGLE)
+    @Config(category = ConfigCategory.FEATURE_TOGGLE, dependencies = @Dependencies(and = @Dependency(value = "minecraft", versionPredicate = ">1.15.2")))
     public static boolean disableBlocklistCheck = false;
 
     @Hotkey
@@ -209,22 +208,18 @@ public class Configs {
 
     // ADVANCED_INTEGRATED_SERVER
 
-    @Dependencies(predicate = SinglePlayerServerOptionPredicate.class)
     @Hotkey
-    @Config(category = ConfigCategory.ADVANCED_INTEGRATED_SERVER)
+    @Config(category = ConfigCategory.ADVANCED_INTEGRATED_SERVER, dependencies = @Dependencies(predicate = SinglePlayerServerOptionPredicate.class))
     public static boolean onlineMode = true;
 
-    @Dependencies(predicate = SinglePlayerServerOptionPredicate.class)
-    @Config(category = ConfigCategory.ADVANCED_INTEGRATED_SERVER)
+    @Config(category = ConfigCategory.ADVANCED_INTEGRATED_SERVER, dependencies = @Dependencies(predicate = SinglePlayerServerOptionPredicate.class))
     public static boolean pvp = true;
 
-    @Dependencies(predicate = SinglePlayerServerOptionPredicate.class)
-    @Config(category = ConfigCategory.ADVANCED_INTEGRATED_SERVER)
+    @Config(category = ConfigCategory.ADVANCED_INTEGRATED_SERVER, dependencies = @Dependencies(predicate = SinglePlayerServerOptionPredicate.class))
     public static boolean flight = true;
 
-    @Dependencies(predicate = SinglePlayerServerOptionPredicate.class)
     @Numeric(minValue = 0, maxValue = 65535)
-    @Config(category = ConfigCategory.ADVANCED_INTEGRATED_SERVER)
+    @Config(category = ConfigCategory.ADVANCED_INTEGRATED_SERVER, dependencies = @Dependencies(predicate = SinglePlayerServerOptionPredicate.class))
     public static int port = 0;
 
     private static boolean first = true;
