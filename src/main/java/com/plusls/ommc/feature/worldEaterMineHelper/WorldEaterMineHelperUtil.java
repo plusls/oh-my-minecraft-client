@@ -2,7 +2,6 @@ package com.plusls.ommc.feature.worldEaterMineHelper;
 
 import com.plusls.ommc.config.Configs;
 import com.plusls.ommc.mixin.accessor.AccessorBlockStateBase;
-import com.plusls.ommc.util.MiscUtil;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.client.Minecraft;
@@ -14,10 +13,10 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
+import top.hendrixshen.magiclib.util.MiscUtil;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.function.Supplier;
 
 public class WorldEaterMineHelperUtil {

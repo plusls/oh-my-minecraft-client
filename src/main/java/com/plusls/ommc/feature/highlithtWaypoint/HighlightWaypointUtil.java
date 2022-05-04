@@ -7,12 +7,11 @@ import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
 import com.plusls.ommc.ModInfo;
+import com.plusls.ommc.api.command.ClientCommandManager;
 import com.plusls.ommc.config.Configs;
 import com.plusls.ommc.mixin.accessor.AccessorTextComponent;
 import com.plusls.ommc.mixin.accessor.AccessorTranslatableComponent;
-import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -25,7 +24,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.*;
 import net.minecraft.network.protocol.game.ClientboundRespawnPacket;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.Tuple;
@@ -37,6 +35,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import top.hendrixshen.magiclib.compat.minecraft.blaze3d.vertex.VertexFormatCompatApi;
 import top.hendrixshen.magiclib.compat.minecraft.network.chat.ComponentCompatApi;
+import top.hendrixshen.magiclib.compat.minecraft.network.chat.StyleCompatApi;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -51,6 +50,12 @@ import java.util.regex.Pattern;
 import net.minecraft.client.Option;
 //#endif
 
+//#if MC > 11502
+import net.minecraft.resources.ResourceKey;
+//#else
+//$$ import net.minecraft.world.level.dimension.DimensionType;
+//#endif
+
 // from fabric-voxel map
 public class HighlightWaypointUtil {
 
@@ -63,7 +68,11 @@ public class HighlightWaypointUtil {
     public static Pattern pattern3 = Pattern.compile("\\[(-?\\d+)(,\\s*-?\\d+)(,\\s*-?\\d+)]", Pattern.CASE_INSENSITIVE);
     public static Pattern pattern4 = Pattern.compile("\\((-?\\d+)(,\\s*-?\\d+)(,\\s*-?\\d+)\\)", Pattern.CASE_INSENSITIVE);
     @Nullable
+    //#if MC > 11502
     public static ResourceKey<Level> currentWorld = null;
+    //#else
+    //$$ public static DimensionType currentWorld = null;
+    //#endif
 
     public static void init() {
         ClientCommandManager.DISPATCHER.register(ClientCommandManager.literal(HIGHLIGHT_COMMAND).then(
@@ -86,20 +95,37 @@ public class HighlightWaypointUtil {
                         )
                 )
         ));
-        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> currentWorld = Objects.requireNonNull(client.level).dimension());
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) ->
+                        //#if MC > 11502
+                        currentWorld = Objects.requireNonNull(client.level).dimension()
+                //#else
+                //$$ currentWorld = Objects.requireNonNull(client.level).getDimension().getType()
+                //#endif
+        );
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
             currentWorld = null;
             highlightPos = null;
         });
-        WorldRenderEvents.END.register(context -> HighlightWaypointUtil.drawWaypoint(context.matrixStack(), context.tickDelta()));
     }
 
     public static void postRespawn(ClientboundRespawnPacket packet) {
+        //#if MC > 11502
         ResourceKey<Level> newDimension = packet.getDimension();
+        //#else
+        //$$ DimensionType newDimension = packet.getDimension();
+        //#endif
         if (highlightPos != null && currentWorld != newDimension) {
+            //#if MC > 11502
             if (currentWorld == Level.OVERWORLD && newDimension == Level.NETHER) {
+            //#else
+            //$$ if (currentWorld == DimensionType.OVERWORLD && newDimension == DimensionType.NETHER) {
+            //#endif
                 highlightPos = new BlockPos(highlightPos.getX() / 8, highlightPos.getY(), highlightPos.getZ() / 8);
+            //#if MC > 11502
             } else if (currentWorld == Level.NETHER && newDimension == Level.OVERWORLD) {
+            //#else
+            //$$ } else if (currentWorld == DimensionType.NETHER && newDimension == DimensionType.OVERWORLD) {
+            //#endif
                 highlightPos = new BlockPos(highlightPos.getX() * 8, highlightPos.getY(), highlightPos.getZ() * 8);
             } else {
                 highlightPos = null;
@@ -190,7 +216,7 @@ public class HighlightWaypointUtil {
         //$$ if (componentContents instanceof TranslatableContents) {
         //#else
         if (chat instanceof TranslatableComponent) {
-            //#endif
+        //#endif
 
             //#if MC > 11802
             //$$ Object[] args = ((TranslatableContents) componentContents).getArgs();
@@ -211,7 +237,11 @@ public class HighlightWaypointUtil {
             }
             if (updateTranslatableText) {
                 // refresh cache
+                //#if MC > 11502
                 ((AccessorTranslatableComponent) chat).setDecomposedWith(null);
+                //#else
+                //$$ ((AccessorTranslatableComponent) chat).setDecomposedLanguageTime(-1);
+                //#endif
             }
         }
         updateWaypointsText(chat);
@@ -237,44 +267,63 @@ public class HighlightWaypointUtil {
         ArrayList<Tuple<Integer, String>> waypointPairs = getWaypointStrings(message);
         if (waypointPairs.size() > 0) {
             Style style = chat.getStyle();
-            TextColor color = style.getColor();
             ClickEvent clickEvent = style.getClickEvent();
+            //#if MC > 11502
+            TextColor color = style.getColor();
+            //#else
+            //$$ ChatFormatting color = style.getColor();
+            //#endif
             if (color == null) {
+                //#if MC > 11502
                 color = TextColor.fromLegacyFormat(ChatFormatting.GREEN);
+                //#else
+                //$$ color = ChatFormatting.GREEN;
+                //#endif
             }
             ArrayList<Component> texts = new ArrayList<>();
             int prevIdx = 0;
             for (Tuple<Integer, String> waypointPair : waypointPairs) {
                 String waypointString = waypointPair.getB();
                 int waypointIdx = waypointPair.getA();
-                MutableComponent prevText = ComponentCompatApi.literal(message.substring(prevIdx, waypointIdx));
-                prevText.withStyle(style);
+                Component prevText = ComponentCompatApi.literal(message.substring(prevIdx, waypointIdx)).withStyle(style);
                 texts.add(prevText);
 
+                //#if MC > 11502
                 MutableComponent clickableWaypoint = ComponentCompatApi.literal(waypointString);
+                //#else
+                //$$ BaseComponent clickableWaypoint = ComponentCompatApi.literal(waypointString);
+                //#endif
                 Style chatStyle = clickableWaypoint.getStyle();
                 BlockPos pos = Objects.requireNonNull(parseWaypoint(waypointString.substring(1, waypointString.length() - 1)));
-                MutableComponent hover = ComponentCompatApi.literal(ModInfo.translate("highlight_waypoint.tooltip"));
+                Component hover = ComponentCompatApi.literal(ModInfo.translate("highlight_waypoint.tooltip"));
                 if (clickEvent == null || Configs.forceParseWaypointFromChat) {
                     clickEvent = new ClickEvent(ClickEvent.Action.RUN_COMMAND,
                             String.format("/%s %d %d %d", HIGHLIGHT_COMMAND, pos.getX(), pos.getY(), pos.getZ()));
                 }
                 chatStyle = chatStyle.withClickEvent(clickEvent)
-                        .withColor(color).withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hover));
+                        //#if MC > 11502
+                        .withColor(color)
+                        //#else
+                        //$$ .setColor(color)
+                        //#endif
+                        .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hover));
                 clickableWaypoint.withStyle(chatStyle);
                 texts.add(clickableWaypoint);
                 prevIdx = waypointIdx + waypointString.length();
             }
             if (prevIdx < message.length() - 1) {
-                MutableComponent lastText = ComponentCompatApi.literal(message.substring(prevIdx));
-                lastText.setStyle(style);
+                Component lastText = ComponentCompatApi.literal(message.substring(prevIdx)).withStyle(style);
                 texts.add(lastText);
             }
             for (int i = 0; i < texts.size(); ++i) {
                 chat.getSiblings().add(i, texts.get(i));
             }
             ((AccessorTextComponent) (Object) literalChatText).setText("");
-            ((MutableComponent)chat).withStyle(Style.EMPTY);
+            //#if MC > 11502
+            ((MutableComponent) chat).withStyle(StyleCompatApi.empty());
+            //#else
+            //$$ ((BaseComponent) chat).withStyle(StyleCompatApi.empty());
+            //#endif
             return true;
         }
         return false;
@@ -498,11 +547,9 @@ public class HighlightWaypointUtil {
 
             // 渲染文字
             RenderSystem.enableTexture();
-            MultiBufferSource.BufferSource vertexConsumerProvider = mc.renderBuffers().crumblingBufferSource();
             int textColor = (int) (255.0f * fade) << 24 | 0xCCCCCC;
             RenderSystem.disableDepthTest();
-            textRenderer.drawInBatch(ComponentCompatApi.literal(name), (float) (-textRenderer.width(name) / 2), elevateBy, textColor, false, matrix4f, vertexConsumerProvider, true, 0, 0xF000F0);
-            vertexConsumerProvider.endBatch();
+            textRenderer.drawInBatch(ComponentCompatApi.literal(name), (float) (-textRenderer.width(name) / 2), elevateBy, textColor, false, matrix4f, true, 0, 0xF000F0);
         }
         //#if MC > 11605
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);

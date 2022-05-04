@@ -20,7 +20,11 @@ public class PreventWastageOfWaterHandler implements UseItemCallback {
         return (Configs.preventWastageOfWater
                 && world.isClientSide
                 && player.getItemInHand(hand).getItem() == Items.WATER_BUCKET
+                //#if MC > 11502
                 && world.dimensionType().ultraWarm())
+                //#else
+                //$$ && world.getDimension().isUltraWarm())
+                //#endif
                 ? InteractionResultHolder.fail(ItemStack.EMPTY)
                 : InteractionResultHolder.pass(ItemStack.EMPTY);
     }

@@ -7,6 +7,12 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(TranslatableComponent.class)
 public interface AccessorTranslatableComponent {
+
+    //#if MC > 11502
     @Accessor
     void setDecomposedWith(Language decomposedWith);
+    //#else
+    //$$ @Accessor
+    //$$ void setDecomposedLanguageTime(long decomposedLanguageTime);
+    //#endif
 }

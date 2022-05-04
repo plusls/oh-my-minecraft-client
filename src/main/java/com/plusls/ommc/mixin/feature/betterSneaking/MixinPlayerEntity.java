@@ -57,6 +57,7 @@ public abstract class MixinPlayerEntity extends LivingEntity {
         return retNew;
     }
 
+    //#if MC > 11502
     @SuppressWarnings("ConstantConditions")
     @Inject(method = "isAboveGround", at = @At(value = "HEAD"))
     private void setStepHeight(CallbackInfoReturnable<Boolean> cir) {
@@ -76,4 +77,5 @@ public abstract class MixinPlayerEntity extends LivingEntity {
         this.maxUpStep = prevStepHeight;
         prevStepHeight = DEFAULT_STEP_HEIGHT;
     }
+    //#endif
 }

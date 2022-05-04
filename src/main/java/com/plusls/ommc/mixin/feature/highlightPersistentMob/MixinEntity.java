@@ -1,7 +1,6 @@
 package com.plusls.ommc.mixin.feature.highlightPersistentMob;
 
 import com.plusls.ommc.config.Configs;
-import com.plusls.ommc.util.MiscUtil;
 import fi.dy.masa.malilib.util.WorldUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
@@ -12,6 +11,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import top.hendrixshen.magiclib.util.MiscUtil;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,7 +20,6 @@ import java.util.List;
 public class MixinEntity {
     private static final List<String> itemBlackList = Arrays.asList("sword", "bow", "trident", "axe", "fishing_rod");
 
-    @SuppressWarnings("unchecked")
     private static <T extends Entity> T getBestEntity(T entity) {
         // Only try to fetch the corresponding server world if the entity is in the actual client world.
         // Otherwise the entity may be for example in Litematica's schematic world.
@@ -32,7 +31,7 @@ public class MixinEntity {
             if (world != null && world != client.level) {
                 Entity bestEntity = world.getEntity(entity.getId());
                 if (entity.getClass().isInstance(bestEntity)) {
-                    ret = (T) bestEntity;
+                    ret = MiscUtil.cast(bestEntity);
                 }
             }
         }

@@ -18,9 +18,6 @@ public class BlockModelNoOffsetUtil {
     }
 
     public static boolean shouldNoOffset(BlockState blockState) {
-        if (!Configs.blockModelNoOffset) {
-            return false;
-        }
         String blockId = Registry.BLOCK.getKey(blockState.getBlock()).toString();
         String blockName = blockState.getBlock().getName().getString();
 

@@ -29,7 +29,9 @@ dependencies {
     mappings(loom.officialMojangMappings())
 
     modImplementation("top.hendrixshen:magiclib-${project.minecraft_version.replace(".", "_")}:${project.magiclib_version}") {
-        exclude group: 'curse.maven', module: 'in-game-account-switcher-232676'
+        if (project.name == "snapshot") {
+            exclude group: 'curse.maven', module: 'in-game-account-switcher-232676'
+        }
     }
     runtimeOnly(project(path: ":fabricWrapper"))
 }

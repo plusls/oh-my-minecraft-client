@@ -8,13 +8,19 @@
     "accessor.AccessorAbstractContainerScreen",
     "accessor.AccessorBlockModel",
     "accessor.AccessorBlockStateBase",
+    "accessor.AccessorHelpCommand",
     "accessor.AccessorTextComponent",
     "accessor.AccessorTranslatableComponent",
     "advancedIntegratedServer.MixinIntegratedServer",
     "advancedIntegratedServer.MixinOpenToLanScreen",
+    "api.command.MixinClientPacketListener",
+    "api.command.MixinClientSuggestionProvider",
+    "api.command.MixinLocalPlayer",
+    "api.command.MixinMinecraft",
     "feature.autoSwitchElytra.MixinClientPlayerEntity",
     "feature.betterSneaking.MixinPlayerEntity",
     "feature.blockModelNoOffset.fabric.MixinTerrainRenderContext",
+    "feature.blockModelNoOffset.optifine.MixinBlockModelRenderer",
     "feature.disableBlocklistCheck.MixinSocialInteractionsManager",
     "feature.disableBreakBlock.MixinClientPlayerInteractionManager",
     "feature.disableBreakScaffolding.MixinClientPlayerInteractionManager",
@@ -24,21 +30,19 @@
     "feature.fallbackLanguageList.MixinLanguageManager",
     "feature.flatDigger.MixinClientPlayerInteractionManager",
     "feature.forceBreakingCooldown.MixinClientPlayerInteractionManager",
-    "feature.highlightPersistentMob.MixinEntity",
     "feature.highlightEntity.MixinEntity",
+    "feature.highlightPersistentMob.MixinEntity",
     "feature.highlightWaypoint.MixinChatHud",
+    "feature.highlightWaypoint.MixinLevelRenderer",
     "feature.highlightWaypoint.MixinPlayerRespawnS2CPacket",
     "feature.preventIntentionalGameDesign.MixinClientPlayerInteractionManager",
     "feature.removeBreakCooldown.MixinClientPlayerInteractionManager",
     "feature.worldEaterMineHelper.MixinJsonUnbakedModel",
     "feature.worldEaterMineHelper.fabric.MixinBlockRenderContext",
-    "feature.worldEaterMineHelper.fabric.MixinTerrainRenderContext"
+    "feature.worldEaterMineHelper.fabric.MixinTerrainRenderContext",
+    "feature.worldEaterMineHelper.optifine.MixinBlockRenderManager"
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "mixins": [
-    "feature.blockModelNoOffset.optifine.MixinBlockModelRenderer",
-    "feature.worldEaterMineHelper.optifine.MixinBlockRenderManager"
-  ]
+  }
 }

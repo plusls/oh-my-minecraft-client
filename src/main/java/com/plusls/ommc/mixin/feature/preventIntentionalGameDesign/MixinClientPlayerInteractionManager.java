@@ -8,13 +8,16 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.block.BedBlock;
-import net.minecraft.world.level.block.RespawnAnchorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+//#if MC > 11502
+import net.minecraft.world.level.block.RespawnAnchorBlock;
+//#endif
 
 @Mixin(MultiPlayerGameMode.class)
 public class MixinClientPlayerInteractionManager {
@@ -34,8 +37,14 @@ public class MixinClientPlayerInteractionManager {
         }
         BlockPos blockPos = hitResult.getBlockPos();
         BlockState blockState = world.getBlockState(blockPos);
-        if ((blockState.getBlock() instanceof BedBlock && !world.dimensionType().bedWorks()) ||
-                (blockState.getBlock() instanceof RespawnAnchorBlock && !world.dimensionType().respawnAnchorWorks())) {
+        if ((blockState.getBlock() instanceof BedBlock &&
+                //#if MC > 11502
+                !world.dimensionType().bedWorks()) ||
+                (blockState.getBlock() instanceof RespawnAnchorBlock && !world.dimensionType().respawnAnchorWorks())
+                //#else
+                //$$ !world.getDimension().mayRespawn())
+                //#endif
+        ) {
             cir.setReturnValue(InteractionResult.SUCCESS);
         }
     }

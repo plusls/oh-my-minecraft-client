@@ -35,7 +35,12 @@ public class MixinClientPlayerInteractionManager {
     @Inject(method = "startDestroyBlock",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;destroyBlock(Lnet/minecraft/core/BlockPos;)Z",
-                    ordinal = 1))
+                    //#if MC > 11502
+                    ordinal = 1
+                    //#else
+                    //$$ ordinal = 0
+                    //#endif
+            ))
     private void addBreakingCooldown(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
         if (Configs.forceBreakingCooldown) {
             destroyDelay = 5;
