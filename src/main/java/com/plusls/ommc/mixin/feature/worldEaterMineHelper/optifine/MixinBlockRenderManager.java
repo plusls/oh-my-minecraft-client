@@ -1,7 +1,6 @@
 package com.plusls.ommc.mixin.feature.worldEaterMineHelper.optifine;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.plusls.ommc.feature.worldEaterMineHelper.BlockModelRendererContext;
 import com.plusls.ommc.feature.worldEaterMineHelper.WorldEaterMineHelperUtil;
 import com.plusls.ommc.mixin.accessor.AccessorBlockStateBase;
@@ -25,10 +24,16 @@ import java.util.Random;
 //$$ import net.minecraft.util.RandomSource;
 //#endif
 
+//#if MC > 11404
+import com.mojang.blaze3d.vertex.VertexConsumer;
+//#endif
+
 // 兼容 opt
 @Dependencies(and = @Dependency("optifabric"))
 @Mixin(BlockRenderDispatcher.class)
 public class MixinBlockRenderManager {
+    // TODO 开摆
+    //#if MC > 11404
     private final ThreadLocal<BlockModelRendererContext> ommcRenderContext = ThreadLocal.withInitial(BlockModelRendererContext::new);
     private final ThreadLocal<Integer> ommcOriginalLuminance = ThreadLocal.withInitial(() -> -1);
 
@@ -98,4 +103,5 @@ public class MixinBlockRenderManager {
             }
         }
     }
+    //#endif
 }

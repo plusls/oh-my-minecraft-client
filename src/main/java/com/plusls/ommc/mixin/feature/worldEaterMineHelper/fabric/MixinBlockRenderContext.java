@@ -1,10 +1,10 @@
 package com.plusls.ommc.mixin.feature.worldEaterMineHelper.fabric;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.plusls.ommc.feature.worldEaterMineHelper.WorldEaterMineHelperUtil;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.fabricmc.fabric.impl.client.indigo.renderer.render.BlockRenderContext;
+import net.fabricmc.fabric.impl.client.indigo.renderer.render.BlockRenderInfo;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -17,35 +17,51 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Random;
-import java.util.function.Supplier;
 
 //#if MC > 11802
 //$$ import net.minecraft.util.RandomSource;
 //#endif
 
+//#if MC > 11404
+import com.mojang.blaze3d.vertex.VertexConsumer;
+//#else
+//$$ import com.mojang.blaze3d.vertex.BufferBuilder;
+//#endif
+
 @Mixin(value = BlockRenderContext.class, remap = false)
 public abstract class MixinBlockRenderContext implements RenderContext {
-    @Final
-    @Shadow
-    //#if MC > 11802
-    //$$ private Supplier<RandomSource> randomSupplier;
-    //#else
-    private Supplier<Random> randomSupplier;
-    //#endif
 
-    @Inject(method = "render", at = @At(value = "INVOKE",
-            target = "Lnet/fabricmc/fabric/api/renderer/v1/model/FabricBakedModel;emitBlockQuads(Lnet/minecraft/world/level/BlockAndTintGetter;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;Ljava/util/function/Supplier;Lnet/fabricmc/fabric/api/renderer/v1/render/RenderContext;)V",
-            shift = At.Shift.AFTER, ordinal = 0, remap = true))
+    @Shadow
+    @Final
+    private BlockRenderInfo blockInfo;
+
+    @Inject(
+            //#if MC > 11404
+            method = "render",
+            //#else
+            //$$ method = "tesselate",
+            //#endif
+            at = @At(value = "INVOKE",
+                    target = "Lnet/fabricmc/fabric/api/renderer/v1/model/FabricBakedModel;emitBlockQuads(Lnet/minecraft/world/level/BlockAndTintGetter;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;Ljava/util/function/Supplier;Lnet/fabricmc/fabric/api/renderer/v1/render/RenderContext;)V",
+                    shift = At.Shift.AFTER, ordinal = 0, remap = true))
     private void emitCustomBlockQuads(BlockAndTintGetter blockView, BakedModel model,
-                                      BlockState state, BlockPos pos, PoseStack matrixStack,
+                                      BlockState state, BlockPos pos,
+                                      //#if MC > 11404
+                                      PoseStack matrixStack,
                                       VertexConsumer buffer,
+                                      //#else
+                                      //$$ BufferBuilder buffer,
+                                      //#endif
                                       //#if MC > 11802
                                       //$$ RandomSource random,
-                                      //#else
+                                      //#elseif MC > 11404
                                       Random random,
                                       //#endif
-                                      long seed, int overlay,
+                                      long seed,
+                                      //#if MC > 11404
+                                      int overlay,
+                                      //#endif
                                       CallbackInfoReturnable<Boolean> cir) {
-        WorldEaterMineHelperUtil.emitCustomBlockQuads(blockView, state, pos, randomSupplier, this);
+        WorldEaterMineHelperUtil.emitCustomBlockQuads(blockView, state, pos, this.blockInfo.randomSupplier, this);
     }
 }

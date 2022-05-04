@@ -34,11 +34,23 @@ public abstract class MixinJsonUnbakedModel implements UnbakedModel {
     @Shadow
     public abstract List<BlockElement> getElements();
 
-    @Inject(method = "bake(Lnet/minecraft/client/resources/model/ModelBakery;Lnet/minecraft/client/renderer/block/model/BlockModel;Ljava/util/function/Function;Lnet/minecraft/client/resources/model/ModelState;Lnet/minecraft/resources/ResourceLocation;Z)Lnet/minecraft/client/resources/model/BakedModel;",
+    @Inject(
+            //#if MC > 11404
+            method = "bake(Lnet/minecraft/client/resources/model/ModelBakery;Lnet/minecraft/client/renderer/block/model/BlockModel;Ljava/util/function/Function;Lnet/minecraft/client/resources/model/ModelState;Lnet/minecraft/resources/ResourceLocation;Z)Lnet/minecraft/client/resources/model/BakedModel;",
+            //#else
+            //$$ method = "bake(Lnet/minecraft/client/resources/model/ModelBakery;Lnet/minecraft/client/renderer/block/model/BlockModel;Ljava/util/function/Function;Lnet/minecraft/client/resources/model/ModelState;)Lnet/minecraft/client/resources/model/BakedModel;",
+            //#endif
             at = @At(value = "HEAD"), cancellable = true)
     private void generateCustomBakedModel(ModelBakery loader, BlockModel parent,
+                                          //#if MC > 11404
                                           Function<Material, TextureAtlasSprite> textureGetter,
-                                          ModelState settings, ResourceLocation id, boolean hasDepth,
+                                          //#else
+                                          //$$ Function<ResourceLocation, TextureAtlasSprite> textureGetter,
+                                          //#endif
+                                          ModelState settings,
+                                          //#if MC > 11404
+                                          ResourceLocation id, boolean hasDepth,
+                                          //#endif
                                           CallbackInfoReturnable<BakedModel> cir) {
         String[] splitResult = id.getPath().split("/");
         ResourceLocation blockId = new ResourceLocation(splitResult[splitResult.length - 1]);
@@ -72,8 +84,8 @@ public abstract class MixinJsonUnbakedModel implements UnbakedModel {
         while ((((AccessorBlockModel) tmpJsonUnbakedModel).getParent() != null)) {
             tmpJsonUnbakedModel = ((AccessorBlockModel) tmpJsonUnbakedModel).getParent();
         }
-        boolean tmpAmbientOcclusion = ((AccessorBlockModel)tmpJsonUnbakedModel).getHasAmbientOcclusion();
-        ((AccessorBlockModel)tmpJsonUnbakedModel).setHasAmbientOcclusion(false);
+        boolean tmpAmbientOcclusion = ((AccessorBlockModel) tmpJsonUnbakedModel).getHasAmbientOcclusion();
+        ((AccessorBlockModel) tmpJsonUnbakedModel).setHasAmbientOcclusion(false);
         // 部分 models
         BakedModel customBakedModel = me.bake(loader, parent, textureGetter, settings, id, hasDepth);
         WorldEaterMineHelperUtil.customModels.put(block, customBakedModel);
@@ -82,7 +94,7 @@ public abstract class MixinJsonUnbakedModel implements UnbakedModel {
         BakedModel customFullBakedModel = me.bake(loader, parent, textureGetter, settings, id, hasDepth);
         WorldEaterMineHelperUtil.customFullModels.put(block, customFullBakedModel);
 
-        ((AccessorBlockModel)tmpJsonUnbakedModel).setHasAmbientOcclusion(tmpAmbientOcclusion);
+        ((AccessorBlockModel) tmpJsonUnbakedModel).setHasAmbientOcclusion(tmpAmbientOcclusion);
         originalModelElements.clear();
         originalModelElements.addAll(originalModelElementsBackup);
         BakedModel ret = me.bake(loader, parent, textureGetter, settings, id, hasDepth);

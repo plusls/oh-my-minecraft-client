@@ -19,9 +19,6 @@ public abstract class MixinEntity {
     public abstract EntityType<?> getType();
 
     @Shadow
-    protected abstract Component getTypeName();
-
-    @Shadow
     public Level level;
 
     @Inject(method = "isCurrentlyGlowing", at = @At(value = "RETURN"), cancellable = true)
@@ -29,9 +26,8 @@ public abstract class MixinEntity {
         if (cir.getReturnValue() || !this.level.isClientSide) {
             return;
         }
-        // TODO
         String entityId = Registry.ENTITY_TYPE.getKey(this.getType()).toString();
-        String entityName = this.getTypeName().getString();
+        String entityName = this.getType().getDescription().getString();
         if (Configs.highlightEntityListType == UsageRestriction.ListType.WHITELIST) {
             cir.setReturnValue(Configs.highlightEntityWhiteList.stream().anyMatch(s -> entityId.contains(s) || entityName.contains(s)));
         } else if (Configs.highlightEntityListType == UsageRestriction.ListType.BLACKLIST) {
