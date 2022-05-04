@@ -44,7 +44,13 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayer {
     }
 
     @SuppressWarnings("ConstantConditions")
-    @Inject(method = "aiStep", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/client/player/LocalPlayer;isFallFlying()Z", ordinal = 0))
+    @Inject(method = "aiStep", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/client/player/LocalPlayer;isFallFlying()Z",
+            //#if MC > 11404
+            ordinal = 0
+            //#else
+            //$$ ordinal = 1
+            //#endif
+    ))
     private void autoSwitchChest(CallbackInfo ci) {
         if (!Configs.autoSwitchElytra) {
             return;
