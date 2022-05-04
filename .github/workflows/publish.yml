@@ -48,7 +48,7 @@ jobs:
           changelog: ${{ github.event.release.body }}
 
           loaders: fabric
-          game-versions: "1.14.4\n1.15.2\n1.16.5\n1.17.1\n1.18.2"
+          game-versions: "1.15.2\n1.16.5\n1.17.1\n1.18.2"
           version-resolver: exact
 
           retry-attempts: 3
