@@ -1,6 +1,7 @@
 package com.plusls.ommc.mixin.feature.highlightPersistentMob;
 
 import com.plusls.ommc.config.Configs;
+import com.plusls.ommc.util.MiscUtil;
 import fi.dy.masa.malilib.util.WorldUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
@@ -15,8 +16,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Arrays;
 import java.util.List;
 
-@Mixin(Minecraft.class)
-public class MixinMinecraftClient {
+@Mixin(Entity.class)
+public class MixinEntity {
     private static final List<String> itemBlackList = Arrays.asList("sword", "bow", "trident", "axe", "fishing_rod");
 
     @SuppressWarnings("unchecked")
@@ -38,10 +39,10 @@ public class MixinMinecraftClient {
         return ret;
     }
 
-    @Inject(method = "shouldEntityAppearGlowing", at = @At(value = "RETURN"), cancellable = true)
-    private void checkWanderingTraderEntity(Entity entity, CallbackInfoReturnable<Boolean> cir) {
+    @Inject(method = "isCurrentlyGlowing", at = @At(value = "RETURN"), cancellable = true)
+    private void checkWanderingTraderEntity(CallbackInfoReturnable<Boolean> cir) {
         if (Configs.highlightPersistentMob && !cir.getReturnValue()) {
-            entity = getBestEntity(entity);
+            Entity entity = getBestEntity(MiscUtil.cast(this));
             if (entity instanceof Mob) {
                 Mob mobEntity = (Mob) entity;
                 if (mobEntity.requiresCustomPersistence() || mobEntity.isPersistenceRequired()) {

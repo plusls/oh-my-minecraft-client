@@ -28,6 +28,7 @@ import top.hendrixshen.magiclib.config.annotation.Config;
 import top.hendrixshen.magiclib.config.annotation.Hotkey;
 import top.hendrixshen.magiclib.config.annotation.Numeric;
 import top.hendrixshen.magiclib.dependency.annotation.Dependencies;
+import top.hendrixshen.magiclib.dependency.annotation.Dependency;
 import top.hendrixshen.magiclib.dependency.annotation.OptionDependencyPredicate;
 
 import java.util.ArrayList;
@@ -112,10 +113,7 @@ public class Configs {
     public static boolean betterSneaking = false;
 
     @Hotkey
-    @Config(category = ConfigCategory.FEATURE_TOGGLE)
-    public static boolean blockModelNoOffset = false;
-
-    @Hotkey
+    @Dependencies(and = @Dependency(value = "minecraft", versionPredicate = ">1.15.2"))
     @Config(category = ConfigCategory.FEATURE_TOGGLE)
     public static boolean disableBlocklistCheck = false;
 
@@ -146,10 +144,6 @@ public class Configs {
     @Hotkey
     @Config(category = ConfigCategory.FEATURE_TOGGLE)
     public static boolean highlightLavaSource = false;
-
-    @Hotkey
-    @Config(category = ConfigCategory.FEATURE_TOGGLE)
-    public static boolean highlightWanderingTrader = false;
 
     @Hotkey
     @Config(category = ConfigCategory.FEATURE_TOGGLE)
@@ -197,6 +191,15 @@ public class Configs {
 
     @Config(category = ConfigCategory.LISTS)
     public static ArrayList<String> breakScaffoldingWhiteList = Lists.newArrayList("minecraft:air", "minecraft:scaffolding");
+
+    @Config(category = ConfigCategory.LISTS)
+    public static ArrayList<String> highlightEntityBlackList = new ArrayList<>();
+
+    @Config(category = ConfigCategory.LISTS)
+    public static IConfigOptionListEntry highlightEntityListType = UsageRestriction.ListType.WHITELIST;
+
+    @Config(category = ConfigCategory.LISTS)
+    public static ArrayList<String> highlightEntityWhiteList = Lists.newArrayList("minecraft:wandering_trader");
 
     @Config(category = ConfigCategory.LISTS)
     public static ArrayList<String> moveDownInScaffoldingWhiteList = Lists.newArrayList("minecraft:air", "minecraft:scaffolding");
@@ -290,10 +293,6 @@ public class Configs {
         });
 
         // FEATURE_TOGGLE
-        cm.setValueChangeCallback("blockModelNoOffset", option -> {
-            ModInfo.LOGGER.debug("set blockModelNoOffset {}", ((ConfigBoolean) option.getConfig()).getBooleanValue());
-            Minecraft.getInstance().levelRenderer.allChanged();
-        });
         cm.setValueChangeCallback("highlightLavaSource", option -> {
             ModInfo.LOGGER.debug("set highlightLavaSource {}", ((ConfigBoolean) option.getConfig()).getBooleanValue());
             Minecraft.getInstance().levelRenderer.allChanged();
