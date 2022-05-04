@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
@@ -18,7 +19,7 @@ public class HighlightWaypointResourceLoader implements SimpleSynchronousResourc
     public static TextureAtlasSprite targetIdSprite;
 
     public static void init() {
-        ClientSpriteRegistryCallback.event(InventoryMenu.BLOCK_ATLAS).register(
+        ClientSpriteRegistryCallback.event(TextureAtlas.LOCATION_BLOCKS).register(
                 (atlasTexture, registry) -> registry.register(targetId)
         );
         ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new HighlightWaypointResourceLoader());
@@ -31,7 +32,11 @@ public class HighlightWaypointResourceLoader implements SimpleSynchronousResourc
 
     @Override
     public void onResourceManagerReload(ResourceManager manager) {
+        //#if MC > 11404
         final Function<ResourceLocation, TextureAtlasSprite> atlas = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS);
         targetIdSprite = atlas.apply(targetId);
+        //#else
+        //$$ targetIdSprite = Minecraft.getInstance().getTextureAtlas().getSprite(targetId);
+        //#endif
     }
 }

@@ -1,5 +1,6 @@
 package com.plusls.ommc.feature.sortInventory;
 
+import com.mojang.blaze3d.platform.Window;
 import com.plusls.ommc.config.Configs;
 import com.plusls.ommc.mixin.accessor.AccessorAbstractContainerScreen;
 import net.minecraft.client.Minecraft;
@@ -88,8 +89,9 @@ public class SortInventoryUtil {
             return false;
         }
         AbstractContainerScreen<?> handledScreen = (AbstractContainerScreen<?>) client.screen;
-        double x = client.mouseHandler.xpos() * client.getWindow().getGuiScaledWidth() / client.getWindow().getScreenWidth();
-        double y = client.mouseHandler.ypos() * client.getWindow().getGuiScaledHeight() / client.getWindow().getScreenHeight();
+        Window window = client.getWindow();
+        double x = client.mouseHandler.xpos() * window.getGuiScaledWidth() / window.getScreenWidth();
+        double y = client.mouseHandler.ypos() * window.getGuiScaledHeight() / window.getScreenHeight();
         Slot mouseSlot = ((AccessorAbstractContainerScreen) handledScreen).invokeFindSlot(x, y);
         if (mouseSlot == null) {
             return false;

@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.resources.ResourceLocation;
@@ -34,7 +35,7 @@ public class LavaSourceResourceLoader implements SimpleSynchronousResourceReload
     public static TextureAtlasSprite defaultLavaSourceStillSprite;
 
     public static void init() {
-        ClientSpriteRegistryCallback.event(InventoryMenu.BLOCK_ATLAS).register((atlasTexture, registry) ->
+        ClientSpriteRegistryCallback.event(TextureAtlas.LOCATION_BLOCKS).register((atlasTexture, registry) ->
         {
             registry.register(flowingSpriteId);
             registry.register(stillSpriteId);
@@ -49,13 +50,24 @@ public class LavaSourceResourceLoader implements SimpleSynchronousResourceReload
 
     @Override
     public void onResourceManagerReload(@NotNull ResourceManager manager) {
+        //#if MC > 11404
         final Function<ResourceLocation, TextureAtlasSprite> atlas = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS);
         lavaSourceStillSprite = atlas.apply(stillSpriteId);
         lavaSourceFlowSprite = atlas.apply(flowingSpriteId);
+        //#else
+        //$$ TextureAtlas atlas = Minecraft.getInstance().getTextureAtlas();
+        //$$ lavaSourceStillSprite = atlas.getSprite(stillSpriteId);
+        //$$ lavaSourceFlowSprite = atlas.getSprite(flowingSpriteId);
+        //#endif
         lavaSourceSpites[0] = lavaSourceStillSprite;
         lavaSourceSpites[1] = lavaSourceFlowSprite;
+
         defaultLavaSourceStillSprite = Minecraft.getInstance().getModelManager().getBlockModelShaper().getBlockModel(Blocks.LAVA.defaultBlockState()).getParticleIcon();
+        //#if MC > 11404
         defaultLavaSourceFlowSprite = ModelBakery.LAVA_FLOW.sprite();
+        //#else
+        //$$ defaultLavaSourceFlowSprite =  Minecraft.getInstance().getTextureAtlas().getSprite(ModelBakery.LAVA_FLOW);
+        //#endif
         defaultLavaSourceSpites[0] = defaultLavaSourceStillSprite;
         defaultLavaSourceSpites[1] = defaultLavaSourceFlowSprite;
         FluidRenderHandler lavaSourceRenderHandler = (view, pos, state) -> {

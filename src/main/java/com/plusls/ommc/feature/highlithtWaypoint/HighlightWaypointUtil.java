@@ -16,10 +16,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.blockentity.BeaconRenderer;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.*;
@@ -34,6 +30,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import top.hendrixshen.magiclib.compat.minecraft.blaze3d.vertex.VertexFormatCompatApi;
+import top.hendrixshen.magiclib.compat.minecraft.math.Vector3fCompatApi;
 import top.hendrixshen.magiclib.compat.minecraft.network.chat.ComponentCompatApi;
 import top.hendrixshen.magiclib.compat.minecraft.network.chat.StyleCompatApi;
 
@@ -48,6 +45,10 @@ import java.util.regex.Pattern;
 //$$ import net.minecraft.network.chat.contents.*;
 //#else
 import net.minecraft.client.Option;
+//#endif
+
+//#if MC <= 11605
+//$$ import net.minecraft.client.renderer.texture.TextureAtlas;
 //#endif
 
 //#if MC > 11502
@@ -374,18 +375,26 @@ public class HighlightWaypointUtil {
 
     // code from BeaconBlockEntityRenderer
     @SuppressWarnings("all")
-    public static void renderBeam(PoseStack matrices, MultiBufferSource vertexConsumers, ResourceLocation textureId, float tickDelta, float heightScale, long worldTime, int yOffset, int maxY, float[] color, float innerRadius, float outerRadius) {
+    public static void renderBeam(PoseStack matrices, float tickDelta, float heightScale, long worldTime,
+                                  int yOffset, int maxY, float[] color, float innerRadius, float outerRadius) {
+        ResourceLocation textureId = new ResourceLocation("textures/entity/beacon_beam.png");
+        //#if MC > 11605
+        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+        RenderSystem.setShaderTexture(0, textureId);
+        //#else
+        //$$ Minecraft.getInstance().getTextureManager().bind(textureId);
+        //#endif
         int i = yOffset + maxY;
         matrices.pushPose();
         matrices.translate(0.5D, 0.0D, 0.5D);
         float f = (float) Math.floorMod(worldTime, 40) + tickDelta;
         float g = maxY < 0 ? f : -f;
-        float h = Mth.frac(g * 0.2F - (float) Mth.floor(g * 0.1F));
-        float j = color[0];
-        float k = color[1];
-        float l = color[2];
+        float h = (float) Mth.frac(g * 0.2F - (float) Mth.floor(g * 0.1F));
+        float red = color[0];
+        float green = color[1];
+        float blue = color[2];
         matrices.pushPose();
-        matrices.mulPose(Vector3f.YP.rotationDegrees(f * 2.25F - 45.0F));
+        matrices.mulPose(Vector3fCompatApi.YP.rotationDegrees(f * 2.25F - 45.0F));
         float y = 0.0F;
         float ab = 0.0F;
         float ac = -innerRadius;
@@ -396,9 +405,12 @@ public class HighlightWaypointUtil {
         float ah = 1.0F;
         float ai = -1.0F + h;
         float aj = (float) maxY * heightScale * (0.5F / innerRadius) + ai;
-        // Change layer to getTextSeeThrough
-        // it works, but why?
-        renderBeamLayer(matrices, vertexConsumers.getBuffer(RenderType.textSeeThrough(textureId)), j, k, l, 1.0F, yOffset, i, 0.0F, innerRadius, innerRadius, 0.0F, ac, 0.0F, 0.0F, t, 0.0F, 1.0F, aj, ai);
+        Tesselator tesselator = Tesselator.getInstance();
+        BufferBuilder bufferBuilder = tesselator.getBuilder();
+        bufferBuilder.begin(VertexFormatCompatApi.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+        renderBeamLayer(matrices, bufferBuilder, red, green, green, 1.0F, yOffset, i, 0.0F, innerRadius, innerRadius,
+                0.0F, ac, 0.0F, 0.0F, t, 0.0F, 1.0F, aj, ai);
+        tesselator.end();
         matrices.popPose();
         y = -outerRadius;
         float z = -outerRadius;
@@ -408,23 +420,30 @@ public class HighlightWaypointUtil {
         ah = 1.0F;
         ai = -1.0F + h;
         aj = (float) maxY * heightScale + ai;
-        renderBeamLayer(matrices, vertexConsumers.getBuffer(RenderType.beaconBeam(textureId, true)), j, k, l, 0.125F, yOffset, i, y, z, outerRadius, ab, ac, outerRadius, outerRadius, outerRadius, 0.0F, 1.0F, aj, ai);
+        bufferBuilder.begin(VertexFormatCompatApi.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+        renderBeamLayer(matrices, bufferBuilder, red, green, green, 0.125F, yOffset, i, y, z, outerRadius, ab, ac, outerRadius, outerRadius, outerRadius, 0.0F, 1.0F, aj, ai);
+        tesselator.end();
         matrices.popPose();
+        //#if MC > 11605
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        //#endif
     }
 
-    private static void renderBeamFace(Matrix4f modelMatrix, Matrix3f normalMatrix, VertexConsumer vertices, float red, float green, float blue, float alpha, int yOffset, int height, float x1, float z1, float x2, float z2, float u1, float u2, float v1, float v2) {
+    private static void renderBeamFace(Matrix4f modelMatrix, Matrix3f normalMatrix, BufferBuilder vertices, float red, float green, float blue, float alpha, int yOffset, int height, float x1, float z1, float x2, float z2, float u1, float u2, float v1, float v2) {
         renderBeamVertex(modelMatrix, normalMatrix, vertices, red, green, blue, alpha, height, x1, z1, u2, v1);
         renderBeamVertex(modelMatrix, normalMatrix, vertices, red, green, blue, alpha, yOffset, x1, z1, u2, v2);
         renderBeamVertex(modelMatrix, normalMatrix, vertices, red, green, blue, alpha, yOffset, x2, z2, u1, v2);
         renderBeamVertex(modelMatrix, normalMatrix, vertices, red, green, blue, alpha, height, x2, z2, u1, v1);
     }
 
-    private static void renderBeamVertex(Matrix4f modelMatrix, Matrix3f normalMatrix, VertexConsumer vertices, float red, float green, float blue, float alpha, int y, float x, float z, float u, float v) {
-        vertices.vertex(modelMatrix, x, (float) y, z).color(red, green, blue, alpha).uv(u, v).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880).normal(normalMatrix, 0.0F, 1.0F, 0.0F).endVertex();
+    private static void renderBeamVertex(Matrix4f modelMatrix, Matrix3f normalMatrix, BufferBuilder vertices, float red, float green, float blue, float alpha, int y, float x, float z, float u, float v) {
+        vertices.vertex(modelMatrix, x, (float) y, z)
+                .uv(u, v)
+                .color(red, green, blue, alpha).endVertex();
     }
 
     @SuppressWarnings("all")
-    private static void renderBeamLayer(PoseStack matrices, VertexConsumer vertices, float red, float green, float blue, float alpha, int yOffset, int height, float x1, float z1, float x2, float z2, float x3, float z3, float x4, float z4, float u1, float u2, float v1, float v2) {
+    private static void renderBeamLayer(PoseStack matrices, BufferBuilder vertices, float red, float green, float blue, float alpha, int yOffset, int height, float x1, float z1, float x2, float z2, float x3, float z3, float x4, float z4, float u1, float u2, float v1, float v2) {
         PoseStack.Pose entry = matrices.last();
         Matrix4f matrix4f = entry.pose();
         Matrix3f matrix3f = entry.normal();
@@ -462,11 +481,10 @@ public class HighlightWaypointUtil {
 
         if (lastBeamTime >= System.currentTimeMillis()) {
             // 画信标光柱
-            MultiBufferSource.BufferSource vertexConsumerProvider0 = mc.renderBuffers().crumblingBufferSource();
             float[] color = {1.0f, 0.0f, 0.0f};
-            renderBeam(matrixStack, vertexConsumerProvider0, BeaconRenderer.BEAM_LOCATION,
-                    tickDelta, 1.0f, Objects.requireNonNull(mc.level).getGameTime(), (int) (baseY - 512), 1024, color, 0.2F, 0.25F);
-            vertexConsumerProvider0.endBatch();
+            renderBeam(matrixStack, tickDelta, 1.0f,
+                    Objects.requireNonNull(mc.level).getGameTime(),
+                    (int) (baseY - 512), 1024, color, 0.2F, 0.25F);
 
             // 画完后会关闭半透明，需要手动打开
             RenderSystem.enableBlend();
@@ -476,8 +494,8 @@ public class HighlightWaypointUtil {
         matrixStack.translate(0.5f, 0.5f, 0.5f);
 
         // 在玩家正对着的平面进行绘制
-        matrixStack.mulPose(Vector3f.YP.rotationDegrees(-cameraEntity.getYRot()));
-        matrixStack.mulPose(Vector3f.XP.rotationDegrees(mc.getEntityRenderDispatcher().camera.getXRot()));
+        matrixStack.mulPose(Vector3fCompatApi.YP.rotationDegrees(-cameraEntity.getYRot()));
+        matrixStack.mulPose(Vector3fCompatApi.XP.rotationDegrees(mc.getEntityRenderDispatcher().camera.getXRot()));
         // 缩放绘制的大小，让 waypoint 根据距离缩放
         matrixStack.scale(-scale, -scale, -scale);
         Matrix4f matrix4f = matrixStack.last().pose();
@@ -503,7 +521,7 @@ public class HighlightWaypointUtil {
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
         RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
         //#else
-        //$$ RenderSystem.bindTexture(Objects.requireNonNull(mc.getTextureManager().getTexture(InventoryMenu.BLOCK_ATLAS)).getId());
+        //$$ RenderSystem.bindTexture(Objects.requireNonNull(mc.getTextureManager().getTexture(TextureAtlas.LOCATION_BLOCKS)).getId());
         //#endif
 
         // 渲染图标
@@ -555,5 +573,7 @@ public class HighlightWaypointUtil {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         //#endif
         matrixStack.popPose();
+        // 1.14 need enableTexture
+        RenderSystem.enableTexture();
     }
 }

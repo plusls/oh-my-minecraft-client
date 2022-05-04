@@ -26,6 +26,7 @@ import java.util.Random;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 //#else
 //$$ import com.mojang.blaze3d.vertex.BufferBuilder;
+//$$ import net.minecraft.client.renderer.block.ModelBlockRenderer;
 //#endif
 
 @Mixin(value = BlockRenderContext.class, remap = false)
@@ -44,24 +45,29 @@ public abstract class MixinBlockRenderContext implements RenderContext {
             at = @At(value = "INVOKE",
                     target = "Lnet/fabricmc/fabric/api/renderer/v1/model/FabricBakedModel;emitBlockQuads(Lnet/minecraft/world/level/BlockAndTintGetter;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;Ljava/util/function/Supplier;Lnet/fabricmc/fabric/api/renderer/v1/render/RenderContext;)V",
                     shift = At.Shift.AFTER, ordinal = 0, remap = true))
-    private void emitCustomBlockQuads(BlockAndTintGetter blockView, BakedModel model,
-                                      BlockState state, BlockPos pos,
-                                      //#if MC > 11404
-                                      PoseStack matrixStack,
-                                      VertexConsumer buffer,
-                                      //#else
-                                      //$$ BufferBuilder buffer,
-                                      //#endif
-                                      //#if MC > 11802
-                                      //$$ RandomSource random,
-                                      //#elseif MC > 11404
-                                      Random random,
-                                      //#endif
-                                      long seed,
-                                      //#if MC > 11404
-                                      int overlay,
-                                      //#endif
-                                      CallbackInfoReturnable<Boolean> cir) {
+    private void emitCustomBlockQuads(
+            //#if MC <= 11404
+            //$$ ModelBlockRenderer vanillaRenderer,
+            //#endif
+            BlockAndTintGetter blockView,
+            BakedModel model,
+            BlockState state, BlockPos pos,
+            //#if MC > 11404
+            PoseStack matrixStack,
+            VertexConsumer buffer,
+            //#else
+            //$$ BufferBuilder buffer,
+            //#endif
+            //#if MC > 11802
+            //$$ RandomSource random,
+            //#elseif MC > 11404
+            Random random,
+            //#endif
+            long seed,
+            //#if MC > 11404
+            int overlay,
+            //#endif
+            CallbackInfoReturnable<Boolean> cir) {
         WorldEaterMineHelperUtil.emitCustomBlockQuads(blockView, state, pos, this.blockInfo.randomSupplier, this);
     }
 }

@@ -14,6 +14,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -34,6 +35,8 @@ public abstract class MixinJsonUnbakedModel implements UnbakedModel {
     @Shadow
     public abstract List<BlockElement> getElements();
 
+    @Shadow @Nullable protected ResourceLocation parentLocation;
+
     @Inject(
             //#if MC > 11404
             method = "bake(Lnet/minecraft/client/resources/model/ModelBakery;Lnet/minecraft/client/renderer/block/model/BlockModel;Ljava/util/function/Function;Lnet/minecraft/client/resources/model/ModelState;Lnet/minecraft/resources/ResourceLocation;Z)Lnet/minecraft/client/resources/model/BakedModel;",
@@ -52,6 +55,12 @@ public abstract class MixinJsonUnbakedModel implements UnbakedModel {
                                           ResourceLocation id, boolean hasDepth,
                                           //#endif
                                           CallbackInfoReturnable<BakedModel> cir) {
+        //#if MC <= 11404
+        //$$ ResourceLocation id = this.parentLocation;
+        //#endif
+        if (id == null) {
+            return;
+        }
         String[] splitResult = id.getPath().split("/");
         ResourceLocation blockId = new ResourceLocation(splitResult[splitResult.length - 1]);
         Block block = Registry.BLOCK.get(blockId);
@@ -87,17 +96,29 @@ public abstract class MixinJsonUnbakedModel implements UnbakedModel {
         boolean tmpAmbientOcclusion = ((AccessorBlockModel) tmpJsonUnbakedModel).getHasAmbientOcclusion();
         ((AccessorBlockModel) tmpJsonUnbakedModel).setHasAmbientOcclusion(false);
         // 部分 models
+        //#if MC > 11404
         BakedModel customBakedModel = me.bake(loader, parent, textureGetter, settings, id, hasDepth);
+        //#else
+        //$$ BakedModel customBakedModel = me.bake(loader, parent, textureGetter, settings);
+        //#endif
         WorldEaterMineHelperUtil.customModels.put(block, customBakedModel);
         originalModelElements.addAll(originalModelElementsBackup);
         // 完整 models
+        //#if MC > 11404
         BakedModel customFullBakedModel = me.bake(loader, parent, textureGetter, settings, id, hasDepth);
+        //#else
+        //$$ BakedModel customFullBakedModel = me.bake(loader, parent, textureGetter, settings);
+        //#endif
         WorldEaterMineHelperUtil.customFullModels.put(block, customFullBakedModel);
 
         ((AccessorBlockModel) tmpJsonUnbakedModel).setHasAmbientOcclusion(tmpAmbientOcclusion);
         originalModelElements.clear();
         originalModelElements.addAll(originalModelElementsBackup);
+        //#if MC > 11404
         BakedModel ret = me.bake(loader, parent, textureGetter, settings, id, hasDepth);
+        //#else
+        //$$ BakedModel ret = me.bake(loader, parent, textureGetter, settings);
+        //#endif
         ommcFirstBake.set(true);
         cir.setReturnValue(ret);
     }

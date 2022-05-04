@@ -17,6 +17,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+//#if MC <= 11404
+//$$ import com.mojang.blaze3d.platform.GlStateManager;
+//#endif
+
 @Mixin(value = TerrainRenderContext.class, remap = false)
 public abstract class MixinTerrainRenderContext implements RenderContext {
 
@@ -29,10 +33,19 @@ public abstract class MixinTerrainRenderContext implements RenderContext {
             "tessellateBlock", // For fabric-renderer-indigo 0.5.0 and above
             "tesselateBlock" // For fabric-renderer-indigo 0.5.0 below
     }, at = @At(value = "HEAD"))
-    private void blockModelNoOffset(BlockState blockState, BlockPos blockPos, BakedModel model, PoseStack matrixStack, CallbackInfoReturnable<Boolean> cir) {
+    private void blockModelNoOffset(BlockState blockState, BlockPos blockPos, BakedModel model,
+                                    //#if MC > 11404
+                                    PoseStack matrixStack,
+                                    //#endif
+                                    CallbackInfoReturnable<Boolean> cir) {
         Vec3 offsetPos = blockState.getOffset(blockInfo.blockView, blockPos);
         if (BlockModelNoOffsetUtil.shouldNoOffset(blockState)) {
+            //#if MC > 11404
             matrixStack.translate(-offsetPos.x, -offsetPos.y, -offsetPos.z);
+            //#else
+            // will cause crash, i don't know why
+            ////$$ GlStateManager.translated(-offsetPos.x, -offsetPos.y, -offsetPos.z);
+            //#endif
         }
     }
 }

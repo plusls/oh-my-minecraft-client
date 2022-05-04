@@ -31,7 +31,11 @@ public abstract class MixinTerrainRenderContext implements RenderContext {
             at = @At(value = "INVOKE",
                     target = "Lnet/fabricmc/fabric/api/renderer/v1/model/FabricBakedModel;emitBlockQuads(Lnet/minecraft/world/level/BlockAndTintGetter;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;Ljava/util/function/Supplier;Lnet/fabricmc/fabric/api/renderer/v1/render/RenderContext;)V",
                     shift = At.Shift.AFTER, ordinal = 0, remap = true))
-    private void emitCustomBlockQuads(BlockState blockState, BlockPos blockPos, BakedModel model, PoseStack matrixStack, CallbackInfoReturnable<Boolean> cir) {
+    private void emitCustomBlockQuads(BlockState blockState, BlockPos blockPos, BakedModel model,
+                                      //#if MC > 11404
+                                      PoseStack matrixStack,
+                                      //#endif
+                                      CallbackInfoReturnable<Boolean> cir) {
         WorldEaterMineHelperUtil.emitCustomBlockQuads(blockInfo.blockView, blockInfo.blockState, blockInfo.blockPos, blockInfo.randomSupplier, this);
     }
 }

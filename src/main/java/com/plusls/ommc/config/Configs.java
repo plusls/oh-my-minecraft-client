@@ -112,8 +112,8 @@ public class Configs {
     @Config(category = ConfigCategory.FEATURE_TOGGLE)
     public static boolean betterSneaking = false;
 
-    @Hotkey
     @Dependencies(and = @Dependency(value = "minecraft", versionPredicate = ">1.15.2"))
+    @Hotkey
     @Config(category = ConfigCategory.FEATURE_TOGGLE)
     public static boolean disableBlocklistCheck = false;
 
@@ -208,8 +208,9 @@ public class Configs {
     public static ArrayList<String> worldEaterMineHelperWhitelist = Lists.newArrayList("_ore", "minecraft:ancient_debris", "minecraft:obsidian");
 
     // ADVANCED_INTEGRATED_SERVER
-    @Hotkey
+
     @Dependencies(predicate = SinglePlayerServerOptionPredicate.class)
+    @Hotkey
     @Config(category = ConfigCategory.ADVANCED_INTEGRATED_SERVER)
     public static boolean onlineMode = true;
 
