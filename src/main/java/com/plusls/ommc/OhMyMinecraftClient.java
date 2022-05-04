@@ -9,6 +9,8 @@ import com.plusls.ommc.feature.realSneaking.RealSneakingEventHandler;
 import net.fabricmc.api.ClientModInitializer;
 import top.hendrixshen.magiclib.config.ConfigHandler;
 import top.hendrixshen.magiclib.config.ConfigManager;
+import top.hendrixshen.magiclib.dependency.annotation.Dependencies;
+import top.hendrixshen.magiclib.dependency.annotation.Dependency;
 
 public class OhMyMinecraftClient implements ClientModInitializer {
     private static final int CONFIG_VERSION = 1;
@@ -19,6 +21,17 @@ public class OhMyMinecraftClient implements ClientModInitializer {
 //                    "canvas": ">=1.0.2282"
 //        }
 //    },
+    @Dependencies(and = {
+            //#if MC > 11701
+            @Dependency(value = "sodium", versionPredicate = ">=0.4.1", optional = true),
+            @Dependency(value = "canvas", versionPredicate = ">=1.0.2308", optional = true),
+            @Dependency(value = "frex", versionPredicate = ">=6.0.242", optional = true),
+            //#elseif MC > 11605
+            @Dependency(value = "sodium", versionPredicate = ">=0.3.4", optional = true),
+            //#elseif MC > 11502
+            @Dependency(value = "sodium", versionPredicate = ">=0.2.0", optional = true),
+            //#endif
+    })
     @Override
     public void onInitializeClient() {
         LavaSourceResourceLoader.init();

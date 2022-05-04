@@ -1,4 +1,4 @@
-package com.plusls.ommc.compat.sodium.mixin;
+package com.plusls.ommc.mixin.feature.worldEaterMineHelper.sodium;
 
 import com.plusls.ommc.feature.blockModelNoOffset.BlockModelNoOffsetUtil;
 import com.plusls.ommc.feature.worldEaterMineHelper.WorldEaterMineHelperUtil;
@@ -46,12 +46,5 @@ public class MixinTerrainRenderContext {
         WorldEaterMineHelperUtil.emitCustomBlockQuads(blockView, state, pos, MiscUtil.cast(randomSupplier), context);
     }
 
-    @Dynamic
-    @Redirect(method = "renderBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;getOffset(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/phys/Vec3;",
-            ordinal = 0,
-            remap = true))
-    private Vec3 blockModelNoOffset(BlockState blockState, BlockGetter world, BlockPos pos) {
-        return BlockModelNoOffsetUtil.blockModelNoOffset(blockState, world, pos);
-    }
 
 }

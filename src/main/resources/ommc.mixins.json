@@ -21,6 +21,8 @@
     "feature.betterSneaking.MixinPlayerEntity",
     "feature.blockModelNoOffset.fabric.MixinTerrainRenderContext",
     "feature.blockModelNoOffset.optifine.MixinBlockModelRenderer",
+    "feature.blockModelNoOffset.sodium.MixinBlockRenderer",
+    "feature.blockModelNoOffset.sodium.MixinTerrainRenderContext",
     "feature.disableBlocklistCheck.MixinSocialInteractionsManager",
     "feature.disableBreakBlock.MixinClientPlayerInteractionManager",
     "feature.disableBreakScaffolding.MixinClientPlayerInteractionManager",
@@ -30,6 +32,8 @@
     "feature.flatDigger.MixinClientPlayerInteractionManager",
     "feature.forceBreakingCooldown.MixinClientPlayerInteractionManager",
     "feature.highlightEntity.MixinEntity",
+    "feature.highlightLavaSource.canvas.MixinSimpleFluidSpriteProvider",
+    "feature.highlightLavaSource.sodium.MixinFluidRenderer",
     "feature.highlightPersistentMob.MixinEntity",
     "feature.highlightWaypoint.MixinChatHud",
     "feature.highlightWaypoint.MixinLevelRenderer",
@@ -39,7 +43,9 @@
     "feature.worldEaterMineHelper.MixinJsonUnbakedModel",
     "feature.worldEaterMineHelper.fabric.MixinBlockRenderContext",
     "feature.worldEaterMineHelper.fabric.MixinTerrainRenderContext",
-    "feature.worldEaterMineHelper.optifine.MixinBlockRenderManager"
+    "feature.worldEaterMineHelper.optifine.MixinBlockRenderManager",
+    "feature.worldEaterMineHelper.sodium.MixinBlockRenderer",
+    "feature.worldEaterMineHelper.sodium.MixinTerrainRenderContext"
   ],
   "injectors": {
     "defaultRequire": 1

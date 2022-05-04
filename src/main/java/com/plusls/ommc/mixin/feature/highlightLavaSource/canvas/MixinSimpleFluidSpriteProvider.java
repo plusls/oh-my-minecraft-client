@@ -1,4 +1,4 @@
-package com.plusls.ommc.feature.highlightLavaSource.canvas;
+package com.plusls.ommc.mixin.feature.highlightLavaSource.canvas;
 
 import com.plusls.ommc.config.Configs;
 import com.plusls.ommc.feature.highlightLavaSource.LavaSourceResourceLoader;
@@ -20,7 +20,6 @@ import top.hendrixshen.magiclib.dependency.annotation.Dependencies;
 import top.hendrixshen.magiclib.dependency.annotation.Dependency;
 
 
-// TODO
 @Dependencies(and = @Dependency("frex"))
 @Pseudo
 @Mixin(targets = "io.vram.frex.impl.model.SimpleFluidSpriteProvider", remap = false)
@@ -30,13 +29,15 @@ public abstract class MixinSimpleFluidSpriteProvider {
 
     @Dynamic
     @Inject(method = "<init>", at = @At(value = "RETURN"))
-    private void preInit(ResourceLocation stillSpriteName, ResourceLocation flowingSpriteName, ResourceLocation overlaySpriteName, CallbackInfo ci) {
+    private void preInit(ResourceLocation stillSpriteName, ResourceLocation flowingSpriteName,
+                         ResourceLocation overlaySpriteName, CallbackInfo ci) {
         this.isLava = stillSpriteName.toString().equals("minecraft:block/lava_still");
     }
 
     @Dynamic
     @Inject(method = "getFluidSprites", at = @At(value = "RETURN"), cancellable = true)
-    private void setLavaSprite(BlockAndTintGetter view, BlockPos pos, FluidState state, CallbackInfoReturnable<TextureAtlasSprite[]> cir) {
+    private void setLavaSprite(BlockAndTintGetter view, BlockPos pos,
+                               FluidState state, CallbackInfoReturnable<TextureAtlasSprite[]> cir) {
         if (this.isLava) {
             if (lavaSourceSpites[0] != LavaSourceResourceLoader.lavaSourceSpites[0]) {
                 lavaSourceSpites[0] = LavaSourceResourceLoader.lavaSourceSpites[0];
