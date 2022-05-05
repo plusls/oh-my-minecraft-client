@@ -13,10 +13,15 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import top.hendrixshen.magiclib.dependency.annotation.Dependencies;
 import top.hendrixshen.magiclib.dependency.annotation.Dependency;
 
+//#if MC <= 11605
+//$$ import org.spongepowered.asm.mixin.Dynamic;
+//#endif
+
 @Dependencies(and = @Dependency("optifabric"))
 @Mixin(ModelBlockRenderer.class)
 public class MixinBlockModelRenderer {
 
+    //#if MC > 11605
     @Redirect(method = "tesselateBlock",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/world/level/block/state/BlockState;getOffset(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/phys/Vec3;",
@@ -25,4 +30,14 @@ public class MixinBlockModelRenderer {
     private Vec3 blockModelNoOffset(BlockState blockState, BlockGetter world, BlockPos pos) {
         return BlockModelNoOffsetUtil.blockModelNoOffset(blockState, world, pos);
     }
+    //#else
+    //$$ @Dynamic
+    //$$ @Redirect(method = "renderModel", at = @At(value = "INVOKE",
+    //$$         target = "Lnet/minecraft/world/level/block/state/BlockState;getOffset(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/phys/Vec3;",
+    //$$         remap = true),
+    //$$         remap = false)
+    //$$ private Vec3 blockModelNoOffset(BlockState blockState, BlockGetter world, BlockPos pos) {
+    //$$     return BlockModelNoOffsetUtil.blockModelNoOffset(blockState, world, pos);
+    //$$ }
+    //#endif
 }
