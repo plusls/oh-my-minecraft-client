@@ -27,7 +27,11 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayer {
     boolean prevFallFlying = false;
 
     public MixinClientPlayerEntity(ClientLevel world, GameProfile profile) {
+        //#if MC > 11802
+        //$$ super(world, profile, null);
+        //#else
         super(world, profile);
+        //#endif
     }
 
     @SuppressWarnings("ConstantConditions")

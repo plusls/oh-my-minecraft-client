@@ -15,6 +15,11 @@ import org.spongepowered.asm.mixin.Shadow;
 import top.hendrixshen.magiclib.compat.minecraft.UtilCompatApi;
 import top.hendrixshen.magiclib.compat.minecraft.network.chat.ComponentCompatApi;
 
+//#if MC > 11802
+//$$ import net.minecraft.core.Registry;
+//$$ import java.util.Objects;
+//#endif
+
 // Code from https://github.com/FabricMC/fabric/blob/1.17/fabric-command-api-v1/src/main/java/net/fabricmc/fabric/mixin/command/client/ClientCommandSourceMixin.java
 @Mixin(ClientSuggestionProvider.class)
 public abstract class MixinClientSuggestionProvider implements FabricClientCommandSource {
@@ -25,7 +30,7 @@ public abstract class MixinClientSuggestionProvider implements FabricClientComma
     @Override
     public void sendFeedback(Component message) {
         //#if MC > 11802
-        //$$ minecraft.gui.handleSystemChat(ChatType.SYSTEM, message);
+        //$$ minecraft.gui.handleSystemChat(Objects.requireNonNull(Objects.requireNonNull(minecraft.level).registryAccess().registryOrThrow(Registry.CHAT_TYPE_REGISTRY).get(ChatType.SYSTEM)), message);
         //#elseif MC > 11502
         minecraft.gui.handleChat(ChatType.SYSTEM, message, UtilCompatApi.NIL_UUID);
         //#else
@@ -37,7 +42,7 @@ public abstract class MixinClientSuggestionProvider implements FabricClientComma
     public void sendError(Component message) {
         Component m = ComponentCompatApi.literal("").append(message).withStyle(ChatFormatting.RED);
         //#if MC > 11802
-        //$$ minecraft.gui.handleSystemChat(ChatType.SYSTEM, m);
+        //$$ minecraft.gui.handleSystemChat(Objects.requireNonNull(Objects.requireNonNull(minecraft.level).registryAccess().registryOrThrow(Registry.CHAT_TYPE_REGISTRY).get(ChatType.SYSTEM)), m);
         //#elseif MC > 11502
         minecraft.gui.handleChat(ChatType.SYSTEM, m, UtilCompatApi.NIL_UUID);
         //#else
