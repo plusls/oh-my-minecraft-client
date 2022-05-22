@@ -387,7 +387,7 @@ public class HighlightWaypointUtil {
         int i = yOffset + maxY;
         matrices.pushPose();
         matrices.translate(0.5D, 0.0D, 0.5D);
-        float f = (float) Math.floorMod(worldTime, 40) + tickDelta;
+        float f = (float) Math.floorMod(worldTime, 40L) + tickDelta;
         float g = maxY < 0 ? f : -f;
         float h = (float) Mth.frac(g * 0.2F - (float) Mth.floor(g * 0.1F));
         float red = color[0];
