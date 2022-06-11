@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MixinLocalPlayer {
     @Inject(
             //#if MC > 11802
-            method = "chat(Ljava/lang/String;Lnet/minecraft/network/chat/Component;)V",
+            method = "command(Ljava/lang/String;Lnet/minecraft/network/chat/Component;)V",
             //#else
             //$$ method = "chat",
             //#endif
@@ -22,6 +22,9 @@ public class MixinLocalPlayer {
                                    Component component,
                                    //#endif
                                    CallbackInfo ci) {
+        //#if MC > 11802
+        string = "/" + string;
+        //#endif
         if (ClientCommandInternals.executeCommand(string)) {
             ci.cancel();
         }
