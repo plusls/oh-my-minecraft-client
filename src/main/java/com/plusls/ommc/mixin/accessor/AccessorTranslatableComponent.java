@@ -1,11 +1,11 @@
 package com.plusls.ommc.mixin.accessor;
 
 import net.minecraft.locale.Language;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(TranslatableComponent.class)
+@Mixin(TranslatableContents.class)
 public interface AccessorTranslatableComponent {
 
     //#if MC > 11502

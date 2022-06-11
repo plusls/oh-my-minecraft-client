@@ -26,11 +26,11 @@ public class MixinClientPlayerInteractionManager {
             cancellable = true)
     private void preventIntentionalGameDesign(LocalPlayer player,
                                               //#if MC <= 11802
-                                              ClientLevel world,
+                                              //$$ ClientLevel world,
                                               //#endif
                                               InteractionHand hand, BlockHitResult hitResult, CallbackInfoReturnable<InteractionResult> cir) {
         //#if MC > 11802
-        //$$ ClientLevel world = (ClientLevel) player.getLevel();
+        ClientLevel world = (ClientLevel) player.getLevel();
         //#endif
         if (!Configs.preventIntentionalGameDesign) {
             return;

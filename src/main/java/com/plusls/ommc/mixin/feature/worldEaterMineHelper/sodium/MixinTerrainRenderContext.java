@@ -1,14 +1,11 @@
 package com.plusls.ommc.mixin.feature.worldEaterMineHelper.sodium;
 
-import com.plusls.ommc.feature.blockModelNoOffset.BlockModelNoOffsetUtil;
 import com.plusls.ommc.feature.worldEaterMineHelper.WorldEaterMineHelperUtil;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
@@ -18,12 +15,14 @@ import top.hendrixshen.magiclib.dependency.annotation.Dependencies;
 import top.hendrixshen.magiclib.dependency.annotation.Dependency;
 import top.hendrixshen.magiclib.util.MiscUtil;
 
-import java.util.Random;
 import java.util.function.Supplier;
 
 //#if MC > 11802
-//$$ import net.minecraft.util.RandomSource;
+import net.minecraft.util.RandomSource;
+//#else
+//$$ import java.util.Random;
 //#endif
+
 
 // TODO
 @Dependencies(and = @Dependency(value = "sodium", versionPredicate = ">=0.5"))
@@ -37,9 +36,9 @@ public class MixinTerrainRenderContext {
             remap = true))
     private void emitCustomBlockQuads(FabricBakedModel model, BlockAndTintGetter blockView, BlockState state, BlockPos pos,
                                       //#if MC > 11802
-                                      //$$ Supplier<RandomSource> randomSupplier,
+                                      Supplier<RandomSource> randomSupplier,
                                       //#else
-                                      Supplier<Random> randomSupplier,
+                                      //$$ Supplier<Random> randomSupplier,
                                       //#endif
                                       RenderContext context) {
         model.emitBlockQuads(blockView, state, pos, randomSupplier, context);

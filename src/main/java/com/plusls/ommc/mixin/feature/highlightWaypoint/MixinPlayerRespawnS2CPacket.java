@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientboundRespawnPacket.class)
 public class MixinPlayerRespawnS2CPacket {
-    @Inject(method = "handle*", at = @At(value = "HEAD"))
+    @Inject(method = "handle(Lnet/minecraft/network/protocol/game/ClientGamePacketListener;)V", at = @At(value = "HEAD"))
     void postApply(ClientGamePacketListener clientPlayPacketListener, CallbackInfo ci) {
         HighlightWaypointUtil.postRespawn((ClientboundRespawnPacket) (Object) this);
     }

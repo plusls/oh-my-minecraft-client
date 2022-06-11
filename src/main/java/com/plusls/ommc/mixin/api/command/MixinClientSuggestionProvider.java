@@ -12,12 +12,13 @@ import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import top.hendrixshen.magiclib.compat.minecraft.UtilCompatApi;
 import top.hendrixshen.magiclib.compat.minecraft.network.chat.ComponentCompatApi;
 
 //#if MC > 11802
-//$$ import net.minecraft.core.Registry;
-//$$ import java.util.Objects;
+import net.minecraft.core.Registry;
+import java.util.Objects;
+//#else
+//$$ import top.hendrixshen.magiclib.compat.minecraft.UtilCompatApi;
 //#endif
 
 // Code from https://github.com/FabricMC/fabric/blob/1.17/fabric-command-api-v1/src/main/java/net/fabricmc/fabric/mixin/command/client/ClientCommandSourceMixin.java
@@ -30,9 +31,9 @@ public abstract class MixinClientSuggestionProvider implements FabricClientComma
     @Override
     public void sendFeedback(Component message) {
         //#if MC > 11802
-        //$$ minecraft.gui.handleSystemChat(Objects.requireNonNull(Objects.requireNonNull(minecraft.level).registryAccess().registryOrThrow(Registry.CHAT_TYPE_REGISTRY).get(ChatType.SYSTEM)), message);
+        minecraft.gui.handleSystemChat(Objects.requireNonNull(Objects.requireNonNull(minecraft.level).registryAccess().registryOrThrow(Registry.CHAT_TYPE_REGISTRY).get(ChatType.SYSTEM)), message);
         //#elseif MC > 11502
-        minecraft.gui.handleChat(ChatType.SYSTEM, message, UtilCompatApi.NIL_UUID);
+        //$$ minecraft.gui.handleChat(ChatType.SYSTEM, message, UtilCompatApi.NIL_UUID);
         //#else
         //$$ minecraft.gui.handleChat(ChatType.SYSTEM, message);
         //#endif
@@ -42,9 +43,9 @@ public abstract class MixinClientSuggestionProvider implements FabricClientComma
     public void sendError(Component message) {
         Component m = ComponentCompatApi.literal("").append(message).withStyle(ChatFormatting.RED);
         //#if MC > 11802
-        //$$ minecraft.gui.handleSystemChat(Objects.requireNonNull(Objects.requireNonNull(minecraft.level).registryAccess().registryOrThrow(Registry.CHAT_TYPE_REGISTRY).get(ChatType.SYSTEM)), m);
+        minecraft.gui.handleSystemChat(Objects.requireNonNull(Objects.requireNonNull(minecraft.level).registryAccess().registryOrThrow(Registry.CHAT_TYPE_REGISTRY).get(ChatType.SYSTEM)), m);
         //#elseif MC > 11502
-        minecraft.gui.handleChat(ChatType.SYSTEM, m, UtilCompatApi.NIL_UUID);
+        //$$ minecraft.gui.handleChat(ChatType.SYSTEM, m, UtilCompatApi.NIL_UUID);
         //#else
         //$$ minecraft.gui.handleChat(ChatType.SYSTEM, m);
         //#endif

@@ -11,9 +11,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 //#if MC > 11802
-//$$ import net.minecraft.network.protocol.Packet;
-//$$ import net.minecraft.network.protocol.game.ServerGamePacketListener;
-//$$ import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ServerGamePacketListener;
+import net.minecraft.world.level.block.state.BlockState;
 //#endif
 
 @Mixin(MultiPlayerGameMode.class)
@@ -22,29 +22,29 @@ public class MixinClientPlayerInteractionManager {
     private int destroyDelay;
 
     //#if MC > 11802
-    //$$ @Inject(method = "method_41930",
-    //$$         at = @At(value = "INVOKE",
-    //$$                 target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;destroyBlock(Lnet/minecraft/core/BlockPos;)Z",
-    //$$                 ordinal = 0))
-    //$$ private void addBreakingCooldown(BlockState blockState, BlockPos blockPos, Direction direction, int i, CallbackInfoReturnable<Packet<ServerGamePacketListener>> cir) {
-    //$$     if (Configs.forceBreakingCooldown) {
-    //$$         destroyDelay = 5;
-    //$$     }
-    //$$ }
-    //#else
-    @Inject(method = "startDestroyBlock",
+    @Inject(method = "method_41930",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;destroyBlock(Lnet/minecraft/core/BlockPos;)Z",
-                    //#if MC > 11502
-                    ordinal = 1
-                    //#else
-                    //$$ ordinal = 0
-                    //#endif
-            ))
-    private void addBreakingCooldown(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
+                    ordinal = 0))
+    private void addBreakingCooldown(BlockState blockState, BlockPos blockPos, Direction direction, int i, CallbackInfoReturnable<Packet<ServerGamePacketListener>> cir) {
         if (Configs.forceBreakingCooldown) {
             destroyDelay = 5;
         }
     }
+    //#else
+    //$$ @Inject(method = "startDestroyBlock",
+    //$$         at = @At(value = "INVOKE",
+    //$$                 target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;destroyBlock(Lnet/minecraft/core/BlockPos;)Z",
+    //$$                 //#if MC > 11502
+    //$$                 ordinal = 1
+    //$$                 //#else
+    //$$                 //$$ ordinal = 0
+    //$$                 //#endif
+    //$$         ))
+    //$$ private void addBreakingCooldown(BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
+    //$$     if (Configs.forceBreakingCooldown) {
+    //$$         destroyDelay = 5;
+    //$$     }
+    //$$ }
     //#endif
 }

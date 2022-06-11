@@ -16,10 +16,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Random;
-
 //#if MC > 11802
-//$$ import net.minecraft.util.RandomSource;
+import net.minecraft.util.RandomSource;
+//#else
+import java.util.Random;
 //#endif
 
 //#if MC > 11404
@@ -28,6 +28,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 //$$ import com.mojang.blaze3d.vertex.BufferBuilder;
 //$$ import net.minecraft.client.renderer.block.ModelBlockRenderer;
 //#endif
+
 
 @Mixin(value = BlockRenderContext.class, remap = false)
 public abstract class MixinBlockRenderContext implements RenderContext {
@@ -59,9 +60,9 @@ public abstract class MixinBlockRenderContext implements RenderContext {
             //$$ BufferBuilder buffer,
             //#endif
             //#if MC > 11802
-            //$$ RandomSource random,
+            RandomSource random,
             //#elseif MC > 11404
-            Random random,
+            //$$ Random random,
             //#endif
             long seed,
             //#if MC > 11404

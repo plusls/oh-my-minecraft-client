@@ -28,9 +28,9 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayer {
 
     public MixinClientPlayerEntity(ClientLevel world, GameProfile profile) {
         //#if MC > 11802
-        //$$ super(world, profile, null);
+        super(world, profile, null);
         //#else
-        super(world, profile);
+        //$$ super(world, profile);
         //#endif
     }
 

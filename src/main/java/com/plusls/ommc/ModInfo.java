@@ -11,9 +11,9 @@ public class ModInfo {
     public static String MOD_ID = "ommc";
 
     //#if MC > 11802
-    //$$ public static final String CURRENT_MOD_ID = MOD_ID + "-22w19a";
+    public static final String CURRENT_MOD_ID = MOD_ID + "-1_19";
     //#elseif MC > 11701
-    public static final String CURRENT_MOD_ID = MOD_ID + "-1_18_2";
+    //$$ public static final String CURRENT_MOD_ID = MOD_ID + "-1_18_2";
     //#elseif MC > 11605
     //$$ public static final String CURRENT_MOD_ID = MOD_ID + "-1_17_1";
     //#elseif MC > 11502
@@ -33,11 +33,6 @@ public class ModInfo {
 
     public static String translate(String key, Object... objects) {
         return I18n.get(ModInfo.MOD_ID + "." + key, objects);
-    }
-
-
-    public static boolean isModLoaded(String modid) {
-        return FabricLoader.getInstance().isModLoaded(modid);
     }
 
     public static ResourceLocation id(String path) {

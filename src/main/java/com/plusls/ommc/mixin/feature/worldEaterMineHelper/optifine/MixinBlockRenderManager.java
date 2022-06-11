@@ -18,10 +18,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import top.hendrixshen.magiclib.dependency.annotation.Dependencies;
 import top.hendrixshen.magiclib.dependency.annotation.Dependency;
 
-import java.util.Random;
 
 //#if MC > 11802
-//$$ import net.minecraft.util.RandomSource;
+import net.minecraft.util.RandomSource;
+//#else
+//$$ import java.util.Random;
 //#endif
 
 //#if MC > 11404
@@ -60,11 +61,13 @@ public class MixinBlockRenderManager {
     private void initRenderContext1(BlockState state, BlockPos pos, BlockAndTintGetter world, PoseStack matrix,
                                     VertexConsumer vertexConsumer, boolean cull,
                                     //#if MC > 11802
-                                    //$$ RandomSource random,
+                                    RandomSource random,
+                                    CallbackInfo ci
                                     //#else
-                                    Random random,
+                                    //$$ Random random,
+                                    //$$ CallbackInfoReturnable<Boolean> cir
                                     //#endif
-                                    CallbackInfoReturnable<Boolean> cir) {
+    ) {
         BlockModelRendererContext context = ommcRenderContext.get();
         context.pos = pos;
         context.state = state;
@@ -74,11 +77,13 @@ public class MixinBlockRenderManager {
     private void clearRenderContext1(BlockState state, BlockPos pos, BlockAndTintGetter world, PoseStack matrix,
                                      VertexConsumer vertexConsumer, boolean cull,
                                      //#if MC > 11802
-                                     //$$ RandomSource random,
+                                     RandomSource random,
+                                     CallbackInfo ci
                                      //#else
-                                     Random random,
+                                     //$$ Random random,
+                                     //$$ CallbackInfoReturnable<Boolean> cir
                                      //#endif
-                                     CallbackInfoReturnable<Boolean> cir) {
+    ) {
         ommcRenderContext.get().clear();
         int originalLuminance = ommcOriginalLuminance.get();
         if (originalLuminance != -1) {

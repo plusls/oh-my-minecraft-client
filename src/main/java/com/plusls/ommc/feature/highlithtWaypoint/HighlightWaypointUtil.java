@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.*;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3f;
 import com.plusls.ommc.ModInfo;
 import com.plusls.ommc.api.command.ClientCommandManager;
 import com.plusls.ommc.config.Configs;
@@ -42,9 +41,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 //#if MC > 11802
-//$$ import net.minecraft.network.chat.contents.*;
+import net.minecraft.network.chat.contents.*;
 //#else
-import net.minecraft.client.Option;
+//$$ import net.minecraft.client.Option;
 //#endif
 
 //#if MC <= 11605
@@ -211,18 +210,16 @@ public class HighlightWaypointUtil {
             }
         }
         //#if MC > 11802
-        //$$ ComponentContents componentContents = chat.getContents();
-        //#endif
-        //#if MC > 11802
-        //$$ if (componentContents instanceof TranslatableContents) {
+        ComponentContents componentContents = chat.getContents();
+        if (componentContents instanceof TranslatableContents) {
         //#else
-        if (chat instanceof TranslatableComponent) {
+        //$$ if (chat instanceof TranslatableComponent) {
         //#endif
 
             //#if MC > 11802
-            //$$ Object[] args = ((TranslatableContents) componentContents).getArgs();
+            Object[] args = ((TranslatableContents) componentContents).getArgs();
             //#else
-            Object[] args = ((TranslatableComponent) chat).getArgs();
+            //$$ Object[] args = ((TranslatableComponent) chat).getArgs();
             //#endif
             boolean updateTranslatableText = false;
             for (int i = 0; i < args.length; ++i) {
@@ -251,17 +248,17 @@ public class HighlightWaypointUtil {
 
     public static boolean updateWaypointsText(Component chat) {
         //#if MC > 11802
-        //$$ ComponentContents componentContents = chat.getContents();
-        //$$ if (!(componentContents instanceof LiteralContents)) {
+        ComponentContents componentContents = chat.getContents();
+        if (!(componentContents instanceof LiteralContents)) {
         //#else
-        if (!(chat instanceof TextComponent)) {
-            //#endif
+        //$$ if (!(chat instanceof TextComponent)) {
+        //#endif
             return false;
         }
         //#if MC > 11802
-        //$$ LiteralContents literalChatText = (LiteralContents) componentContents;
+        LiteralContents literalChatText = (LiteralContents) componentContents;
         //#else
-        TextComponent literalChatText = (TextComponent) chat;
+        //$$ TextComponent literalChatText = (TextComponent) chat;
         //#endif
 
         String message = ((AccessorTextComponent) (Object) literalChatText).getText();
@@ -461,10 +458,10 @@ public class HighlightWaypointUtil {
         double baseY = pos.getY() - Mth.lerp(tickDelta, cameraEntity.yo, cameraEntity.getY()) - 1.5;
         double baseZ = pos.getZ() - Mth.lerp(tickDelta, cameraEntity.zo, cameraEntity.getZ());
         // 当前渲染的最大距离
-        //#if MC >= 11802
-        //$$ double maxDistance = Minecraft.getInstance().options.renderDistance().get();
+        //#if MC > 11802
+        double maxDistance = Minecraft.getInstance().options.renderDistance().get();
         //#else
-        double maxDistance = Option.RENDER_DISTANCE.get(mc.options) * 16;
+        //$$ double maxDistance = Option.RENDER_DISTANCE.get(mc.options) * 16;
         //#endif
         double adjustedDistance = distance;
         if (distance > maxDistance) {
