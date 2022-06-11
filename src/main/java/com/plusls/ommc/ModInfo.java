@@ -4,8 +4,15 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import top.hendrixshen.magiclib.compat.minecraft.network.chat.ComponentCompatApi;
 import top.hendrixshen.magiclib.config.ConfigHandler;
 import top.hendrixshen.magiclib.language.I18n;
+
+//#if MC > 11502
+import net.minecraft.network.chat.MutableComponent;
+//#else
+//$$ import net.minecraft.network.chat.BaseComponent;
+//#endif
 
 public class ModInfo {
     public static String MOD_ID = "ommc";
@@ -34,6 +41,17 @@ public class ModInfo {
     public static String translate(String key, Object... objects) {
         return I18n.get(ModInfo.MOD_ID + "." + key, objects);
     }
+
+    public static
+    //#if MC > 11502
+    MutableComponent
+    //#else
+    //$$ BaseComponent
+    //#endif
+    translatable(String key, Object... objects) {
+        return ComponentCompatApi.translatable(ModInfo.MOD_ID + "." + key, objects);
+    }
+
 
     public static ResourceLocation id(String path) {
         return new ResourceLocation(MOD_ID, path);
