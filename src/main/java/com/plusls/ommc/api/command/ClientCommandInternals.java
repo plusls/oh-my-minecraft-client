@@ -107,7 +107,7 @@ public final class ClientCommandInternals {
         Component message = ComponentUtils.fromMessage(e.getRawMessage());
         String context = e.getContext();
 
-        return context != null ? ComponentCompatApi.literal(I18n.get("command.context.parse_error", message, context)) : message;
+        return context != null ? ComponentCompatApi.translatable("command.context.parse_error", message, context) : message;
     }
 
     /**
