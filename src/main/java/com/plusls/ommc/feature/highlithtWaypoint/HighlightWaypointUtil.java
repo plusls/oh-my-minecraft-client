@@ -235,8 +235,10 @@ public class HighlightWaypointUtil {
             }
             if (updateTranslatableText) {
                 // refresh cache
-                //#if MC > 11502
-                ((AccessorTranslatableComponent) chat).setDecomposedWith(null);
+                //#if MC > 11802
+                ((AccessorTranslatableComponent) componentContents).setDecomposedWith(null);
+                //#elseif MC > 11502
+                //$$ ((AccessorTranslatableComponent) chat).setDecomposedWith(null);
                 //#else
                 //$$ ((AccessorTranslatableComponent) chat).setDecomposedLanguageTime(-1);
                 //#endif
