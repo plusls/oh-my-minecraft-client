@@ -10,6 +10,11 @@ import fi.dy.masa.malilib.config.options.ConfigBoolean;
 import fi.dy.masa.malilib.config.options.ConfigHotkey;
 import fi.dy.masa.malilib.hotkeys.KeybindSettings;
 import fi.dy.masa.malilib.util.restrictions.UsageRestriction;
+//#if MC > 11802
+import net.minecraft.Util;
+import net.minecraft.client.gui.chat.ClientChatPreview;
+import net.minecraft.network.chat.Component;
+//#endif
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.resources.language.I18n;
@@ -270,10 +275,13 @@ public class Configs {
                 if (hitresult.getType() == HitResult.Type.BLOCK) {
                     BlockPos lookPos = ((BlockHitResult) hitresult).getBlockPos();
                     if (client.player != null) {
+                        String message = String.format("[%d, %d, %d]", lookPos.getX(), lookPos.getY(), lookPos.getZ());
                         //#if MC > 11802
-                        client.player.chatSigned(String.format("[%d, %d, %d]", lookPos.getX(), lookPos.getY(), lookPos.getZ()), null);
+                        ClientChatPreview chatPreview = new ClientChatPreview(Minecraft.getInstance());
+                        Component component = Util.mapNullable(chatPreview.pull(message), ClientChatPreview.Preview::response);
+                        client.player.chatSigned(message, component);
                         //#else
-                        //$$ client.player.chat(String.format("[%d, %d, %d]", lookPos.getX(), lookPos.getY(), lookPos.getZ()));
+                        //$$ client.player.chat(message);
                         //#endif
                     }
                 }
