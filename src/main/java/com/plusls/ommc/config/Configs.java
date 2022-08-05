@@ -1,5 +1,10 @@
 package com.plusls.ommc.config;
 
+//#if MC > 11802
+import net.minecraft.Util;
+import net.minecraft.client.gui.chat.ClientChatPreview;
+import net.minecraft.network.chat.Component;
+//#endif
 import com.google.common.collect.Lists;
 import com.plusls.ommc.ModInfo;
 import com.plusls.ommc.feature.highlithtWaypoint.HighlightWaypointUtil;
@@ -270,7 +275,14 @@ public class Configs {
                 if (hitresult.getType() == HitResult.Type.BLOCK) {
                     BlockPos lookPos = ((BlockHitResult) hitresult).getBlockPos();
                     if (client.player != null) {
-                        client.player.chat(String.format("[%d, %d, %d]", lookPos.getX(), lookPos.getY(), lookPos.getZ()));
+                        String message = String.format("[%d, %d, %d]", lookPos.getX(), lookPos.getY(), lookPos.getZ());
+                        //#if MC >= 11900
+                        ClientChatPreview chatPreview = new ClientChatPreview(Minecraft.getInstance());
+                        Component component = Util.mapNullable(chatPreview.pull(message), ClientChatPreview.Preview::response);
+                        client.player.chatSigned(message, component);
+                        //#else
+                        //$$ client.player.chat(message);
+                        //#endif
                     }
                 }
             }

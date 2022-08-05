@@ -30,25 +30,18 @@ public abstract class MixinClientSuggestionProvider implements FabricClientComma
 
     @Override
     public void sendFeedback(Component message) {
-        //#if MC > 11802
-        minecraft.gui.handleSystemChat(Objects.requireNonNull(Objects.requireNonNull(minecraft.level).registryAccess().registryOrThrow(Registry.CHAT_TYPE_REGISTRY).get(ChatType.SYSTEM)), message);
-        //#elseif MC > 11502
-        //$$ minecraft.gui.handleChat(ChatType.SYSTEM, message, UtilCompatApi.NIL_UUID);
-        //#else
-        //$$ minecraft.gui.handleChat(ChatType.SYSTEM, message);
-        //#endif
+        LocalPlayer localPlayer = minecraft.player;
+        if (localPlayer != null) {
+            localPlayer.displayClientMessage(message, false);
+        }
     }
 
     @Override
     public void sendError(Component message) {
-        Component m = ComponentCompatApi.literal("").append(message).withStyle(ChatFormatting.RED);
-        //#if MC > 11802
-        minecraft.gui.handleSystemChat(Objects.requireNonNull(Objects.requireNonNull(minecraft.level).registryAccess().registryOrThrow(Registry.CHAT_TYPE_REGISTRY).get(ChatType.SYSTEM)), m);
-        //#elseif MC > 11502
-        //$$ minecraft.gui.handleChat(ChatType.SYSTEM, m, UtilCompatApi.NIL_UUID);
-        //#else
-        //$$ minecraft.gui.handleChat(ChatType.SYSTEM, m);
-        //#endif
+        LocalPlayer localPlayer = minecraft.player;
+        if (localPlayer != null) {
+            localPlayer.displayClientMessage(message.copy().withStyle(ChatFormatting.RED), false);
+        }
     }
 
     @Override
