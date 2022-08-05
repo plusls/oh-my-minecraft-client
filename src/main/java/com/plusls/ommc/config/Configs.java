@@ -270,7 +270,11 @@ public class Configs {
                 if (hitresult.getType() == HitResult.Type.BLOCK) {
                     BlockPos lookPos = ((BlockHitResult) hitresult).getBlockPos();
                     if (client.player != null) {
-                        client.player.chat(String.format("[%d, %d, %d]", lookPos.getX(), lookPos.getY(), lookPos.getZ()));
+                        //#if MC > 11802
+                        client.player.chatSigned(String.format("[%d, %d, %d]", lookPos.getX(), lookPos.getY(), lookPos.getZ()), null);
+                        //#else
+                        //$$ client.player.chat(String.format("[%d, %d, %d]", lookPos.getX(), lookPos.getY(), lookPos.getZ()));
+                        //#endif
                     }
                 }
             }

@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 
 //#if MC > 11502
-import net.minecraft.util.FormattedCharSequence;
+//$$ import net.minecraft.util.FormattedCharSequence;
 //#endif
 
 // From https://www.curseforge.com/minecraft/mc-mods/dont-clear-chat-history
@@ -25,9 +25,15 @@ public class MixinChatHud {
         }
     }
 
-    @Redirect(method = "addMessage(Lnet/minecraft/network/chat/Component;IIZ)V", at = @At(value = "INVOKE", target = "Ljava/util/List;size()I", ordinal = 0))
-    //#if MC > 11502
-    private int modifySize(List<GuiMessage<FormattedCharSequence>> list) {
+    //#if MC > 11802
+    @Redirect(method = "addMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;ILnet/minecraft/client/GuiMessageTag;Z)V", at = @At(value = "INVOKE", target = "Ljava/util/List;size()I", ordinal = 2))
+    //#else
+    //$$ @Redirect(method = "addMessage(Lnet/minecraft/network/chat/Component;IIZ)V", at = @At(value = "INVOKE", target = "Ljava/util/List;size()I", ordinal = 0))
+    //#endif
+    //#if MC > 11802
+    private int modifySize(List<GuiMessage.Line> list){
+    //#elseif MC > 11502
+    //$$ private int modifySize(List<GuiMessage<FormattedCharSequence>> list) {
     //#else
     //$$ private int modifySize(List<GuiMessage> list) {
     //#endif
