@@ -31,4 +31,19 @@ public class MixinClientPacketListener {
         // to be in the same dispatcher and completion results.
         ClientCommandInternals.addCommands((CommandDispatcher) commands, (FabricClientCommandSource) suggestionsProvider);
     }
+
+    //#if MC >= 11903
+    @Inject(
+            method = "sendCommand",
+            at = @At(
+                    value = "HEAD"
+            ),
+            cancellable = true
+    )
+    private void onCommand(String string, CallbackInfo ci) {
+        if (ClientCommandInternals.executeCommand("/" + string)) {
+            ci.cancel();
+        }
+    }
+    //#endif
 }

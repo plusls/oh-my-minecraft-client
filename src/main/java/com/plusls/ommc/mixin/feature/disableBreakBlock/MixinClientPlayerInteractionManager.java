@@ -5,7 +5,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
+//#if MC >= 11903
+import net.minecraft.core.registries.BuiltInRegistries;
+//#else
+//$$ import net.minecraft.core.Registry;
+//#endif
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
@@ -35,7 +39,12 @@ public class MixinClientPlayerInteractionManager {
         Player player = Minecraft.getInstance().player;
         if (Configs.disableBreakBlock &&
                 world != null && player != null) {
-            String blockId = Registry.BLOCK.getKey(world.getBlockState(pos).getBlock()).toString();
+            //#if MC >= 11903
+            String blockId = BuiltInRegistries.BLOCK.getKey(world.getBlockState(pos).getBlock()).toString();
+            //#else
+            //$$ String blockId = Registry.BLOCK.getKey(world.getBlockState(pos).getBlock()).toString();
+            //#endif
+
             String blockName = world.getBlockState(pos).getBlock().getName().getString();
             return Configs.breakBlockBlackList.stream().anyMatch(s -> blockId.contains(s) || blockName.contains(s));
         }

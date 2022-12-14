@@ -7,7 +7,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.core.Registry;
+//#if MC >= 11903
+import net.minecraft.core.registries.BuiltInRegistries;
+//#else
+//$$ import net.minecraft.core.Registry;
+//#endif
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -28,7 +32,7 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayer {
 
     public MixinClientPlayerEntity(ClientLevel world, GameProfile profile) {
         //#if MC > 11802
-        super(world, profile, null);
+        super(world, profile);
         //#else
         //$$ super(world, profile);
         //#endif
@@ -65,8 +69,10 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayer {
             return;
         }
         prevFallFlying = this.isFallFlying();
-        AutoSwitchElytraUtil.autoSwitch(AutoSwitchElytraUtil.CHEST_SLOT_IDX, this.minecraft, (LocalPlayer) (Object) this, itemStack -> Registry.ITEM.getKey(itemStack.getItem()).toString().contains("_chestplate"));
-
+        //#if MC >= 11903
+        AutoSwitchElytraUtil.autoSwitch(AutoSwitchElytraUtil.CHEST_SLOT_IDX, this.minecraft, (LocalPlayer) (Object) this, itemStack -> BuiltInRegistries.ITEM.getKey(itemStack.getItem()).toString().contains("_chestplate"));
+        //#else
+        //$$ AutoSwitchElytraUtil.autoSwitch(AutoSwitchElytraUtil.CHEST_SLOT_IDX, this.minecraft, (LocalPlayer) (Object) this, itemStack -> Registry.ITEM.getKey(itemStack.getItem()).toString().contains("_chestplate"));
+        //#endif
     }
-
 }

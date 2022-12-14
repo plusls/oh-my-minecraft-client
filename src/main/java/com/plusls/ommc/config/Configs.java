@@ -1,10 +1,5 @@
 package com.plusls.ommc.config;
 
-//#if MC > 11802
-import net.minecraft.Util;
-import net.minecraft.client.gui.chat.ClientChatPreview;
-import net.minecraft.network.chat.Component;
-//#endif
 import com.google.common.collect.Lists;
 import com.plusls.ommc.ModInfo;
 import com.plusls.ommc.feature.highlithtWaypoint.HighlightWaypointUtil;
@@ -224,7 +219,7 @@ public class Configs {
     public static boolean flight = true;
 
     @Numeric(minValue = 0, maxValue = 65535)
-    @Config(category = ConfigCategory.ADVANCED_INTEGRATED_SERVER, dependencies = @Dependencies(predicate = SinglePlayerServerOptionPredicate.class))
+    @Config(category = ConfigCategory.ADVANCED_INTEGRATED_SERVER, dependencies = @Dependencies(not = @Dependency(value = "minecraft", versionPredicate = "<1.19.3"), predicate = SinglePlayerServerOptionPredicate.class))
     public static int port = 0;
 
     private static boolean first = true;
@@ -276,10 +271,8 @@ public class Configs {
                     BlockPos lookPos = ((BlockHitResult) hitresult).getBlockPos();
                     if (client.player != null) {
                         String message = String.format("[%d, %d, %d]", lookPos.getX(), lookPos.getY(), lookPos.getZ());
-                        //#if MC >= 11900
-                        ClientChatPreview chatPreview = new ClientChatPreview(Minecraft.getInstance());
-                        Component component = Util.mapNullable(chatPreview.pull(message), ClientChatPreview.Preview::response);
-                        client.player.chatSigned(message, component);
+                        //#if MC >= 11903
+                        client.player.connection.sendChat(message);
                         //#else
                         //$$ client.player.chat(message);
                         //#endif

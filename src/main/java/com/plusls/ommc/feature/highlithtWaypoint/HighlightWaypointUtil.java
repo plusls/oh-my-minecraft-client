@@ -3,8 +3,11 @@ package com.plusls.ommc.feature.highlithtWaypoint;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
-import com.mojang.math.Matrix3f;
-import com.mojang.math.Matrix4f;
+//#if MC >= 11903
+import com.mojang.math.Axis;
+//#else
+//$$ import top.hendrixshen.magiclib.compat.minecraft.math.Vector3fCompatApi;
+//#endif
 import com.plusls.ommc.ModInfo;
 import com.plusls.ommc.api.command.ClientCommandManager;
 import com.plusls.ommc.config.Configs;
@@ -28,8 +31,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
 import top.hendrixshen.magiclib.compat.minecraft.blaze3d.vertex.VertexFormatCompatApi;
-import top.hendrixshen.magiclib.compat.minecraft.math.Vector3fCompatApi;
 import top.hendrixshen.magiclib.compat.minecraft.network.chat.ComponentCompatApi;
 import top.hendrixshen.magiclib.compat.minecraft.network.chat.StyleCompatApi;
 
@@ -393,7 +397,11 @@ public class HighlightWaypointUtil {
         float green = color[1];
         float blue = color[2];
         matrices.pushPose();
-        matrices.mulPose(Vector3fCompatApi.YP.rotationDegrees(f * 2.25F - 45.0F));
+        //#if MC >= 11903
+        matrices.mulPose(Axis.YP.rotationDegrees(f * 2.25F - 45.0F));
+        //#else
+        //$$ matrices.mulPose(Vector3fCompatApi.YP.rotationDegrees(f * 2.25F - 45.0F));
+        //#endif
         float y = 0.0F;
         float ab = 0.0F;
         float ac = -innerRadius;
@@ -493,8 +501,13 @@ public class HighlightWaypointUtil {
         matrixStack.translate(0.5f, 0.5f, 0.5f);
 
         // 在玩家正对着的平面进行绘制
-        matrixStack.mulPose(Vector3fCompatApi.YP.rotationDegrees(-cameraEntity.getYRot()));
-        matrixStack.mulPose(Vector3fCompatApi.XP.rotationDegrees(mc.getEntityRenderDispatcher().camera.getXRot()));
+        //#if MC >= 11903
+        matrixStack.mulPose(Axis.YP.rotationDegrees(-cameraEntity.getYRot()));
+        matrixStack.mulPose(Axis.XP.rotationDegrees(mc.getEntityRenderDispatcher().camera.getXRot()));
+        //#else
+        //$$ matrixStack.mulPose(Vector3fCompatApi.YP.rotationDegrees(-cameraEntity.getYRot()));
+        //$$ matrixStack.mulPose(Vector3fCompatApi.XP.rotationDegrees(mc.getEntityRenderDispatcher().camera.getXRot()));
+        //#endif
         // 缩放绘制的大小，让 waypoint 根据距离缩放
         matrixStack.scale(-scale, -scale, -scale);
         Matrix4f matrix4f = matrixStack.last().pose();

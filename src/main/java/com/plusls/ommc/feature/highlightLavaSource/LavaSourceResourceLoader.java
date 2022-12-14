@@ -4,11 +4,13 @@ import com.plusls.ommc.ModInfo;
 import com.plusls.ommc.config.Configs;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
-import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
+//#if MC < 11903
+//$$ import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
+//$$ import net.minecraft.client.renderer.texture.TextureAtlas;
+//#endif
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.resources.ResourceLocation;
@@ -35,11 +37,13 @@ public class LavaSourceResourceLoader implements SimpleSynchronousResourceReload
     public static TextureAtlasSprite defaultLavaSourceStillSprite;
 
     public static void init() {
-        ClientSpriteRegistryCallback.event(TextureAtlas.LOCATION_BLOCKS).register((atlasTexture, registry) ->
-        {
-            registry.register(flowingSpriteId);
-            registry.register(stillSpriteId);
-        });
+        //#if MC < 11903
+        //$$ ClientSpriteRegistryCallback.event(TextureAtlas.LOCATION_BLOCKS).register((atlasTexture, registry) ->
+        //$$ {
+        //$$     registry.register(flowingSpriteId);
+        //$$     registry.register(stillSpriteId);
+        //$$ });
+        //#endif
         ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new LavaSourceResourceLoader());
     }
 

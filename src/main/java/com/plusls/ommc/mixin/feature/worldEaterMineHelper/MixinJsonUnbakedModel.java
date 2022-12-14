@@ -1,6 +1,5 @@
 package com.plusls.ommc.mixin.feature.worldEaterMineHelper;
 
-import com.mojang.math.Vector3f;
 import com.plusls.ommc.feature.worldEaterMineHelper.WorldEaterMineHelperUtil;
 import com.plusls.ommc.mixin.accessor.AccessorBlockModel;
 import net.minecraft.client.renderer.block.model.BlockElement;
@@ -10,11 +9,16 @@ import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.*;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
+//#if MC >= 11903
+import net.minecraft.core.registries.BuiltInRegistries;
+//#else
+//$$ import net.minecraft.core.Registry;
+//#endif
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -38,13 +42,19 @@ public abstract class MixinJsonUnbakedModel implements UnbakedModel {
     @Shadow @Nullable protected ResourceLocation parentLocation;
 
     @Inject(
-            //#if MC > 11404
-            method = "bake(Lnet/minecraft/client/resources/model/ModelBakery;Lnet/minecraft/client/renderer/block/model/BlockModel;Ljava/util/function/Function;Lnet/minecraft/client/resources/model/ModelState;Lnet/minecraft/resources/ResourceLocation;Z)Lnet/minecraft/client/resources/model/BakedModel;",
+            //#if MC >= 11903
+            method = "bake(Lnet/minecraft/client/resources/model/ModelBaker;Lnet/minecraft/client/renderer/block/model/BlockModel;Ljava/util/function/Function;Lnet/minecraft/client/resources/model/ModelState;Lnet/minecraft/resources/ResourceLocation;Z)Lnet/minecraft/client/resources/model/BakedModel;",
+            //#elseif MC > 11404
+            //$$ method = "bake(Lnet/minecraft/client/resources/model/ModelBakery;Lnet/minecraft/client/renderer/block/model/BlockModel;Ljava/util/function/Function;Lnet/minecraft/client/resources/model/ModelState;Lnet/minecraft/resources/ResourceLocation;Z)Lnet/minecraft/client/resources/model/BakedModel;",
             //#else
             //$$ method = "bake(Lnet/minecraft/client/resources/model/ModelBakery;Lnet/minecraft/client/renderer/block/model/BlockModel;Ljava/util/function/Function;Lnet/minecraft/client/resources/model/ModelState;)Lnet/minecraft/client/resources/model/BakedModel;",
             //#endif
             at = @At(value = "HEAD"), cancellable = true)
-    private void generateCustomBakedModel(ModelBakery loader, BlockModel parent,
+    //#if MC >= 11903
+    private void generateCustomBakedModel(ModelBaker loader, BlockModel parent,
+    //#else
+    //$$ private void generateCustomBakedModel(ModelBakery loader, BlockModel parent,
+    //#endif
                                           //#if MC > 11404
                                           Function<Material, TextureAtlasSprite> textureGetter,
                                           //#else
@@ -63,7 +73,11 @@ public abstract class MixinJsonUnbakedModel implements UnbakedModel {
         }
         String[] splitResult = id.getPath().split("/");
         ResourceLocation blockId = new ResourceLocation(splitResult[splitResult.length - 1]);
-        Block block = Registry.BLOCK.get(blockId);
+        //#if MC >= 11903
+        Block block = BuiltInRegistries.BLOCK.get(blockId);
+        //#else
+        //$$ Block block = Registry.BLOCK.get(blockId);
+        //#endif
         if (block == Blocks.AIR) {
             return;
         }

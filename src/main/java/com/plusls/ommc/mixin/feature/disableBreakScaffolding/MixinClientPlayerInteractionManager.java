@@ -5,7 +5,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
+//#if MC >= 11903
+import net.minecraft.core.registries.BuiltInRegistries;
+//#else
+//$$ import net.minecraft.core.Registry;
+//#endif
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -37,7 +41,11 @@ public class MixinClientPlayerInteractionManager {
         if (Configs.disableBreakScaffolding &&
                 world != null && world.getBlockState(pos).is(Blocks.SCAFFOLDING) &&
                 player != null) {
-            String itemId = Registry.ITEM.getKey(player.getMainHandItem().getItem()).toString();
+            //#if MC >= 11903
+            String itemId = BuiltInRegistries.ITEM.getKey(player.getMainHandItem().getItem()).toString();
+            //#else
+            //$$ String itemId = Registry.ITEM.getKey(player.getMainHandItem().getItem()).toString();
+            //#endif
             String itemName = player.getMainHandItem().getItem().getDescription().getString();
             return Configs.breakScaffoldingWhiteList.stream().noneMatch(s -> itemId.contains(s) || itemName.contains(s));
         }
