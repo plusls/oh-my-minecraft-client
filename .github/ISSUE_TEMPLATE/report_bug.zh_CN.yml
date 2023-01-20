@@ -1,5 +1,6 @@
 name: 提交问题
 description: 报告问题以帮助我们改进 Oh My Minecraft Client
+title: "[Bug] "
 labels: [ bug ]
 body:
   - type: textarea
