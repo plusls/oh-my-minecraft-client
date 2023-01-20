@@ -1,6 +1,6 @@
 name: Report Bug
 description: Report a bug and help us improve Oh My Minecraft Client
-title: \[Bug\] 
+title: "[Bug] "
 labels: [ bug ]
 body:
   - type: textarea
