@@ -1,5 +1,6 @@
 name: 反馈或建议
 description: 给 Oh My Minecraft Client 模组提个建议
+title: "[反馈/建议] "
 labels: [ enhancement ]
 body:
   - type: textarea
