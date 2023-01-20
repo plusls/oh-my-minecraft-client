@@ -32,9 +32,9 @@ body:
   - type: input
     id: csl-log
     attributes:
-      label: Link to CustomSkinLoader.log if applicable
+      label: Link to latest.log if applicable
       description: |
-       The path to the file is `<minecraft-directory>/CustomSkinLoader/CustomSkinLoader.log`.
+       The path to the file is `<minecraft-directory>/logs/latest.log`.
        [Generate URL](https://mclo.gs)
       placeholder: "https://"
   - type: input
