@@ -1,12 +1,12 @@
 plugins {
     id("maven-publish")
-    id("fabric-loom").version("0.12-SNAPSHOT").apply(false)
+    id("fabric-loom").version("1.0-SNAPSHOT").apply(false)
     // https://github.com/Juuxel/LoomQuiltflower
-    id("io.github.juuxel.loom-quiltflower").version("1.7.0").apply(false)
+    id("io.github.juuxel.loom-quiltflower").version("1.8.0").apply(false)
     // https://github.com/ReplayMod/preprocessor
     // https://github.com/Fallen-Breath/preprocessor
     id("com.replaymod.preprocess").version("b7207cffa9")
-    id("org.ajoberstar.grgit").version("4.1.0")
+    id("org.ajoberstar.grgit").version("5.0.0")
 }
 
 preprocess {
