@@ -9,6 +9,9 @@ import net.minecraft.client.multiplayer.ClientSuggestionProvider;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -57,5 +60,25 @@ public abstract class MixinClientSuggestionProvider implements FabricClientComma
     @Override
     public ClientLevel getWorld() {
         return minecraft.level;
+    }
+
+    @Override
+    public Entity getEntity() {
+        return FabricClientCommandSource.super.getEntity();
+    }
+
+    @Override
+    public Vec3 getPosition() {
+        return FabricClientCommandSource.super.getPosition();
+    }
+
+    @Override
+    public Vec2 getRotation() {
+        return FabricClientCommandSource.super.getRotation();
+    }
+
+    @Override
+    public Object getMeta(String key) {
+        return FabricClientCommandSource.super.getMeta(key);
     }
 }
