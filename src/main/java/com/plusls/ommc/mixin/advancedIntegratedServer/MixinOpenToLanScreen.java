@@ -11,8 +11,9 @@ import org.spongepowered.asm.mixin.Mixin;
 @Mixin(ShareToLanScreen.class)
 public class MixinOpenToLanScreen {
     //#if MC < 11903
+    //$$ @SuppressWarnings("InvalidInjectorMethodSignature")
     //$$ @ModifyVariable(method = "method_19851",
-    //$$         at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/util/HttpUtil;getAvailablePort()I", ordinal = 0),
+    //$$         at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/util/HttpUtil;getAvailablePort()I", ordinal = 0, remap = true),
     //$$         ordinal = 0, remap = false)
     //$$ private int modifyPort(int port) {
     //$$     int ret = Configs.port;
