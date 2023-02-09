@@ -1,11 +1,14 @@
 package com.plusls.ommc.api.command;
 
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentType;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+
+//#if MC <= 11605
+//$$ import com.mojang.brigadier.CommandDispatcher;
+//$$ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+//$$ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
+//#endif
 
 // Code from https://github.com/FabricMC/fabric/blob/1.17/fabric-command-api-v1/src/main/java/net/fabricmc/fabric/api/client/command/v1/ClientCommandManager.java
 
@@ -45,33 +48,35 @@ import net.fabricmc.api.Environment;
  */
 @Environment(EnvType.CLIENT)
 public final class ClientCommandManager {
-    /**
-     * The command dispatcher that handles client command registration and execution.
-     */
-    public static final CommandDispatcher<FabricClientCommandSource> DISPATCHER = new CommandDispatcher<>();
-
-    private ClientCommandManager() {
-    }
-
-    /**
-     * Creates a literal argument builder.
-     *
-     * @param name the literal name
-     * @return the created argument builder
-     */
-    public static LiteralArgumentBuilder<FabricClientCommandSource> literal(String name) {
-        return LiteralArgumentBuilder.literal(name);
-    }
-
-    /**
-     * Creates a required argument builder.
-     *
-     * @param name the name of the argument
-     * @param type the type of the argument
-     * @param <T>  the type of the parsed argument value
-     * @return the created argument builder
-     */
-    public static <T> RequiredArgumentBuilder<FabricClientCommandSource, T> argument(String name, ArgumentType<T> type) {
-        return RequiredArgumentBuilder.argument(name, type);
-    }
+	//#if MC <= 11605
+    //$$ /**
+    //$$  * The command dispatcher that handles client command registration and execution.
+    //$$  */
+    //$$ public static final CommandDispatcher<FabricClientCommandSource> DISPATCHER = new CommandDispatcher<>();
+    //$$ 
+    //$$ private ClientCommandManager() {
+    //$$ }
+    //$$ 
+    //$$ /**
+    //$$  * Creates a literal argument builder.
+    //$$  *
+    //$$  * @param name the literal name
+    //$$  * @return the created argument builder
+    //$$  */
+    //$$ public static LiteralArgumentBuilder<FabricClientCommandSource> literal(String name) {
+    //$$     return LiteralArgumentBuilder.literal(name);
+    //$$ }
+    //$$ 
+    //$$ /**
+    //$$  * Creates a required argument builder.
+    //$$  *
+    //$$  * @param name the name of the argument
+    //$$  * @param type the type of the argument
+    //$$  * @param <T>  the type of the parsed argument value
+    //$$  * @return the created argument builder
+    //$$  */
+    //$$ public static <T> RequiredArgumentBuilder<FabricClientCommandSource, T> argument(String name, ArgumentType<T> type) {
+    //$$     return RequiredArgumentBuilder.argument(name, type);
+    //$$ }
+	//#endif
 }

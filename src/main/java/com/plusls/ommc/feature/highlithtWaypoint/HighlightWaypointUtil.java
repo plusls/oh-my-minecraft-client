@@ -9,10 +9,13 @@ import com.mojang.math.Axis;
 //$$ import top.hendrixshen.magiclib.compat.minecraft.math.Vector3fCompatApi;
 //#endif
 import com.plusls.ommc.ModInfo;
-import com.plusls.ommc.api.command.ClientCommandManager;
 import com.plusls.ommc.config.Configs;
 import com.plusls.ommc.mixin.accessor.AccessorTextComponent;
 import com.plusls.ommc.mixin.accessor.AccessorTranslatableComponent;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+//#if MC >= 11903
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+//#endif
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -79,26 +82,35 @@ public class HighlightWaypointUtil {
     //#endif
 
     public static void init() {
-        ClientCommandManager.DISPATCHER.register(ClientCommandManager.literal(HIGHLIGHT_COMMAND).then(
-                ClientCommandManager.argument("x", IntegerArgumentType.integer()).then(
-                        ClientCommandManager.argument("y", IntegerArgumentType.integer()).then(
-                                ClientCommandManager.argument("z", IntegerArgumentType.integer()).
-                                        executes(context -> {
-                                            int x = IntegerArgumentType.getInteger(context, "x");
-                                            int y = IntegerArgumentType.getInteger(context, "y");
-                                            int z = IntegerArgumentType.getInteger(context, "z");
-                                            BlockPos pos = new BlockPos(x, y, z);
-                                            if (pos.equals(highlightPos)) {
-                                                lastBeamTime = System.currentTimeMillis() + 10 * 1000;
-                                            } else {
-                                                highlightPos = new BlockPos(x, y, z);
-                                                lastBeamTime = 0;
-                                            }
-                                            return 0;
-                                        })
-                        )
-                )
-        ));
+        //#if MC >= 11903
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> dispatcher.register(
+        //#else
+        //$$ ClientCommandManager.DISPATCHER.register(
+        //#endif
+            ClientCommandManager.literal(HIGHLIGHT_COMMAND).then(
+                    ClientCommandManager.argument("x", IntegerArgumentType.integer()).then(
+                            ClientCommandManager.argument("y", IntegerArgumentType.integer()).then(
+                                    ClientCommandManager.argument("z", IntegerArgumentType.integer()).
+                                            executes(context -> {
+                                                int x = IntegerArgumentType.getInteger(context, "x");
+                                                int y = IntegerArgumentType.getInteger(context, "y");
+                                                int z = IntegerArgumentType.getInteger(context, "z");
+                                                BlockPos pos = new BlockPos(x, y, z);
+                                                if (pos.equals(highlightPos)) {
+                                                    lastBeamTime = System.currentTimeMillis() + 10 * 1000;
+                                                } else {
+                                                    highlightPos = new BlockPos(x, y, z);
+                                                    lastBeamTime = 0;
+                                                }
+                                                return 0;
+                                            })
+                            )
+                    )
+        //#if MC >= 11903
+            )));
+        //#else
+        //$$ ));
+        //#endif
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) ->
                         //#if MC > 11502
                         currentWorld = Objects.requireNonNull(client.level).dimension()

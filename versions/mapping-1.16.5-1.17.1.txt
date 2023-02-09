@@ -1,0 +1,2 @@
+com.plusls.ommc.api.command.ClientCommandManager net.fabricmc.fabric.api.client.command.v1.ClientCommandManager
+com.plusls.ommc.api.command.FabricClientCommandSource net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource
