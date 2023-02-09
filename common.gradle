@@ -12,13 +12,16 @@ preprocess {
 
 repositories {
     maven {
-        url 'https://www.cursemaven.com/'
+        name("CurseForge Maven")
+        url("https://www.cursemaven.com")
+    }
+    maven{
+        name("Modrinth Maven")
+        url("https://api.modrinth.com/maven")
     }
     maven {
-        url = "https://api.modrinth.com/maven"
-    }
-    maven {
-        url 'https://maven.hendrixshen.top'
+        name("Nyan Maven")
+        url("https://maven.hendrixshen.top")
     }
     mavenCentral()
     mavenLocal()
@@ -37,15 +40,62 @@ dependencies {
 }
 
 loom {
-//    mixin {
-//        // 如果使用 Legacy Mixin Ap，有时候 Mixin class remap 会有问题，该 remap 的不 remap
-//        useLegacyMixinAp = false
-//    }
-    runConfigs.all {
-        // to make sure it generates all "Minecraft Client (:subproject_name)" applications
-        // ideConfigGenerated = true
+    interfaceInjection {
+        enableDependencyInterfaceInjection = true
+    }
+
+    runConfigs.configureEach {
+        // Dump modified classes automatically.
         property("mixin.debug.export", "true")
-        runDir "../../run"
+    }
+
+    // We need large window.
+    runConfigs.client {
+        programArgs([
+                "--width",
+                "1920",
+                "--height",
+                "1080",
+        ])
+        runDir("run/client")
+    }
+
+    // Useless, but we write here.
+    runConfigs.server {
+        runDir("run/server")
+    }
+
+    // Setup client default settings.
+    runClient {
+        defaultCharacterEncoding("UTF-8")
+        if (!new File("${projectDir}/run/client/options.txt").exists()) {
+            new File("${projectDir}/run/client").mkdirs()
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("${projectDir}/run/client/options.txt"))
+            bufferedWriter.write("autoJump:false\n")
+            bufferedWriter.write("enableVsync:false\n")
+            bufferedWriter.write("forceUnicodeFont:true\n")
+            bufferedWriter.write("fov:1.0\n")
+            bufferedWriter.write("gamma:16.0\n")
+            bufferedWriter.write("guiScale:3\n")
+            bufferedWriter.write("lang:${Locale.getDefault().toString()}\n")
+            bufferedWriter.write("maxFps:260\n")
+            bufferedWriter.write("renderDistance:10\n")
+            bufferedWriter.write("soundCategory_master:0.0")
+            bufferedWriter.close()
+        }
+    }
+
+    // Useless, but we write here.
+    // Setup server default settings.
+    runServer {
+        defaultCharacterEncoding("UTF-8")
+        // Agree eula before server init.
+        if (!new File("${projectDir}/run/server/eula.txt").exists()) {
+            new File("${projectDir}/run/server").mkdirs()
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("${projectDir}/run/server/eula.txt"))
+            bufferedWriter.write("eula=true")
+            bufferedWriter.close()
+        }
     }
 }
 
@@ -53,12 +103,11 @@ remapJar {
     remapperIsolation = true
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
-
-archivesBaseName = project.archives_base_name + "-" + project.minecraft_version
-version = project.parent.version
-group = project.maven_group
+setSourceCompatibility(JavaVersion.VERSION_1_8)
+setTargetCompatibility(JavaVersion.VERSION_1_8)
+setArchivesBaseName("${project.archives_base_name}-${project.minecraft_version}")
+setVersion(project.parent.version)
+setGroup(project.maven_group)
 
 processResources {
     inputs.property("version", version)
@@ -80,7 +129,7 @@ processResources {
 // ensure that the encoding is set to UTF-8, no matter what the system default is
 // this fixes some edge cases with special characters not displaying correctly
 // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
     options.encoding = "UTF-8"
 }
 
