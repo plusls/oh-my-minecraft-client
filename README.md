@@ -1,185 +1,345 @@
 # Oh My Minecraft Client
 
-[![Issues](https://img.shields.io/github/issues/plusls/oh-my-minecraft-client.svg)](https://github.com/plusls/oh-my-minecraft-client/issues)
 [![MC Versions](http://cf.way2muchnoise.eu/versions/For%20MC_454900_all.svg)](https://www.curseforge.com/minecraft/mc-mods/oh-my-minecraft-client)
 [![CurseForge](http://cf.way2muchnoise.eu/full_454900_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/oh-my-minecraft-client)
+[![Issues](https://img.shields.io/github/issues/plusls/oh-my-minecraft-client?style=flat-square)](https://github.com/plusls/oh-my-minecraft-client/issues)
+[![Pull Requests](https://img.shields.io/github/issues-pr/plusls/oh-my-minecraft-client?style=flat-square)](https://github.com/plusls/oh-my-minecraft-client/pulls)
+[![CI](https://img.shields.io/github/actions/workflow/status/plusls/oh-my-minecraft-client/build.yml?label=Build&style=flat-square)](https://github.com/plusls/oh-my-minecraft-client/actions/workflows/build.yml)
+[![Publish Release](https://img.shields.io/github/actions/workflow/status/plusls/oh-my-minecraft-client/publish.yml?label=Publish%20Release&style=flat-square)](https://github.com/plusls/oh-my-minecraft-client/actions/workflows/publish.yml)
+[![Release](https://img.shields.io/github/v/release/plusls/oh-my-minecraft-client?include_prereleases&style=flat-square)](https://github.com/plusls/oh-my-minecraft-client/releases)
 [![Github Release Downloads](https://img.shields.io/github/downloads/plusls/oh-my-minecraft-client/total?label=Github%20Release%20Downloads&style=flat-square)](https://github.com/plusls/oh-my-minecraft-client/releases)
 
-[>>> English <<<](./README_EN.md)
+English | [中文](./README_ZH_CN.md)
 
 Make Minecraft Client Great Again!
 
-默认使用 O+C 打开设置界面
+The default hotkey to open the in-game config GUI is **T + C**.
 
-## 依赖
-
-+ [malilib](https://www.curseforge.com/minecraft/mc-mods/malilib)
-+ [fabric-api](https://www.curseforge.com/minecraft/mc-mods/fabric-api)
+# Dependencies
+| Dependency | Download                                                                                                                                                                           |
+|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Fabric API | [CurseForge](https://www.curseforge.com/minecraft/mc-mods/fabric-api) &#124; [GitHub](https://github.com/FabricMC/fabric) &#124; [Modrinth](https://modrinth.com/mod/fabric-api)   |
+| MagicLib   | [CurseForge](https://www.curseforge.com/minecraft/mc-mods/magiclib) &#124; [GitHub](https://github.com/Hendrix-Shen/MagicLib) &#124; [Modrinth](https://modrinth.com/mod/magiclib) |
 
 ## Generic
+## clearWaypoint
+A hotkey to clear highlight waypoint.
 
-### 不清空聊天历史记录
+- Category: `Generic`
+- Type: `hotkey`
+- Default value: `C`
+## debug
+Display debug message
 
-不清空聊天历史记录，不清空输入历史记录
+- Category: `Generic`
+- Type: `boolean`
+- Default value: `false`
+## dontClearChatHistory
+Don't clear chat history and input history.
 
-### 高亮坐标点
+- Category: `Generic`
+- Type: `boolean`
+- Default value: `false`
+## forceParseWaypointFromChat
+Force parse waypoint from chat (such it will override the clickevent of rtext).
 
-添加了命令 `/highlightWaypoint` 来高亮坐标点
-
-会自动解析聊天栏的坐标点（形如 `[x:1, y:2, z:3]`，`(x:1, y:2, z:3)`, `[1, 2, 3]`, `(1, 2, 3)`）
-
-效果如下：
+- Category: `Generic`
+- Type: `boolean with hotkey`
+- Default value: `false`, `no hotkey`
 
 ![highlightWaypoint](./docs/img/highlightWaypoint.png)
+## openConfigGui
+A hotkey to open the in-game Config GUI
 
-可用快捷键取消高亮
+- Category: `Generic`
+- Type: `hotkey`
+- Default value: `O,C`
+## parseWaypointFromChat
+Parse waypoint from chat.
 
-### 强制从聊天中解析路径点
+- Category: `Generic`
+- Type: `boolean with hotkey`
+- Default value: `true`, `no hotkey`
+## sendLookingAtPos
+A hotkey to send looking at pos.
 
-强制从聊天中解析路径点，就算该信息中存在 click event 也会将其覆盖
+- Category: `Generic`
+- Type: `hotkey`
+- Default value: `O,P`
+## sortInventory
+A hotkey to sort inventory.
 
-### 发送当前注视的方块的坐标
+- Category: `Generic`
+- Type: `hotkey`
+- Default value: `R`
+## sortInventoryShulkerBoxLast
+Sort inventory shulker box last.
 
-发送当前注视的方块的坐标
+- Category: `Generic`
+- Type: `enum`
+- Default value: `AUTO`
+- Option values: `AUTO`, `FALSE`, `TRUE`
+## sortInventorySupportEmptyShulkerBoxStack
+Support empty shulker box stack when sort inventory.
 
-### 整理仓库
+- Category: `Generic`
+- Type: `boolean with hotkey`
+- Default value: `false`, `no hotkey`
 
-按下快捷键后可以自动整理仓库（R 键整理的替代品）
+## Feature Toggles
+## autoSwitchElytra
+Auto switch elytra and chestplate.
 
-### 整理仓库时潜影盒放在最后
-
-整理仓库时潜影盒放在最后（指格子的最后）
-
-### 整理仓库时支持空潜影盒堆叠
-
-在自动整理时会将空盒视作可堆叠的
-
-## Feature
-
-### 自动切换鞘翅
-
-自动切换鞘翅和胸甲（支持原地起飞）
-
-效果如下：
+- Category: `Feature Toggles`
+- Type: `boolean with hotkey`
+- Default value: `false`, `no hotkey`
 
 ![autoSwitchElytra](./docs/img/autoSwitchElytra.gif)
+## betterSneaking
+Player can move down 1 height when sneaking.
 
-### 更好的潜行
+- Category: `Feature Toggles`
+- Type: `boolean with hotkey`
+- Default value: `false`, `no hotkey`
+## disableBlocklistCheck
+Workaround for MC-218167, prevent network request from blocking the Render Thread.
 
-在潜行时玩家可以向下移动 1 格高
+- Category: `Feature Toggles`
+- Type: `boolean with hotkey`
+- Default value: `false`, `no hotkey`
+- Dependencies:
+    - And (All conditions need to be satisfied):
+        - minecraft: >1.15.2
 
-### 方块模型没有偏移
+## disableBreakBlock
+You can't break blocks in **breakBlockBlackList**.
 
-渲染方块模型时不再有随机偏移（比如凋零玫瑰）
+- Category: `Feature Toggles`
+- Type: `boolean with hotkey`
+- Default value: `false`, `no hotkey`
+## disableBreakScaffolding
+You can only break scaffolding with the items in **breakScaffoldingWhiteList**.
 
-### 禁止破坏特定方块
+- Category: `Feature Toggles`
+- Type: `boolean with hotkey`
+- Default value: `false`, `no hotkey`
+## disableMoveDownInScaffolding
+You can only move down scaffolding with the items inside **moveDownInScaffoldingWhiteList** in your hand.
 
-玩家无法破坏在 **破坏方块黑名单** 中的方块
+- Category: `Feature Toggles`
+- Type: `boolean with hotkey`
+- Default value: `false`, `no hotkey`
+## disablePistonPushEntity
+Prevent piston push entities (except the player) to reduce piston lag (such as the carpet duper), it will cause entities pos error when entity push by piston.
 
-### 禁止破坏脚手架
+- Category: `Feature Toggles`
+- Type: `boolean with hotkey`
+- Default value: `false`, `no hotkey`
+## flatDigger
+Which allowed you mine a flat road while digging stone by preventing digging of blocks under your feet while standing，sneak to dig blocks under you.
 
-玩家只有在手持 **破坏脚手架白名单** 中的物品时才能破坏脚手架
+- Category: `Feature Toggles`
+- Type: `boolean with hotkey`
+- Default value: `false`, `no hotkey`
+## forceBreakingCooldown
+You will have 5gt cooldown after instant breaking.
 
-### 禁止在脚手架中下降
+- Category: `Feature Toggles`
+- Type: `boolean with hotkey`
+- Default value: `false`, `no hotkey`
+## highlightLavaSource
+Highlight lava sources.
 
-玩家只有在手持 **在脚手架中下降白名单** 中的物品时才能在脚手架下降
-
-### 禁止活塞推动实体
-
-通过阻止客户端活塞推动实体（玩家除外）来减少活塞卡顿（比如地毯复制机），会导致一些实体位置渲染错误
-
-### 强制添加破坏冷却
-
-玩家在秒破方块后会有 5gt 的破坏冷却时间
-
-### 高亮岩浆源
-
-岩浆源将会使用特殊的贴图高亮
-
-为此我们还提供了一些可选的资源包：
-+ [ommc-highlightLavaSource\[32x\](static)](https://github.com/plusls/oh-my-minecraft-client/raw/1.17/docs/file/ommc-highlightLavaSource[32x](static).zip) 提供者：[Hendrix-Shen](https://github.com/Hendrix-Shen).
-+ [ommc-highlightLavaSource\[32x\](dynamic)](https://github.com/plusls/oh-my-minecraft-client/raw/1.17/docs/file/ommc-highlightLavaSource[32x](dynamic).zip) 提供者：[Hendrix-Shen](https://github.com/Hendrix-Shen).
-+ [ommc-xk(32x)](https://github.com/plusls/oh-my-minecraft-client/raw/1.17/docs/file/ommc-xk(32x).zip) 提供者：[SunnySlopes](https://github.com/SunnySlopes).
-+ [ommc-faithful(static)](https://github.com/plusls/oh-my-minecraft-client/raw/1.17/docs/file/ommc-faithful(static).zip) 提供者：[SunnySlopes](https://github.com/SunnySlopes).
-+ [ommc-faithful(dynamic)](https://github.com/plusls/oh-my-minecraft-client/raw/1.17/docs/file/ommc-faithful(dynamic).zip) 提供者：[SunnySlopes](https://github.com/SunnySlopes).
-
-效果如下：
+- Category: `Feature Toggles`
+- Type: `boolean with hotkey`
+- Default value: `false`, `no hotkey`
 
 ![highlightLavaSourceOff](./docs/img/highlightLavaSourceOff.png)
-
 ![highlightLavaSourceOn](./docs/img/highlightLavaSourceOn.png)
+We have also provided some optional resource packs for this purpose.
++ [ommc-highlightLavaSource\[32x\](static)](https://github.com/plusls/oh-my-minecraft-client/raw/1.17/docs/file/ommc-highlightLavaSource[32x](static).zip) by [Hendrix-Shen](https://github.com/Hendrix-Shen).
++ [ommc-highlightLavaSource\[32x\](dynamic)](https://github.com/plusls/oh-my-minecraft-client/raw/1.17/docs/file/ommc-highlightLavaSource[32x](dynamic).zip) by [Hendrix-Shen](https://github.com/Hendrix-Shen).
++ [ommc-xk(32x)](https://github.com/plusls/oh-my-minecraft-client/raw/1.17/docs/file/ommc-xk(32x).zip) by [SunnySlopes](https://github.com/SunnySlopes).
++ [ommc-faithful(static)](https://github.com/plusls/oh-my-minecraft-client/raw/1.17/docs/file/ommc-faithful(static).zip) by [SunnySlopes](https://github.com/SunnySlopes).
++ [ommc-faithful(dynamic)](https://github.com/plusls/oh-my-minecraft-client/raw/1.17/docs/file/ommc-faithful(dynamic).zip) by [SunnySlopes](https://github.com/SunnySlopes).
 
-### 高亮流浪商人
+## highlightPersistentMob
+Highlight persistent mobs (Mob have item in hand or mob have custom name).
 
-流浪商人会像被射了光灵箭一样高亮，隐身时同样也会高亮
+- Category: `Feature Toggles`
+- Type: `boolean with hotkey`
+- Default value: `false`, `no hotkey`
+## highlightPersistentMobClientMode
+Use client data to check persistent mob, such as hand item, custom name. Tips: in local game should disable this option, in server also can use syncAllEntityData in MasaGadget to sync entity data to local.
 
-![highlightLavaSourceOn](./docs/img/highlightWanderingTrader.png)
+- Category: `Feature Toggles`
+- Type: `boolean`
+- Default value: `false`
+## preventIntentionalGameDesign
+Prevent Intentional Game Design (Bed and Respawn Anchor).
 
-### 防止刻意的游戏设计
+- Category: `Feature Toggles`
+- Type: `boolean with hotkey`
+- Default value: `false`, `no hotkey`
+## preventWastageOfWater
+Prevent water bucket from vanishing in nether.
 
-防止刻意的游戏设计（床或者重生锚爆炸）
+- Category: `Feature Toggles`
+- Type: `boolean with hotkey`
+- Default value: `false`, `no hotkey`
+## realSneaking
+You cannot ascend or descend non-full blocks when sneaking, e.g. carpets.
 
-### 防止浪费水
+- Category: `Feature Toggles`
+- Type: `boolean with hotkey`
+- Default value: `false`, `no hotkey`
+## removeBreakingCooldown
+Remove cooldown after break block (default is 5gt), it will not work when enable **forceBreakingCooldown**.
 
-防止在地狱使用水桶
+- Category: `Feature Toggles`
+- Type: `boolean with hotkey`
+- Default value: `false`, `no hotkey`
+## worldEaterMineHelper
+When the blocks in **worldEaterMineHelperWhitelist**r are exposed to the air, the game will render a mirror image above them, which is convenient for world eater maintenance and mining.
 
-### 高亮不会消失的怪物
-
-高亮不会消失的怪物（受到客户端的限制，现在只能高亮手里有特殊物品或者被命名的怪物）
-
-### 平坦挖掘
-
-只有在潜行时才能挖掘比自己低的方块
-
-### 真潜行
-
-玩家在潜行时无法上升或者下降，比如走上或者离开地毯，半砖，台阶这类方块
-
-### 关闭玩家黑名单检查
-
-避免 [MC-218167](https://bugs.mojang.com/browse/MC-218167) ，避免网络请求阻塞主线程
-
-### 移除挖掘冷却
-
-移除在非秒破方块后的挖掘冷却（默认是 5gt），该功能在开启 **强制添加破坏冷却** 时不会生效
-
-### 世吞挖矿助手
-
-当 **世吞挖矿助手白名单** 中的方块暴露在空气中时，客户端会在它们上方渲染出自己的镜像，方便世吞运维以及挖矿
+- Category: `Feature Toggles`
+- Type: `boolean with hotkey`
+- Default value: `false`, `no hotkey`
 
 ![worldEaterMineHelper](./docs/img/worldEaterMineHelper.png)
 
-## 列表
+## List
+## blockModelNoOffsetBlacklist
+blockModelNoOffsetBlacklist
 
-### 候选语言列表
+- Category: `Lists`
+- Type: `string list`
+- Default value: `[]`
+## blockModelNoOffsetListType
+blockModelNoOffsetListType
 
-候选语言不只是 en_us，可以设置自己的候选语言列表（比如在设置文言的时候，可以在 **候选语言列表** 中加入 zh_cn，从而在找不到语言资源的情况下使用中文文本）
+- Category: `Lists`
+- Type: `enum`
+- Default value: `WHITELIST`
+- Option values: `WHITELIST`, `NONE`, `BLACKLIST`
+## blockModelNoOffsetWhitelist
+blockModelNoOffsetWhitelist
 
-## 本地服务器设置
+- Category: `Lists`
+- Type: `string list`
+- Default value: `[minecraft:wither_rose, minecraft:poppy, minecraft:dandelion]`
+## breakBlockBlackList
+If **disableBreakScaffolding** is enabled, you can't break blocks in **breakBlockBlackList**.
 
-现在可以调节如下的本地服务器设置
+- Category: `Lists`
+- Type: `string list`
+- Default value: `[minecraft:budding_amethyst, _bud]`
+## breakScaffoldingWhiteList
+If **disableBreakScaffolding** is enabled, you can only break scaffolding with the items in **breakScaffoldingWhiteList**.
 
-### 正版验证
+- Category: `Lists`
+- Type: `string list`
+- Default value: `[minecraft:air, minecraft:scaffolding]`
+## highlightEntityBlackList
+highlightEntityBlackList
 
-本地服务器是否开启正版验证
+- Category: `Lists`
+- Type: `string list`
+- Default value: `[]`
+## highlightEntityListType
+highlightEntityListType
 
-### pvp
+- Category: `Lists`
+- Type: `enum`
+- Default value: `WHITELIST`
+- Option values: `WHITELIST`, `NONE`, `BLACKLIST`
+## highlightEntityWhiteList
+highlightEntityWhiteList
 
-本地服务器是否允许 PVP
+- Category: `Lists`
+- Type: `string list`
+- Default value: `[minecraft:wandering_trader]`
+## moveDownInScaffoldingWhiteList
+If **disableMoveDownInScaffolding** is enabled, you can only move down scaffolding with the items inside **moveDownInScaffoldingWhiteList** in your hand.
 
-### 飞行
+- Category: `Lists`
+- Type: `string list`
+- Default value: `[minecraft:air, minecraft:scaffolding]`
+## worldEaterMineHelperWhitelist
+If **worldEaterMineHelper** is enabled, when the blocks in **worldEaterMineHelperWhitelist** are exposed to the air, the game will render a mirror image above them, which is convenient for world eater maintenance and mining.
 
-本地服务器是否允许飞行
+- Category: `Lists`
+- Type: `string list`
+- Default value: `[_ore, minecraft:ancient_debris, minecraft:obsidian]`
 
-### 局域网端口
+## Advanced Integrated Server
+## flight
+Integrated server enable flight.
 
-本地服务器的局域网端口，0 表示使用随机端口
+- Category: `Advanced Integrated Server`
+- Type: `boolean`
+- Default value: `true`
+## onlineMode
+Integrated server use online mode.
 
-## 致谢
+- Category: `Advanced Integrated Server`
+- Type: `boolean with hotkey`
+- Default value: `true`, `no hotkey`
+## port
+Integrated server lan port, 0 to use default port.
 
-+ 感谢 [XeKr](https://space.bilibili.com/5930630) 的岩浆护眼材质
-+ 感谢 [NextPage](https://github.com/Next-Page-Vi) 提供的英文翻译，岩浆材质修改以及测试工作
-+ 感谢 [水星嗷](https://space.bilibili.com/18525909) 提供的[矿物高亮的灵感以及样例](https://www.bilibili.com/video/BV1w64y1D7wP)
-+ 感谢 [voxelmap](https://www.curseforge.com/minecraft/mc-mods/voxelmap) 提供的高亮坐标点的实现
-+ 感谢 [Hendrix-Shen](https://github.com/Hendrix-Shen) 提供的 32x 岩浆高亮材质
-+ 感谢 [SunnySlopes](https://github.com/SunnySlopes) 提供的 32x 岩浆高亮材质
+- Category: `Advanced Integrated Server`
+- Type: `integer`
+- Default value: `0`
+- Min value: `0`
+- Max value: `65535`
+- Dependencies:
+    - Not (Any condition needs to be excluded):
+        - minecraft: <1.19.3
+
+## pvp
+Integrated server enable pvp.
+
+- Category: `Advanced Integrated Server`
+- Type: `boolean`
+- Default value: `true`
+
+## Development
+
+### Support
+
+Current main development for Minecraft version: 1.19.3
+
+And use `preprocess` to be compatible with all versions.
+
+**Note: We only accept the following versions of issues. Please note that this information is time-sensitive and any version of the issue not listed here will be closed**
+
+- Minecraft 1.14.4
+- Minecraft 1.15.2
+- Minecraft 1.16.5
+- Minecraft 1.17.1
+- Minecraft 1.18.2
+- Minecraft 1.19.2
+- Minecraft 1.19.3
+
+### Mappings
+
+We are using the **Mojang official** mappings to de-obfuscate Minecraft and insert patches.
+
+### Document
+
+The English doc and the Chinese doc are aligned line by line.
+
+## License
+
+This project is available under the LGPL-3.0 license. Feel free to learn from it and incorporate it in your own projects.
+
+# Credit
++ Thanks to [XeKr](https://space.bilibili.com/5930630) for the lava eye protection texture.
++ Thanks to [NextPage](https://github.com/Next-Page-Vi) for providing the English translation, lava source texture
+  modification and testing work.
++ Thanks to [水星嗷](https://space.bilibili.com/18525909) for
+  providing [the idea of highlighting ores and resourcepack](https://www.bilibili.com/video/BV1w64y1D7wP).
++ Thanks to [voxelmap](https://www.curseforge.com/minecraft/mc-mods/voxelmap) for providing the code of highlight waypoint.
++ Thanks to [Hendrix-Shen](https://github.com/Hendrix-Shen) for providing highlightLavaSource x32 resource pack.
++ Thanks to [SunnySlopes](https://github.com/SunnySlopes) for providing highlightLavaSource x32 resource pack.
