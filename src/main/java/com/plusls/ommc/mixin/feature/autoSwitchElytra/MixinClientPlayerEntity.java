@@ -7,11 +7,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
-//#if MC >= 11903
-import net.minecraft.core.registries.BuiltInRegistries;
-//#else
-//$$ import net.minecraft.core.Registry;
-//#endif
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -22,6 +17,16 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+//#if MC >= 11902 && MC < 11903
+//$$ import net.minecraft.world.entity.player.ProfilePublicKey;
+//#endif
+
+//#if MC >= 11903
+import net.minecraft.core.registries.BuiltInRegistries;
+//#else
+//$$ import net.minecraft.core.Registry;
+//#endif
+
 @Mixin(LocalPlayer.class)
 public abstract class MixinClientPlayerEntity extends AbstractClientPlayer {
     @Shadow
@@ -30,13 +35,15 @@ public abstract class MixinClientPlayerEntity extends AbstractClientPlayer {
 
     boolean prevFallFlying = false;
 
+    //#if MC != 11902
     public MixinClientPlayerEntity(ClientLevel world, GameProfile profile) {
-        //#if MC > 11802
         super(world, profile);
-        //#else
-        //$$ super(world, profile);
-        //#endif
     }
+    //#else
+    //$$ public MixinClientPlayerEntity(ClientLevel world, GameProfile profile, ProfilePublicKey profilePublicKey) {
+    //$$     super(world, profile, profilePublicKey);
+    //$$ }
+    //#endif
 
     @SuppressWarnings("ConstantConditions")
     @Inject(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;getItemBySlot(Lnet/minecraft/world/entity/EquipmentSlot;)Lnet/minecraft/world/item/ItemStack;", ordinal = 0))

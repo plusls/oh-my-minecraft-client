@@ -31,6 +31,10 @@ dependencies {
     minecraft("com.mojang:minecraft:${project.minecraft_version}")
     mappings(loom.officialMojangMappings())
 
+    // Annotation processor
+    modApi("org.projectlombok:lombok:${project.lombok_version}")
+    annotationProcessor("org.projectlombok:lombok:${project.lombok_version}")
+
     modImplementation("top.hendrixshen:magiclib-${project.minecraft_version.replace(".", "_")}:${project.magiclib_version}") {
         if (project.name == "snapshot") {
             exclude group: 'curse.maven', module: 'in-game-account-switcher-232676'
@@ -71,16 +75,16 @@ loom {
         if (!new File("${projectDir}/run/client/options.txt").exists()) {
             new File("${projectDir}/run/client").mkdirs()
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("${projectDir}/run/client/options.txt"))
-            bufferedWriter.write("autoJump:false\n")
-            bufferedWriter.write("enableVsync:false\n")
-            bufferedWriter.write("forceUnicodeFont:true\n")
-            bufferedWriter.write("fov:1.0\n")
-            bufferedWriter.write("gamma:16.0\n")
-            bufferedWriter.write("guiScale:3\n")
-            bufferedWriter.write("lang:${Locale.getDefault().toString()}\n")
-            bufferedWriter.write("maxFps:260\n")
-            bufferedWriter.write("renderDistance:10\n")
-            bufferedWriter.write("soundCategory_master:0.0")
+            bufferedWriter.writeLine("autoJump:false")
+            bufferedWriter.writeLine("enableVsync:false")
+            bufferedWriter.writeLine("forceUnicodeFont:true")
+            bufferedWriter.writeLine("fov:1.0")
+            bufferedWriter.writeLine("gamma:16.0")
+            bufferedWriter.writeLine("guiScale:3")
+            bufferedWriter.writeLine("lang:${Locale.getDefault().toString()}")
+            bufferedWriter.writeLine("maxFps:260")
+            bufferedWriter.writeLine("renderDistance:10")
+            bufferedWriter.writeLine("soundCategory_master:0.0")
             bufferedWriter.close()
         }
     }
@@ -93,7 +97,7 @@ loom {
         if (!new File("${projectDir}/run/server/eula.txt").exists()) {
             new File("${projectDir}/run/server").mkdirs()
             BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("${projectDir}/run/server/eula.txt"))
-            bufferedWriter.write("eula=true")
+            bufferedWriter.writeLine("eula=true")
             bufferedWriter.close()
         }
     }

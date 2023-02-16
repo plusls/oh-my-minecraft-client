@@ -1,7 +1,7 @@
 package com.plusls.ommc.config;
 
 import com.google.common.collect.Lists;
-import com.plusls.ommc.ModInfo;
+import com.plusls.ommc.OhMyMinecraftClientReference;
 import com.plusls.ommc.feature.highlithtWaypoint.HighlightWaypointUtil;
 import com.plusls.ommc.feature.sortInventory.SortInventoryUtil;
 import com.plusls.ommc.gui.GuiConfigs;
@@ -34,6 +34,12 @@ import top.hendrixshen.magiclib.dependency.annotation.OptionDependencyPredicate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+//#if MC >= 11902 && MC < 11903
+//$$ import net.minecraft.Util;
+//$$ import net.minecraft.client.gui.chat.ClientChatPreview;
+//$$ import net.minecraft.network.chat.Component;
+//#endif
 
 public class Configs {
     private static final List<String> OLD_WORLD_EATER_MINE_HELPER_WHITELIST = new ArrayList<>();
@@ -227,7 +233,7 @@ public class Configs {
     public static void postDeserialize(ConfigHandler configHandler) {
         if (first) {
             if (debug) {
-                Configurator.setLevel(ModInfo.MOD_ID, Level.toLevel("DEBUG"));
+                Configurator.setLevel(OhMyMinecraftClientReference.MOD_ID, Level.toLevel("DEBUG"));
             }
             updateOldStringList();
             first = false;
@@ -241,9 +247,9 @@ public class Configs {
         // GENERIC
         cm.setValueChangeCallback("debug", option -> {
             if (debug) {
-                Configurator.setLevel(ModInfo.MOD_ID, Level.toLevel("DEBUG"));
+                Configurator.setLevel(OhMyMinecraftClientReference.MOD_ID, Level.toLevel("DEBUG"));
             } else {
-                Configurator.setLevel(ModInfo.MOD_ID, Level.toLevel("INFO"));
+                Configurator.setLevel(OhMyMinecraftClientReference.MOD_ID, Level.toLevel("INFO"));
             }
             GuiConfigs.getInstance().reDraw();
         });
@@ -273,6 +279,10 @@ public class Configs {
                         String message = String.format("[%d, %d, %d]", lookPos.getX(), lookPos.getY(), lookPos.getZ());
                         //#if MC >= 11903
                         client.player.connection.sendChat(message);
+                        //#elseif MC >= 11902
+                        //$$ ClientChatPreview ccp = new ClientChatPreview(Minecraft.getInstance());
+                        //$$ Component component = Util.mapNullable(ccp.pull(message), ClientChatPreview.Preview::response);
+                        //$$ client.player.chatSigned(message, component);
                         //#else
                         //$$ client.player.chat(message);
                         //#endif
@@ -295,11 +305,11 @@ public class Configs {
 
         // FEATURE_TOGGLE
         cm.setValueChangeCallback("highlightLavaSource", option -> {
-            ModInfo.LOGGER.debug("set highlightLavaSource {}", ((ConfigBoolean) option.getConfig()).getBooleanValue());
+            OhMyMinecraftClientReference.LOGGER.debug("set highlightLavaSource {}", ((ConfigBoolean) option.getConfig()).getBooleanValue());
             Minecraft.getInstance().levelRenderer.allChanged();
         });
         cm.setValueChangeCallback("worldEaterMineHelper", option -> {
-            ModInfo.LOGGER.debug("set worldEaterMineHelper {}", ((ConfigBoolean) option.getConfig()).getBooleanValue());
+            OhMyMinecraftClientReference.LOGGER.debug("set worldEaterMineHelper {}", ((ConfigBoolean) option.getConfig()).getBooleanValue());
             Minecraft.getInstance().levelRenderer.allChanged();
         });
 
@@ -309,20 +319,20 @@ public class Configs {
 
         // ADVANCED_INTEGRATED_SERVER
         cm.setValueChangeCallback("onlineMode", option -> {
-            ModInfo.LOGGER.debug("set onlineMode {}", ((ConfigBoolean) option.getConfig()).getBooleanValue());
+            OhMyMinecraftClientReference.LOGGER.debug("set onlineMode {}", ((ConfigBoolean) option.getConfig()).getBooleanValue());
             if (Minecraft.getInstance().hasSingleplayerServer()) {
                 Objects.requireNonNull(Minecraft.getInstance().getSingleplayerServer()).setUsesAuthentication(onlineMode);
             }
         });
 
         cm.setValueChangeCallback("pvp", option -> {
-            ModInfo.LOGGER.debug("set pvp {}", ((ConfigBoolean) option.getConfig()).getBooleanValue());
+            OhMyMinecraftClientReference.LOGGER.debug("set pvp {}", ((ConfigBoolean) option.getConfig()).getBooleanValue());
             if (Minecraft.getInstance().hasSingleplayerServer()) {
                 Objects.requireNonNull(Minecraft.getInstance().getSingleplayerServer()).setPvpAllowed(pvp);
             }
         });
         cm.setValueChangeCallback("flight", option -> {
-            ModInfo.LOGGER.debug("set flight {}", ((ConfigBoolean) option.getConfig()).getBooleanValue());
+            OhMyMinecraftClientReference.LOGGER.debug("set flight {}", ((ConfigBoolean) option.getConfig()).getBooleanValue());
             if (Minecraft.getInstance().hasSingleplayerServer()) {
                 Objects.requireNonNull(Minecraft.getInstance().getSingleplayerServer()).setFlightAllowed(flight);
             }
@@ -330,9 +340,9 @@ public class Configs {
     }
 
     public enum SortInventoryShulkerBoxLastType implements IConfigOptionListEntry {
-        FALSE("false", ModInfo.MOD_ID + ".gui.label.sort_inventory_shulker_box_last_type.false"),
-        TRUE("true", ModInfo.MOD_ID + ".gui.label.sort_inventory_shulker_box_last_type.true"),
-        AUTO("auto", ModInfo.MOD_ID + ".gui.label.sort_inventory_shulker_box_last_type.auto");
+        FALSE("false", OhMyMinecraftClientReference.MOD_ID + ".gui.label.sort_inventory_shulker_box_last_type.false"),
+        TRUE("true", OhMyMinecraftClientReference.MOD_ID + ".gui.label.sort_inventory_shulker_box_last_type.true"),
+        AUTO("auto", OhMyMinecraftClientReference.MOD_ID + ".gui.label.sort_inventory_shulker_box_last_type.auto");
         private final String configString;
         private final String translationKey;
 

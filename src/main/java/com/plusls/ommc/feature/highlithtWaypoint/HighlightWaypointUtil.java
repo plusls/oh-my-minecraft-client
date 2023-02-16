@@ -3,19 +3,11 @@ package com.plusls.ommc.feature.highlithtWaypoint;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
-//#if MC >= 11903
-import com.mojang.math.Axis;
-//#else
-//$$ import top.hendrixshen.magiclib.compat.minecraft.math.Vector3fCompatApi;
-//#endif
-import com.plusls.ommc.ModInfo;
+import com.plusls.ommc.OhMyMinecraftClientReference;
 import com.plusls.ommc.config.Configs;
 import com.plusls.ommc.mixin.accessor.AccessorTextComponent;
 import com.plusls.ommc.mixin.accessor.AccessorTranslatableComponent;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
-//#if MC >= 11903
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
-//#endif
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -33,6 +25,7 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
@@ -46,6 +39,16 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+//#if MC >= 11903
+import com.mojang.math.Axis;
+//#else
+//$$ import top.hendrixshen.magiclib.compat.minecraft.math.Vector3fCompatApi;
+//#endif
+
+//#if MC >= 11902
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+//#endif
 
 //#if MC > 11802
 import net.minecraft.network.chat.contents.*;
@@ -82,7 +85,7 @@ public class HighlightWaypointUtil {
     //#endif
 
     public static void init() {
-        //#if MC >= 11903
+        //#if MC >= 11902
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> dispatcher.register(
         //#else
         //$$ ClientCommandManager.DISPATCHER.register(
@@ -106,7 +109,7 @@ public class HighlightWaypointUtil {
                                             })
                             )
                     )
-        //#if MC >= 11903
+        //#if MC >= 11902
             )));
         //#else
         //$$ ));
@@ -124,7 +127,7 @@ public class HighlightWaypointUtil {
         });
     }
 
-    public static void postRespawn(ClientboundRespawnPacket packet) {
+    public static void postRespawn(@NotNull ClientboundRespawnPacket packet) {
         //#if MC > 11502
         ResourceKey<Level> newDimension = packet.getDimension();
         //#else
@@ -150,7 +153,7 @@ public class HighlightWaypointUtil {
         currentWorld = newDimension;
     }
 
-    public static ArrayList<Tuple<Integer, String>> getWaypointStrings(String message) {
+    public static @NotNull ArrayList<Tuple<Integer, String>> getWaypointStrings(@NotNull String message) {
         ArrayList<Tuple<Integer, String>> ret = new ArrayList<>();
         if ((message.contains("[") && message.contains("]")) || (message.contains("(") && message.contains(")"))) {
             getWaypointStringsByPattern(message, ret, pattern1);
@@ -162,7 +165,7 @@ public class HighlightWaypointUtil {
         return ret;
     }
 
-    private static void getWaypointStringsByPattern(String message, ArrayList<Tuple<Integer, String>> ret, Pattern pattern) {
+    private static void getWaypointStringsByPattern(String message, ArrayList<Tuple<Integer, String>> ret, @NotNull Pattern pattern) {
         Matcher matcher = pattern.matcher(message);
         while (matcher.find()) {
             String match = matcher.group();
@@ -175,7 +178,7 @@ public class HighlightWaypointUtil {
     }
 
     @Nullable
-    private static BlockPos parseWaypoint(String details) {
+    private static BlockPos parseWaypoint(@NotNull String details) {
         String[] pairs = details.split(",");
         Integer x = null;
         Integer z = null;
@@ -219,7 +222,7 @@ public class HighlightWaypointUtil {
         return new BlockPos(x, y, z);
     }
 
-    public static void parseWaypointText(Component chat) {
+    public static void parseWaypointText(@NotNull Component chat) {
         if (chat.getSiblings().size() > 0) {
             for (Component text : chat.getSiblings()) {
                 parseWaypointText(text);
@@ -264,7 +267,7 @@ public class HighlightWaypointUtil {
     }
 
 
-    public static boolean updateWaypointsText(Component chat) {
+    public static boolean updateWaypointsText(@NotNull Component chat) {
         //#if MC > 11802
         ComponentContents componentContents = chat.getContents();
         if (!(componentContents instanceof LiteralContents)) {
@@ -311,7 +314,7 @@ public class HighlightWaypointUtil {
                 //#endif
                 Style chatStyle = clickableWaypoint.getStyle();
                 BlockPos pos = Objects.requireNonNull(parseWaypoint(waypointString.substring(1, waypointString.length() - 1)));
-                Component hover = ComponentCompatApi.literal(ModInfo.translate("highlight_waypoint.tooltip"));
+                Component hover = ComponentCompatApi.literal(OhMyMinecraftClientReference.translate("highlight_waypoint.tooltip"));
                 if (clickEvent == null || Configs.forceParseWaypointFromChat) {
                     clickEvent = new ClickEvent(ClickEvent.Action.RUN_COMMAND,
                             String.format("/%s %d %d %d", HIGHLIGHT_COMMAND, pos.getX(), pos.getY(), pos.getZ()));
@@ -345,7 +348,7 @@ public class HighlightWaypointUtil {
         return false;
     }
 
-    private static double getDistanceToEntity(Entity entity, BlockPos pos) {
+    private static double getDistanceToEntity(@NotNull Entity entity, @NotNull BlockPos pos) {
         double dx = pos.getX() + 0.5 - entity.getX();
         double dy = pos.getY() + 0.5 - entity.getY();
         double dz = pos.getZ() + 0.5 - entity.getZ();
@@ -353,7 +356,7 @@ public class HighlightWaypointUtil {
     }
 
 
-    private static boolean isPointedAt(BlockPos pos, double distance, Entity cameraEntity, float tickDelta) {
+    private static boolean isPointedAt(@NotNull BlockPos pos, double distance, @NotNull Entity cameraEntity, float tickDelta) {
         Vec3 cameraPos = cameraEntity.getEyePosition(tickDelta);
         double degrees = 5.0 + Math.min((5.0 / distance), 5.0);
         double angle = degrees * 0.0174533;
@@ -390,8 +393,8 @@ public class HighlightWaypointUtil {
 
     // code from BeaconBlockEntityRenderer
     @SuppressWarnings("all")
-    public static void renderBeam(PoseStack matrices, float tickDelta, float heightScale, long worldTime,
-                                  int yOffset, int maxY, float[] color, float innerRadius, float outerRadius) {
+    public static void renderBeam(@NotNull PoseStack matrices, float tickDelta, float heightScale, long worldTime,
+                                  int yOffset, int maxY, float @NotNull [] color, float innerRadius, float outerRadius) {
         ResourceLocation textureId = new ResourceLocation("textures/entity/beacon_beam.png");
         //#if MC > 11605
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
@@ -455,14 +458,14 @@ public class HighlightWaypointUtil {
         renderBeamVertex(modelMatrix, normalMatrix, vertices, red, green, blue, alpha, height, x2, z2, u1, v1);
     }
 
-    private static void renderBeamVertex(Matrix4f modelMatrix, Matrix3f normalMatrix, BufferBuilder vertices, float red, float green, float blue, float alpha, int y, float x, float z, float u, float v) {
+    private static void renderBeamVertex(Matrix4f modelMatrix, Matrix3f normalMatrix, @NotNull BufferBuilder vertices, float red, float green, float blue, float alpha, int y, float x, float z, float u, float v) {
         vertices.vertex(modelMatrix, x, (float) y, z)
                 .uv(u, v)
                 .color(red, green, blue, alpha).endVertex();
     }
 
     @SuppressWarnings("all")
-    private static void renderBeamLayer(PoseStack matrices, BufferBuilder vertices, float red, float green, float blue, float alpha, int yOffset, int height, float x1, float z1, float x2, float z2, float x3, float z3, float x4, float z4, float u1, float u2, float v1, float v2) {
+    private static void renderBeamLayer(@NotNull PoseStack matrices, BufferBuilder vertices, float red, float green, float blue, float alpha, int yOffset, int height, float x1, float z1, float x2, float z2, float x3, float z3, float x4, float z4, float u1, float u2, float v1, float v2) {
         PoseStack.Pose entry = matrices.last();
         Matrix4f matrix4f = entry.pose();
         Matrix3f matrix3f = entry.normal();
@@ -472,7 +475,7 @@ public class HighlightWaypointUtil {
         renderBeamFace(matrix4f, matrix3f, vertices, red, green, blue, alpha, yOffset, height, x3, z3, x1, z1, u1, u2, v1, v2);
     }
 
-    public static void renderLabel(PoseStack matrixStack, double distance, Entity cameraEntity, float tickDelta, boolean isPointedAt, BlockPos pos) {
+    public static void renderLabel(PoseStack matrixStack, double distance, @NotNull Entity cameraEntity, float tickDelta, boolean isPointedAt, @NotNull BlockPos pos) {
         Minecraft mc = Minecraft.getInstance();
 
         String name = String.format("x:%d, y:%d, z:%d (%dm)", pos.getX(), pos.getY(), pos.getZ(), (int) distance);

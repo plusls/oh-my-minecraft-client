@@ -1,6 +1,6 @@
 package com.plusls.ommc.feature.highlithtWaypoint;
 
-import com.plusls.ommc.ModInfo;
+import com.plusls.ommc.OhMyMinecraftClientReference;
 //#if MC < 11903
 //$$ import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 //$$ import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -16,8 +16,8 @@ import net.minecraft.world.inventory.InventoryMenu;
 import java.util.function.Function;
 
 public class HighlightWaypointResourceLoader implements SimpleSynchronousResourceReloadListener {
-    private static final ResourceLocation listenerId = ModInfo.id("target_reload_listener");
-    private static final ResourceLocation targetId = ModInfo.id("block/target");
+    private static final ResourceLocation listenerId = OhMyMinecraftClientReference.id("target_reload_listener");
+    private static final ResourceLocation targetId = OhMyMinecraftClientReference.id("block/target");
     public static TextureAtlasSprite targetIdSprite;
 
     public static void init() {

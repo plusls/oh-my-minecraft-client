@@ -4,6 +4,8 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import top.hendrixshen.magiclib.compat.minecraft.network.chat.ComponentCompatApi;
 import top.hendrixshen.magiclib.config.ConfigHandler;
 import top.hendrixshen.magiclib.language.I18n;
@@ -14,7 +16,7 @@ import net.minecraft.network.chat.MutableComponent;
 //$$ import net.minecraft.network.chat.BaseComponent;
 //#endif
 
-public class ModInfo {
+public class OhMyMinecraftClientReference {
     public static String MOD_ID = "ommc";
 
     //#if MC > 11802
@@ -39,21 +41,21 @@ public class ModInfo {
     public static ConfigHandler configHandler;
 
     public static String translate(String key, Object... objects) {
-        return I18n.get(ModInfo.MOD_ID + "." + key, objects);
+        return I18n.get(OhMyMinecraftClientReference.MOD_ID + "." + key, objects);
     }
 
-    public static
+    public static @NotNull
     //#if MC > 11502
     MutableComponent
     //#else
     //$$ BaseComponent
     //#endif
     translatable(String key, Object... objects) {
-        return ComponentCompatApi.translatable(ModInfo.MOD_ID + "." + key, objects);
+        return ComponentCompatApi.translatable(OhMyMinecraftClientReference.MOD_ID + "." + key, objects);
     }
 
-
-    public static ResourceLocation id(String path) {
+    @Contract("_ -> new")
+    public static @NotNull ResourceLocation id(String path) {
         return new ResourceLocation(MOD_ID, path);
     }
 }

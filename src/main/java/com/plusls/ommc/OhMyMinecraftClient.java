@@ -36,11 +36,11 @@ public class OhMyMinecraftClient implements ClientModInitializer {
     public void onInitializeClient() {
         LavaSourceResourceLoader.init();
         HighlightWaypointResourceLoader.init();
-        top.hendrixshen.magiclib.config.ConfigManager cm = ConfigManager.get(ModInfo.MOD_ID);
+        top.hendrixshen.magiclib.config.ConfigManager cm = ConfigManager.get(OhMyMinecraftClientReference.MOD_ID);
         cm.parseConfigClass(Configs.class);
-        ModInfo.configHandler = new ConfigHandler(ModInfo.MOD_ID, cm, CONFIG_VERSION);
-        ModInfo.configHandler.postDeserializeCallback = Configs::postDeserialize;
-        ConfigHandler.register(ModInfo.configHandler);
+        OhMyMinecraftClientReference.configHandler = new ConfigHandler(OhMyMinecraftClientReference.MOD_ID, cm, CONFIG_VERSION);
+        OhMyMinecraftClientReference.configHandler.postDeserializeCallback = Configs::postDeserialize;
+        ConfigHandler.register(OhMyMinecraftClientReference.configHandler);
         Configs.init(cm);
         RealSneakingEventHandler.init();
         HighlightWaypointUtil.init();
