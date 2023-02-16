@@ -336,10 +336,8 @@ This project is available under the LGPL-3.0 license. Feel free to learn from it
 
 # Credit
 + Thanks to [XeKr](https://space.bilibili.com/5930630) for the lava eye protection texture.
-+ Thanks to [NextPage](https://github.com/Next-Page-Vi) for providing the English translation, lava source texture
-  modification and testing work.
-+ Thanks to [水星嗷](https://space.bilibili.com/18525909) for
-  providing [the idea of highlighting ores and resourcepack](https://www.bilibili.com/video/BV1w64y1D7wP).
++ Thanks to [NextPage](https://github.com/Next-Page-Vi) for providing the English translation, lava source texture modification and testing work.
++ Thanks to [水星嗷](https://space.bilibili.com/18525909) for providing [the idea of highlighting ores and resourcepack](https://www.bilibili.com/video/BV1w64y1D7wP).
 + Thanks to [voxelmap](https://www.curseforge.com/minecraft/mc-mods/voxelmap) for providing the code of highlight waypoint.
 + Thanks to [Hendrix-Shen](https://github.com/Hendrix-Shen) for providing highlightLavaSource x32 resource pack.
 + Thanks to [SunnySlopes](https://github.com/SunnySlopes) for providing highlightLavaSource x32 resource pack.
