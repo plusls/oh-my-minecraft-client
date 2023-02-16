@@ -10,13 +10,13 @@ public class GuiConfigs extends ConfigGui {
     private static GuiConfigs INSTANCE;
 
     private GuiConfigs(String identifier, String defaultTab, ConfigManager configManager) {
-        super(identifier, defaultTab, configManager, () -> OhMyMinecraftClientReference.translate("gui.title.configs", OhMyMinecraftClientReference.MOD_VERSION));
+        super(identifier, defaultTab, configManager, () -> OhMyMinecraftClientReference.translate("gui.title.configs", OhMyMinecraftClientReference.getModVersion()));
     }
 
 
     public static GuiConfigs getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new GuiConfigs(OhMyMinecraftClientReference.MOD_ID, Configs.ConfigCategory.GENERIC, ConfigManager.get(OhMyMinecraftClientReference.MOD_ID));
+            INSTANCE = new GuiConfigs(OhMyMinecraftClientReference.getModIdentifier(), Configs.ConfigCategory.GENERIC, ConfigManager.get(OhMyMinecraftClientReference.getModIdentifier()));
         }
         return INSTANCE;
     }

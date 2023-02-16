@@ -16,7 +16,6 @@ public class ModMenuApiImpl implements ModMenuCompatApi {
 
     @Override
     public String getModIdCompat() {
-        return OhMyMinecraftClientReference.CURRENT_MOD_ID;
+        return OhMyMinecraftClientReference.getCurrentModIdentifier();
     }
-
 }

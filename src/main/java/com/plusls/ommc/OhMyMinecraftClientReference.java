@@ -1,5 +1,6 @@
 package com.plusls.ommc;
 
+import lombok.Getter;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
@@ -12,36 +13,28 @@ import top.hendrixshen.magiclib.language.I18n;
 
 //#if MC > 11502
 import net.minecraft.network.chat.MutableComponent;
+import top.hendrixshen.magiclib.util.VersionParser;
 //#else
 //$$ import net.minecraft.network.chat.BaseComponent;
 //#endif
 
 public class OhMyMinecraftClientReference {
-    public static String MOD_ID = "ommc";
-
-    //#if MC > 11802
-    public static final String CURRENT_MOD_ID = MOD_ID + "-1_19_3";
-    //#elseif MC > 11701
-    //$$ public static final String CURRENT_MOD_ID = MOD_ID + "-1_18_2";
-    //#elseif MC > 11605
-    //$$ public static final String CURRENT_MOD_ID = MOD_ID + "-1_17_1";
-    //#elseif MC > 11502
-    //$$ public static final String CURRENT_MOD_ID = MOD_ID + "-1_16_5";
-    //#elseif MC > 11404
-    //$$ public static final String CURRENT_MOD_ID = MOD_ID + "-1_15_2";
-    //#else
-    //$$ public static final String CURRENT_MOD_ID = MOD_ID + "-1_14_4";
-    //#endif
-
-    public static final String MOD_NAME = FabricLoader.getInstance().getModContainer(CURRENT_MOD_ID)
-            .orElseThrow(RuntimeException::new).getMetadata().getName();
-    public static final String MOD_VERSION = FabricLoader.getInstance().getModContainer(CURRENT_MOD_ID)
-            .orElseThrow(RuntimeException::new).getMetadata().getVersion().getFriendlyString();
-    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
+    @Getter
+    private static final String currentModIdentifier = "${mod_id}-${minecraft_version_id}";
+    @Getter
+    private static final String modIdentifier = "${mod_id}";
+    @Getter
+    private static final String currentModName = FabricLoader.getInstance().getModContainer(currentModIdentifier).orElseThrow(RuntimeException::new).getMetadata().getName();
+    @Getter
+    private static final String modName = "${mod_name}";
+    @Getter
+    private static final String modVersion = FabricLoader.getInstance().getModContainer(currentModIdentifier).orElseThrow(RuntimeException::new).getMetadata().getVersion().getFriendlyString();
+    @Getter
+    private static final Logger logger = LogManager.getLogger(modIdentifier);
     public static ConfigHandler configHandler;
 
     public static String translate(String key, Object... objects) {
-        return I18n.get(OhMyMinecraftClientReference.MOD_ID + "." + key, objects);
+        return I18n.get(OhMyMinecraftClientReference.modIdentifier + "." + key, objects);
     }
 
     public static @NotNull
@@ -51,11 +44,11 @@ public class OhMyMinecraftClientReference {
     //$$ BaseComponent
     //#endif
     translatable(String key, Object... objects) {
-        return ComponentCompatApi.translatable(OhMyMinecraftClientReference.MOD_ID + "." + key, objects);
+        return ComponentCompatApi.translatable(OhMyMinecraftClientReference.modIdentifier + "." + key, objects);
     }
 
-    @Contract("_ -> new")
-    public static @NotNull ResourceLocation id(String path) {
-        return new ResourceLocation(MOD_ID, path);
+    @Contract(value = "_ -> new", pure = true)
+    public static @NotNull ResourceLocation identifier(String path) {
+        return new ResourceLocation(OhMyMinecraftClientReference.modIdentifier, path);
     }
 }

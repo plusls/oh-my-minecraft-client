@@ -1,6 +1,7 @@
 apply(plugin: "maven-publish")
 apply(plugin: "fabric-loom")
 apply(plugin: "io.github.juuxel.loom-quiltflower")
+apply(plugin: "net.kyori.blossom")
 apply(plugin: "com.replaymod.preprocess")
 
 int mcVersion = 1
@@ -107,11 +108,11 @@ remapJar {
     remapperIsolation = true
 }
 
-setSourceCompatibility(JavaVersion.VERSION_1_8)
-setTargetCompatibility(JavaVersion.VERSION_1_8)
 setArchivesBaseName("${project.archives_base_name}-${project.minecraft_version}")
 setVersion(project.parent.version)
 setGroup(project.maven_group)
+setSourceCompatibility(JavaVersion.VERSION_1_8)
+setTargetCompatibility(JavaVersion.VERSION_1_8)
 
 processResources {
     inputs.property("version", version)
@@ -130,17 +131,17 @@ processResources {
     }
 }
 
-// ensure that the encoding is set to UTF-8, no matter what the system default is
-// this fixes some edge cases with special characters not displaying correctly
-// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
+blossom {
+    replaceToken("\${mod_id}", project.mod_id)
+    replaceToken("\${mod_name}", project.mod_name)
+    replaceToken("\${minecraft_version_id}", project.minecraft_version.replace(".", "_"))
+}
+
 tasks.withType(JavaCompile).configureEach {
     options.encoding = "UTF-8"
 }
 
 java {
-    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-    // if it is present.
-    // If you remove this line, sources will not be generated.
     withSourcesJar()
 }
 
@@ -151,8 +152,7 @@ jar {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifactId = "${project.mod_id}-${project.minecraft_version.replace(".", "_")}"
-            version = project.version
+            artifactId("${project.mod_id}-${project.minecraft_version.replace(".", "_")}")
             from(components.java)
         }
     }

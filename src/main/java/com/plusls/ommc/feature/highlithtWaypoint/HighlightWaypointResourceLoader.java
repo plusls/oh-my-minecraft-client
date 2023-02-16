@@ -16,8 +16,8 @@ import net.minecraft.world.inventory.InventoryMenu;
 import java.util.function.Function;
 
 public class HighlightWaypointResourceLoader implements SimpleSynchronousResourceReloadListener {
-    private static final ResourceLocation listenerId = OhMyMinecraftClientReference.id("target_reload_listener");
-    private static final ResourceLocation targetId = OhMyMinecraftClientReference.id("block/target");
+    private static final ResourceLocation listenerId = OhMyMinecraftClientReference.identifier("target_reload_listener");
+    private static final ResourceLocation targetId = OhMyMinecraftClientReference.identifier("block/target");
     public static TextureAtlasSprite targetIdSprite;
 
     public static void init() {

@@ -21,6 +21,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
+import org.jetbrains.annotations.NotNull;
 import top.hendrixshen.magiclib.config.ConfigHandler;
 import top.hendrixshen.magiclib.config.ConfigManager;
 import top.hendrixshen.magiclib.config.Option;
@@ -231,26 +232,21 @@ public class Configs {
     private static boolean first = true;
 
     public static void postDeserialize(ConfigHandler configHandler) {
-        if (first) {
-            if (debug) {
-                Configurator.setLevel(OhMyMinecraftClientReference.MOD_ID, Level.toLevel("DEBUG"));
+        if (Configs.first) {
+            if (Configs.debug) {
+                Configurator.setLevel(OhMyMinecraftClientReference.getModIdentifier(), Level.DEBUG);
             }
             updateOldStringList();
-            first = false;
+            Configs.first = false;
         }
         checkIsStringListChanged();
     }
 
 
-    public static void init(ConfigManager cm) {
-
+    public static void init(@NotNull ConfigManager cm) {
         // GENERIC
         cm.setValueChangeCallback("debug", option -> {
-            if (debug) {
-                Configurator.setLevel(OhMyMinecraftClientReference.MOD_ID, Level.toLevel("DEBUG"));
-            } else {
-                Configurator.setLevel(OhMyMinecraftClientReference.MOD_ID, Level.toLevel("INFO"));
-            }
+            Configurator.setLevel(OhMyMinecraftClientReference.getModIdentifier(), Configs.debug ? Level.DEBUG : Level.INFO);
             GuiConfigs.getInstance().reDraw();
         });
 
@@ -305,11 +301,11 @@ public class Configs {
 
         // FEATURE_TOGGLE
         cm.setValueChangeCallback("highlightLavaSource", option -> {
-            OhMyMinecraftClientReference.LOGGER.debug("set highlightLavaSource {}", ((ConfigBoolean) option.getConfig()).getBooleanValue());
+            OhMyMinecraftClientReference.getLogger().debug("set highlightLavaSource {}", ((ConfigBoolean) option.getConfig()).getBooleanValue());
             Minecraft.getInstance().levelRenderer.allChanged();
         });
         cm.setValueChangeCallback("worldEaterMineHelper", option -> {
-            OhMyMinecraftClientReference.LOGGER.debug("set worldEaterMineHelper {}", ((ConfigBoolean) option.getConfig()).getBooleanValue());
+            OhMyMinecraftClientReference.getLogger().debug("set worldEaterMineHelper {}", ((ConfigBoolean) option.getConfig()).getBooleanValue());
             Minecraft.getInstance().levelRenderer.allChanged();
         });
 
@@ -319,20 +315,20 @@ public class Configs {
 
         // ADVANCED_INTEGRATED_SERVER
         cm.setValueChangeCallback("onlineMode", option -> {
-            OhMyMinecraftClientReference.LOGGER.debug("set onlineMode {}", ((ConfigBoolean) option.getConfig()).getBooleanValue());
+            OhMyMinecraftClientReference.getLogger().debug("set onlineMode {}", ((ConfigBoolean) option.getConfig()).getBooleanValue());
             if (Minecraft.getInstance().hasSingleplayerServer()) {
                 Objects.requireNonNull(Minecraft.getInstance().getSingleplayerServer()).setUsesAuthentication(onlineMode);
             }
         });
 
         cm.setValueChangeCallback("pvp", option -> {
-            OhMyMinecraftClientReference.LOGGER.debug("set pvp {}", ((ConfigBoolean) option.getConfig()).getBooleanValue());
+            OhMyMinecraftClientReference.getLogger().debug("set pvp {}", ((ConfigBoolean) option.getConfig()).getBooleanValue());
             if (Minecraft.getInstance().hasSingleplayerServer()) {
                 Objects.requireNonNull(Minecraft.getInstance().getSingleplayerServer()).setPvpAllowed(pvp);
             }
         });
         cm.setValueChangeCallback("flight", option -> {
-            OhMyMinecraftClientReference.LOGGER.debug("set flight {}", ((ConfigBoolean) option.getConfig()).getBooleanValue());
+            OhMyMinecraftClientReference.getLogger().debug("set flight {}", ((ConfigBoolean) option.getConfig()).getBooleanValue());
             if (Minecraft.getInstance().hasSingleplayerServer()) {
                 Objects.requireNonNull(Minecraft.getInstance().getSingleplayerServer()).setFlightAllowed(flight);
             }
@@ -340,9 +336,9 @@ public class Configs {
     }
 
     public enum SortInventoryShulkerBoxLastType implements IConfigOptionListEntry {
-        FALSE("false", OhMyMinecraftClientReference.MOD_ID + ".gui.label.sort_inventory_shulker_box_last_type.false"),
-        TRUE("true", OhMyMinecraftClientReference.MOD_ID + ".gui.label.sort_inventory_shulker_box_last_type.true"),
-        AUTO("auto", OhMyMinecraftClientReference.MOD_ID + ".gui.label.sort_inventory_shulker_box_last_type.auto");
+        FALSE("false", OhMyMinecraftClientReference.getModIdentifier() + ".gui.label.sort_inventory_shulker_box_last_type.false"),
+        TRUE("true", OhMyMinecraftClientReference.getModIdentifier() + ".gui.label.sort_inventory_shulker_box_last_type.true"),
+        AUTO("auto", OhMyMinecraftClientReference.getModIdentifier() + ".gui.label.sort_inventory_shulker_box_last_type.auto");
         private final String configString;
         private final String translationKey;
 
@@ -357,7 +353,7 @@ public class Configs {
         }
 
         @Override
-        public String getDisplayName() {
+        public @NotNull String getDisplayName() {
             return I18n.get(this.translationKey);
         }
 
