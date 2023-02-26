@@ -14,6 +14,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 //#if MC > 11802
@@ -32,7 +33,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 
 @Mixin(value = BlockRenderContext.class, remap = false)
 public abstract class MixinBlockRenderContext implements RenderContext {
-
     @Shadow
     @Final
     private BlockRenderInfo blockInfo;
@@ -59,6 +59,9 @@ public abstract class MixinBlockRenderContext implements RenderContext {
             //#else
             //$$ BufferBuilder buffer,
             //#endif
+            //#if MC > 11701
+            boolean cull,
+            //#endif
             //#if MC > 11802
             RandomSource random,
             //#elseif MC > 11404
@@ -68,7 +71,11 @@ public abstract class MixinBlockRenderContext implements RenderContext {
             //#if MC > 11404
             int overlay,
             //#endif
-            CallbackInfoReturnable<Boolean> cir) {
+            //#if MC > 11701
+            CallbackInfo cir) {
+            //#else
+            //$$ CallbackInfoReturnable<Boolean> cir) {
+            //#endif
         WorldEaterMineHelperUtil.emitCustomBlockQuads(blockView, state, pos, this.blockInfo.randomSupplier, this);
     }
 }
