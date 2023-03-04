@@ -33,6 +33,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 
 @Mixin(value = BlockRenderContext.class, remap = false)
 public abstract class MixinBlockRenderContext implements RenderContext {
+    @SuppressWarnings("target")
     @Shadow
     @Final
     private BlockRenderInfo blockInfo;
@@ -71,7 +72,7 @@ public abstract class MixinBlockRenderContext implements RenderContext {
             //#if MC > 11404
             int overlay,
             //#endif
-            //#if MC > 11701
+            //#if MC > 11802
             CallbackInfo cir) {
             //#else
             //$$ CallbackInfoReturnable<Boolean> cir) {
