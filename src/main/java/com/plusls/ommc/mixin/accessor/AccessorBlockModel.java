@@ -10,10 +10,18 @@ public interface AccessorBlockModel {
     @Accessor
     BlockModel getParent();
 
-    @Accessor
-    boolean getHasAmbientOcclusion();
+    @Accessor()
+    //#if MC > 11903
+    Boolean getHasAmbientOcclusion();
+    //#else
+    //$$ boolean getHasAmbientOcclusion();
+    //#endif
 
     @Mutable
     @Accessor
-    void setHasAmbientOcclusion(boolean hasAmbientOcclusion);
+    //#if MC > 11903
+    void setHasAmbientOcclusion(Boolean hasAmbientOcclusion);
+    //#else
+    //$$ void setHasAmbientOcclusion(boolean hasAmbientOcclusion);
+    //#endif
 }

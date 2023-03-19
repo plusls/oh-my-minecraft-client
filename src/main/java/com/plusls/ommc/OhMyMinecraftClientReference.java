@@ -7,26 +7,25 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import top.hendrixshen.magiclib.compat.minecraft.network.chat.ComponentCompatApi;
-import top.hendrixshen.magiclib.config.ConfigHandler;
-import top.hendrixshen.magiclib.language.I18n;
+import top.hendrixshen.magiclib.compat.minecraft.api.network.chat.ComponentCompatApi;
+import top.hendrixshen.magiclib.language.api.I18n;
+import top.hendrixshen.magiclib.malilib.impl.ConfigHandler;
 
 //#if MC > 11502
 import net.minecraft.network.chat.MutableComponent;
-import top.hendrixshen.magiclib.util.VersionParser;
 //#else
 //$$ import net.minecraft.network.chat.BaseComponent;
 //#endif
 
 public class OhMyMinecraftClientReference {
     @Getter
-    private static final String currentModIdentifier = "${mod_id}-${minecraft_version_id}";
+    private static final String currentModIdentifier = "@MOD_IDENTIFIER@-@MINECRAFT_VERSION_IDENTIFY@";
     @Getter
-    private static final String modIdentifier = "${mod_id}";
+    private static final String modIdentifier = "@MOD_IDENTIFIER@";
     @Getter
     private static final String currentModName = FabricLoader.getInstance().getModContainer(currentModIdentifier).orElseThrow(RuntimeException::new).getMetadata().getName();
     @Getter
-    private static final String modName = "${mod_name}";
+    private static final String modName = "@MOD_NAME@";
     @Getter
     private static final String modVersion = FabricLoader.getInstance().getModContainer(currentModIdentifier).orElseThrow(RuntimeException::new).getMetadata().getVersion().getFriendlyString();
     @Getter

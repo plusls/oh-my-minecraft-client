@@ -29,9 +29,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
-import top.hendrixshen.magiclib.compat.minecraft.blaze3d.vertex.VertexFormatCompatApi;
-import top.hendrixshen.magiclib.compat.minecraft.network.chat.ComponentCompatApi;
-import top.hendrixshen.magiclib.compat.minecraft.network.chat.StyleCompatApi;
+import top.hendrixshen.magiclib.compat.minecraft.api.blaze3d.vertex.VertexFormatCompatApi;
+import top.hendrixshen.magiclib.compat.minecraft.api.network.chat.ComponentCompatApi;
+import top.hendrixshen.magiclib.compat.minecraft.api.network.chat.StyleCompatApi;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -43,7 +43,7 @@ import java.util.regex.Pattern;
 //#if MC >= 11903
 import com.mojang.math.Axis;
 //#else
-//$$ import top.hendrixshen.magiclib.compat.minecraft.math.Vector3fCompatApi;
+//$$ import top.hendrixshen.magiclib.compat.minecraft.api.math.Vector3fCompatApi;
 //#endif
 
 //#if MC >= 11902
@@ -117,9 +117,9 @@ public class HighlightWaypointUtil {
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) ->
                         //#if MC > 11502
                         currentWorld = Objects.requireNonNull(client.level).dimension()
-                //#else
-                //$$ currentWorld = Objects.requireNonNull(client.level).getDimension().getType()
-                //#endif
+                        //#else
+                        //$$ currentWorld = Objects.requireNonNull(client.level).getDimension().getType()
+                        //#endif
         );
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
             currentWorld = null;
@@ -552,14 +552,18 @@ public class HighlightWaypointUtil {
         //#endif
 
         // 渲染图标
-        RenderSystem.enableTexture();
+        //#if MC < 11904
+        //$$ RenderSystem.enableTexture();
+        //#endif
         vertexBuffer.begin(VertexFormatCompatApi.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
         vertexBuffer.vertex(matrix4f, -xWidth, -yWidth, 0.0f).uv(icon.getU0(), icon.getV0()).color(iconR, iconG, iconB, fade).endVertex();
         vertexBuffer.vertex(matrix4f, -xWidth, yWidth, 0.0f).uv(icon.getU0(), icon.getV1()).color(iconR, iconG, iconB, fade).endVertex();
         vertexBuffer.vertex(matrix4f, xWidth, yWidth, 0.0f).uv(icon.getU1(), icon.getV1()).color(iconR, iconG, iconB, fade).endVertex();
         vertexBuffer.vertex(matrix4f, xWidth, -yWidth, 0.0f).uv(icon.getU1(), icon.getV0()).color(iconR, iconG, iconB, fade).endVertex();
         tessellator.end();
-        RenderSystem.disableTexture();
+        //#if MC < 11904
+        //$$ RenderSystem.disableTexture();
+        //#endif
 
         Font textRenderer = mc.font;
         if (isPointedAt && textRenderer != null) {
@@ -591,7 +595,9 @@ public class HighlightWaypointUtil {
             RenderSystem.disablePolygonOffset();
 
             // 渲染文字
-            RenderSystem.enableTexture();
+            //#if MC < 11904
+            //$$ RenderSystem.enableTexture();
+            //#endif
             int textColor = (int) (255.0f * fade) << 24 | 0xCCCCCC;
             RenderSystem.disableDepthTest();
             textRenderer.drawInBatch(ComponentCompatApi.literal(name), (float) (-textRenderer.width(name) / 2), elevateBy, textColor, false, matrix4f, true, 0, 0xF000F0);
@@ -601,6 +607,8 @@ public class HighlightWaypointUtil {
         //#endif
         matrixStack.popPose();
         // 1.14 need enableTexture
-        RenderSystem.enableTexture();
+        //#if MC < 11904
+        //$$ RenderSystem.enableTexture();
+        //#endif
     }
 }

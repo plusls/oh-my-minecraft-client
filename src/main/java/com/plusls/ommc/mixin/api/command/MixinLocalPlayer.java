@@ -9,8 +9,8 @@ package com.plusls.ommc.mixin.api.command;
 
 import net.minecraft.client.player.LocalPlayer;
 import org.spongepowered.asm.mixin.Mixin;
-import top.hendrixshen.magiclib.dependency.annotation.Dependencies;
-import top.hendrixshen.magiclib.dependency.annotation.Dependency;
+import top.hendrixshen.magiclib.dependency.api.annotation.Dependencies;
+import top.hendrixshen.magiclib.dependency.api.annotation.Dependency;
 
 @Dependencies(and = @Dependency(value = "minecraft", versionPredicate = "<=1.16.5"))
 @Mixin(LocalPlayer.class)

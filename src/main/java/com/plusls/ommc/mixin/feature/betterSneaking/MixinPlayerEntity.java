@@ -33,8 +33,8 @@ public abstract class MixinPlayerEntity {
         if (!Configs.betterSneaking || !thisObj.getLevelCompat().isClientSide()) {
             return;
         }
-        prevStepHeight = thisObj.maxUpStep;
-        thisObj.maxUpStep = MAX_STEP_HEIGHT;
+        prevStepHeight = thisObj.maxUpStepCompat();
+        thisObj.setMaxUpStepCompat(MAX_STEP_HEIGHT);
     }
 
     @Inject(method = "maybeBackOffFromEdge", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;<init>(DDD)V", ordinal = 0))
@@ -43,14 +43,14 @@ public abstract class MixinPlayerEntity {
         if (!Configs.betterSneaking || !thisObj.getLevelCompat().isClientSide() || Math.abs(prevStepHeight - DEFAULT_STEP_HEIGHT) <= 0.001) {
             return;
         }
-        thisObj.maxUpStep = prevStepHeight;
+        thisObj.setMaxUpStepCompat(prevStepHeight);
         prevStepHeight = DEFAULT_STEP_HEIGHT;
     }
 
     @Redirect(method = "maybeBackOffFromEdge", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;noCollision(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/AABB;)Z", ordinal = -1))
     private boolean myIsSpaceEmpty(Level world, Entity entity, AABB box) {
         Entity thisObj = MiscUtil.cast(this);
-        boolean retOld = world.noCollision(entity, box.move(0, thisObj.maxUpStep - prevStepHeight, 0));
+        boolean retOld = world.noCollision(entity, box.move(0, thisObj.maxUpStepCompat() - prevStepHeight, 0));
         boolean retNew = world.noCollision(entity, box);
         if (Configs.betterSneaking && thisObj.getLevelCompat().isClientSide() && (retOld && !retNew) &&
                 world.getFluidState(thisObj.blockPosition().below()).getType() instanceof LavaFluid) {
@@ -67,8 +67,8 @@ public abstract class MixinPlayerEntity {
             return;
         }
         Player playerEntity = MiscUtil.cast(this);
-        prevStepHeight = playerEntity.maxUpStep;
-        playerEntity.maxUpStep = MAX_STEP_HEIGHT;
+        prevStepHeight = playerEntity.maxUpStepCompat();
+        playerEntity.setMaxUpStepCompat(MAX_STEP_HEIGHT);
     }
 
     @Inject(method = "isAboveGround", at = @At(value = "RETURN"))
@@ -77,7 +77,7 @@ public abstract class MixinPlayerEntity {
         if (!Configs.betterSneaking || !thisObj.getLevelCompat().isClientSide() || Math.abs(prevStepHeight - DEFAULT_STEP_HEIGHT) <= 0.001) {
             return;
         }
-        thisObj.maxUpStep = prevStepHeight;
+        thisObj.setMaxUpStepCompat(prevStepHeight);
         prevStepHeight = DEFAULT_STEP_HEIGHT;
     }
     //#endif

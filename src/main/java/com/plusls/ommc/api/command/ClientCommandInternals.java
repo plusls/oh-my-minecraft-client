@@ -21,8 +21,8 @@ package com.plusls.ommc.api.command;
 //$$ import org.apache.logging.log4j.Level;
 //$$ import org.apache.logging.log4j.LogManager;
 //$$ import org.apache.logging.log4j.Logger;
-//$$ import top.hendrixshen.magiclib.compat.minecraft.network.chat.ComponentCompatApi;
-//$$ import top.hendrixshen.magiclib.language.I18n;
+//$$ import top.hendrixshen.magiclib.compat.minecraft.api.network.chat.ComponentCompatApi;
+//$$ import top.hendrixshen.magiclib.language.api.I18n;
 //$$ 
 //$$ import java.util.HashMap;
 //$$ import java.util.List;

@@ -20,6 +20,7 @@
 |------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Fabric API | [CurseForge](https://www.curseforge.com/minecraft/mc-mods/fabric-api) &#124; [GitHub](https://github.com/FabricMC/fabric) &#124; [Modrinth](https://modrinth.com/mod/fabric-api)   |
 | MagicLib   | [CurseForge](https://www.curseforge.com/minecraft/mc-mods/magiclib) &#124; [GitHub](https://github.com/Hendrix-Shen/MagicLib) &#124; [Modrinth](https://modrinth.com/mod/magiclib) |
+| MaliLib    | [CurseForge](https://www.curseforge.com/minecraft/mc-mods/malilib) &#124; [Masa WebSite](https://masa.dy.fi/mcmods/client_mods/?mod=malilib)                                       |
 
 ## 通用
 ## 取消高亮坐标点 (clearWaypoint)
@@ -308,7 +309,7 @@ We have also provided some optional resource packs for this purpose.
 
 ### 支持
 
-当前主开发版本：1.19.3
+当前主开发版本：1.19.4
 
 并且使用 `预处理` 来兼容各版本。
 
@@ -321,6 +322,7 @@ We have also provided some optional resource packs for this purpose.
 - Minecraft 1.18.2
 - Minecraft 1.19.2
 - Minecraft 1.19.3
+- Minecraft 1.19.4
 
 ### 混淆映射表
 

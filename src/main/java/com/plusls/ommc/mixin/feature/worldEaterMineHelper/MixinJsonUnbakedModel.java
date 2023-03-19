@@ -107,7 +107,12 @@ public abstract class MixinJsonUnbakedModel implements UnbakedModel {
         while ((((AccessorBlockModel) tmpJsonUnbakedModel).getParent() != null)) {
             tmpJsonUnbakedModel = ((AccessorBlockModel) tmpJsonUnbakedModel).getParent();
         }
-        boolean tmpAmbientOcclusion = ((AccessorBlockModel) tmpJsonUnbakedModel).getHasAmbientOcclusion();
+        //#if MC > 11903
+        Boolean bool = ((AccessorBlockModel) tmpJsonUnbakedModel).getHasAmbientOcclusion();
+        boolean tmpAmbientOcclusion = bool == null || bool;
+        //#else
+        //$$ boolean tmpAmbientOcclusion = ((AccessorBlockModel) tmpJsonUnbakedModel).getHasAmbientOcclusion();
+        //#endif
         ((AccessorBlockModel) tmpJsonUnbakedModel).setHasAmbientOcclusion(false);
         // 部分 models
         //#if MC > 11404

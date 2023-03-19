@@ -2,8 +2,8 @@ package com.plusls.ommc.mixin.api.command;
 
 import net.minecraft.client.multiplayer.ClientSuggestionProvider;
 import org.spongepowered.asm.mixin.Mixin;
-import top.hendrixshen.magiclib.dependency.annotation.Dependencies;
-import top.hendrixshen.magiclib.dependency.annotation.Dependency;
+import top.hendrixshen.magiclib.dependency.api.annotation.Dependencies;
+import top.hendrixshen.magiclib.dependency.api.annotation.Dependency;
 
 //#if MC <= 11605
 //$$ import com.plusls.ommc.api.command.FabricClientCommandSource;

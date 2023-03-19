@@ -22,25 +22,20 @@ import net.minecraft.world.phys.HitResult;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.jetbrains.annotations.NotNull;
-import top.hendrixshen.magiclib.config.ConfigHandler;
-import top.hendrixshen.magiclib.config.ConfigManager;
-import top.hendrixshen.magiclib.config.Option;
-import top.hendrixshen.magiclib.config.annotation.Config;
-import top.hendrixshen.magiclib.config.annotation.Hotkey;
-import top.hendrixshen.magiclib.config.annotation.Numeric;
-import top.hendrixshen.magiclib.dependency.annotation.Dependencies;
-import top.hendrixshen.magiclib.dependency.annotation.Dependency;
-import top.hendrixshen.magiclib.dependency.annotation.OptionDependencyPredicate;
+import top.hendrixshen.magiclib.dependency.api.ConfigDependencyPredicate;
+import top.hendrixshen.magiclib.dependency.api.annotation.Dependencies;
+import top.hendrixshen.magiclib.dependency.api.annotation.Dependency;
+import top.hendrixshen.magiclib.malilib.api.annotation.Config;
+import top.hendrixshen.magiclib.malilib.api.annotation.Hotkey;
+import top.hendrixshen.magiclib.malilib.api.annotation.Numeric;
+import top.hendrixshen.magiclib.malilib.impl.ConfigHandler;
+import top.hendrixshen.magiclib.malilib.impl.ConfigManager;
+import top.hendrixshen.magiclib.malilib.impl.ConfigOption;
+import top.hendrixshen.magiclib.util.InfoUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-//#if MC >= 11902 && MC < 11903
-//$$ import net.minecraft.Util;
-//$$ import net.minecraft.client.gui.chat.ClientChatPreview;
-//$$ import net.minecraft.network.chat.Component;
-//#endif
 
 public class Configs {
     private static final List<String> OLD_WORLD_EATER_MINE_HELPER_WHITELIST = new ArrayList<>();
@@ -273,15 +268,7 @@ public class Configs {
                     BlockPos lookPos = ((BlockHitResult) hitresult).getBlockPos();
                     if (client.player != null) {
                         String message = String.format("[%d, %d, %d]", lookPos.getX(), lookPos.getY(), lookPos.getZ());
-                        //#if MC >= 11903
-                        client.player.connection.sendChat(message);
-                        //#elseif MC >= 11902
-                        //$$ ClientChatPreview ccp = new ClientChatPreview(Minecraft.getInstance());
-                        //$$ Component component = Util.mapNullable(ccp.pull(message), ClientChatPreview.Preview::response);
-                        //$$ client.player.chatSigned(message, component);
-                        //#else
-                        //$$ client.player.chat(message);
-                        //#endif
+                        InfoUtil.sendChat(message);
                     }
                 }
             }
@@ -394,9 +381,9 @@ public class Configs {
         public static final String ADVANCED_INTEGRATED_SERVER = "advanced_integrated_server";
     }
 
-    public static class SinglePlayerServerOptionPredicate implements OptionDependencyPredicate {
+    public static class SinglePlayerServerOptionPredicate implements ConfigDependencyPredicate {
         @Override
-        public boolean test(Option option) {
+        public boolean isSatisfied(ConfigOption option) {
             return Minecraft.getInstance().hasSingleplayerServer();
         }
     }

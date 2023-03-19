@@ -18,7 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import top.hendrixshen.magiclib.compat.minecraft.world.item.ItemStackCompatApi;
+import top.hendrixshen.magiclib.compat.minecraft.api.world.item.ItemStackCompatApi;
 
 import java.util.ArrayList;
 import java.util.Comparator;
