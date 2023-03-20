@@ -3,7 +3,6 @@ package com.plusls.ommc.mixin.feature.blockModelNoOffset.fabric;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.plusls.ommc.feature.blockModelNoOffset.BlockModelNoOffsetUtil;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.fabricmc.fabric.impl.client.indigo.renderer.render.BlockRenderInfo;
 import net.fabricmc.fabric.impl.client.indigo.renderer.render.TerrainRenderContext;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
@@ -16,8 +15,18 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+
+//#if MC > 11802
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+//#else
+//$$ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+//#endif
+
+//#if MC > 11701
+import net.fabricmc.fabric.impl.client.indigo.renderer.render.BlockRenderInfo;
+//#else
+//$$ import net.fabricmc.fabric.impl.client.indigo.renderer.render.TerrainBlockRenderInfo;
+//#endif
 
 //#if MC <= 11404
 //$$ import com.mojang.blaze3d.platform.GlStateManager;

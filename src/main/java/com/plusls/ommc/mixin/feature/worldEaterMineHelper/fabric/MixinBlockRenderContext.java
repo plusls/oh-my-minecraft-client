@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.plusls.ommc.feature.worldEaterMineHelper.WorldEaterMineHelperUtil;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.fabricmc.fabric.impl.client.indigo.renderer.render.BlockRenderContext;
-import net.fabricmc.fabric.impl.client.indigo.renderer.render.BlockRenderInfo;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -14,14 +13,20 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 //#if MC > 11802
 import net.minecraft.util.RandomSource;
 //#else
-import java.util.Random;
+//$$ import java.util.Random;
 //#endif
+
+//#if MC > 11802
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+//#else
+//$$ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+//#endif
+
+import net.fabricmc.fabric.impl.client.indigo.renderer.render.BlockRenderInfo;
 
 //#if MC > 11404
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -30,10 +35,8 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 //$$ import net.minecraft.client.renderer.block.ModelBlockRenderer;
 //#endif
 
-
 @Mixin(value = BlockRenderContext.class, remap = false)
 public abstract class MixinBlockRenderContext implements RenderContext {
-    @SuppressWarnings("target")
     @Shadow
     @Final
     private BlockRenderInfo blockInfo;
