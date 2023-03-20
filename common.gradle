@@ -83,14 +83,14 @@ loom {
     runs {
         mixinAuditClient {
             inherit(client)
-            vmArgs("-D${project.mod_id}.mixin_audit=true")
+            vmArgs("-Dmagiclib.mixin_audit=true")
             ideConfigGenerated(false)
             runDir("run/client")
         }
 
         mixinAuditServer {
             inherit(server)
-            vmArgs("-D${project.mod_id}.mixin_audit=true")
+            vmArgs("-Dmagiclib.mixin_audit=true")
             ideConfigGenerated(false)
             runDir("run/server")
         }
