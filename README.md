@@ -13,7 +13,7 @@ English | [中文](./README_ZH_CN.md)
 
 Make Minecraft Client Great Again!
 
-The default hotkey to open the in-game config GUI is **T + C**.
+The default hotkey to open the in-game config GUI is **O + C**.
 
 # Dependencies
 | Dependency | Download                                                                                                                                                                           |
