@@ -3,7 +3,11 @@ package com.plusls.ommc.mixin.feature.highlightPersistentMob;
 import com.plusls.ommc.config.Configs;
 import fi.dy.masa.malilib.util.WorldUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.Registry;
+//#if MC >= 11903
+import net.minecraft.core.registries.BuiltInRegistries;
+//#else
+//$$ import net.minecraft.core.Registry;
+//#endif
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.Level;
@@ -51,7 +55,11 @@ public class MixinEntity {
                 if (!Configs.highlightPersistentMobClientMode) {
                     return;
                 }
-                String mainHandItemName = Registry.ITEM.getKey(mobEntity.getMainHandItem().getItem()).toString();
+                //#if MC >= 11903
+                String mainHandItemName = BuiltInRegistries.ITEM.getKey(mobEntity.getMainHandItem().getItem()).toString();
+                //#else
+                //$$ String mainHandItemName = Registry.ITEM.getKey(mobEntity.getMainHandItem().getItem()).toString();
+                //#endif
                 if (!mobEntity.getMainHandItem().isEmpty() && itemBlackList.stream().noneMatch(mainHandItemName::contains) ||
                         entity.getCustomName() != null) {
                     cir.setReturnValue(true);

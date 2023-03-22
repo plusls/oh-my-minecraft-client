@@ -1,12 +1,10 @@
 package com.plusls.ommc.compat.modmenu;
 
-import com.plusls.ommc.ModInfo;
+import com.plusls.ommc.OhMyMinecraftClientReference;
 
 public class WrapperModMenuApiImpl extends ModMenuApiImpl {
-
     @Override
     public String getModIdCompat() {
-        return ModInfo.MOD_ID;
+        return OhMyMinecraftClientReference.getModIdentifier();
     }
-
 }

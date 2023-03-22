@@ -1,14 +1,16 @@
 package com.plusls.ommc.feature.highlightLavaSource;
 
-import com.plusls.ommc.ModInfo;
+import com.plusls.ommc.OhMyMinecraftClientReference;
 import com.plusls.ommc.config.Configs;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
-import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
+//#if MC < 11903
+//$$ import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
+//$$ import net.minecraft.client.renderer.texture.TextureAtlas;
+//#endif
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.resources.ResourceLocation;
@@ -26,20 +28,22 @@ import java.util.function.Function;
 public class LavaSourceResourceLoader implements SimpleSynchronousResourceReloadListener {
     public static final TextureAtlasSprite[] lavaSourceSpites = new TextureAtlasSprite[2];
     public static final TextureAtlasSprite[] defaultLavaSourceSpites = new TextureAtlasSprite[2];
-    private static final ResourceLocation listenerId = ModInfo.id("lava_reload_listener");
-    private static final ResourceLocation flowingSpriteId = ModInfo.id("block/lava_flow");
-    private static final ResourceLocation stillSpriteId = ModInfo.id("block/lava_still");
+    private static final ResourceLocation listenerId = OhMyMinecraftClientReference.identifier("lava_reload_listener");
+    private static final ResourceLocation flowingSpriteId = OhMyMinecraftClientReference.identifier("block/lava_flow");
+    private static final ResourceLocation stillSpriteId = OhMyMinecraftClientReference.identifier("block/lava_still");
     public static TextureAtlasSprite lavaSourceFlowSprite;
     public static TextureAtlasSprite lavaSourceStillSprite;
     public static TextureAtlasSprite defaultLavaSourceFlowSprite;
     public static TextureAtlasSprite defaultLavaSourceStillSprite;
 
     public static void init() {
-        ClientSpriteRegistryCallback.event(TextureAtlas.LOCATION_BLOCKS).register((atlasTexture, registry) ->
-        {
-            registry.register(flowingSpriteId);
-            registry.register(stillSpriteId);
-        });
+        //#if MC < 11903
+        //$$ ClientSpriteRegistryCallback.event(TextureAtlas.LOCATION_BLOCKS).register((atlasTexture, registry) ->
+        //$$ {
+        //$$     registry.register(flowingSpriteId);
+        //$$     registry.register(stillSpriteId);
+        //$$ });
+        //#endif
         ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new LavaSourceResourceLoader());
     }
 

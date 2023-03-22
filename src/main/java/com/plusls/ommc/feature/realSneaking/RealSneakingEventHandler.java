@@ -14,13 +14,13 @@ public class RealSneakingEventHandler {
 
     private static void preClientTick(Minecraft minecraftClient) {
         if (minecraftClient.player != null) {
-            if (minecraftClient.player.maxUpStep - MIN_STEP_HEIGHT >= 0.00001) {
-                prevStepHeight = minecraftClient.player.maxUpStep;
+            if (minecraftClient.player.maxUpStepCompat() - MIN_STEP_HEIGHT >= 0.00001) {
+                prevStepHeight = minecraftClient.player.maxUpStepCompat();
             }
             if (Configs.realSneaking && minecraftClient.player.isShiftKeyDown()) {
-                minecraftClient.player.maxUpStep = MIN_STEP_HEIGHT;
+                minecraftClient.player.setMaxUpStepCompat(MIN_STEP_HEIGHT);
             } else {
-                minecraftClient.player.maxUpStep = prevStepHeight;
+                minecraftClient.player.setMaxUpStepCompat(prevStepHeight);
             }
         }
     }

@@ -1,27 +1,30 @@
 plugins {
     id("maven-publish")
-    id("fabric-loom").version("0.12-SNAPSHOT").apply(false)
+    id("fabric-loom").version("1.1-SNAPSHOT").apply(false)
     // https://github.com/Juuxel/LoomQuiltflower
-    id("io.github.juuxel.loom-quiltflower").version("1.7.0").apply(false)
-    // https://github.com/ReplayMod/preprocessor
-    // https://github.com/Fallen-Breath/preprocessor
-    id("com.replaymod.preprocess").version("b7207cffa9")
-    id("org.ajoberstar.grgit").version("4.1.0")
+    id("io.github.juuxel.loom-quiltflower").version("1.8.0").apply(false)
+    id("net.kyori.blossom").version("1.3.1").apply(false)
+    id("org.ajoberstar.grgit").version("5.0.0")
+    id("com.replaymod.preprocess").version("SNAPSHOT")
 }
 
 preprocess {
-    def mc114 = createNode("1.14.4", 1_14_04, "mojang")
-    def mc115 = createNode("1.15.2", 1_15_02, "mojang")
-    def mc116 = createNode("1.16.5", 1_16_05, "mojang")
-    def mc117 = createNode("1.17.1", 1_17_01, "mojang")
-    def mc118 = createNode("1.18.2", 1_18_02, "mojang")
-    def mc119 = createNode("1.19", 1_19_00, "mojang") // root
+    def mc1144 = createNode("1.14.4", 1_14_04, "mojang")
+    def mc1152 = createNode("1.15.2", 1_15_02, "mojang")
+    def mc1165 = createNode("1.16.5", 1_16_05, "mojang")
+    def mc1171 = createNode("1.17.1", 1_17_01, "mojang")
+    def mc1182 = createNode("1.18.2", 1_18_02, "mojang")
+    def mc1192 = createNode("1.19.2", 1_19_02, "mojang")
+    def mc1193 = createNode("1.19.3", 1_19_03, "mojang")
+    def mc1194 = createNode("1.19.4", 1_19_04, "mojang") // root
 
-    mc114.link(mc115, null)
-    mc115.link(mc116, null)
-    mc116.link(mc117, null)
-    mc117.link(mc118, null)
-    mc118.link(mc119, null)
+    mc1144.link(mc1152, null)
+    mc1152.link(mc1165, null)
+    mc1165.link(mc1171, file("versions/mapping-1.16.5-1.17.1.txt"))
+    mc1171.link(mc1182, null)
+    mc1182.link(mc1192, file("versions/mapping-1.18.2-1.19.2.txt"))
+    mc1192.link(mc1193, file("versions/mapping-1.19.2-1.19.3.txt"))
+    mc1193.link(mc1194, null)
 }
 
 String realVersion = "${project.mod_version}"
@@ -33,7 +36,7 @@ if (project.pre_release != "") {
 
 version = realVersion
 
-task cleanPreprocessSources {
+tasks.register('cleanPreprocessSources') {
     doFirst {
         subprojects {
             def path = project.projectDir.toPath().resolve('build/preprocessed')

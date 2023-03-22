@@ -1,28 +1,29 @@
 pluginManagement {
     repositories {
+        mavenLocal()
+
         maven {
-            name = 'Fabric'
-            url = 'https://maven.fabricmc.net/'
+            name("Fabric Maven")
+            url("https://maven.fabricmc.net")
         }
+
         maven {
-            name = 'Jitpack'
-            url = "https://jitpack.io"
+            name("Jitpack Maven")
+            url("https://jitpack.io")
         }
+
         maven {
-            name = 'Cotton'
-            url = 'https://server.bbkr.space/artifactory/libs-release/'
+            name("Nyan Maven")
+            url("https://maven.hendrixshen.top")
         }
+
+        maven {
+            name("Cotton")
+            url("https://server.bbkr.space/artifactory/libs-release")
+        }
+
         mavenCentral()
         gradlePluginPortal()
-    }
-    resolutionStrategy {
-        eachPlugin {
-            switch (requested.id.id) {
-                case "com.replaymod.preprocess": {
-                    useModule("com.github.Fallen-Breath:preprocessor:${requested.version}")
-                }
-            }
-        }
     }
 }
 
@@ -32,13 +33,16 @@ def versions = Arrays.asList(
         "1.16.5",
         "1.17.1",
         "1.18.2",
-        "1.19",
+        "1.19.2",
+        "1.19.3",
+        "1.19.4",
 )
+
 for (String version : versions) {
     include(":$version")
-
     def proj = project(":$version")
     proj.projectDir = file("versions/$version")
     proj.buildFileName = "../../common.gradle"
 }
+
 include(":fabricWrapper")

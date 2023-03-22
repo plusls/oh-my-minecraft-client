@@ -8,7 +8,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
+//#if MC >= 11903
+import net.minecraft.core.registries.BuiltInRegistries;
+//#else
+//$$ import net.minecraft.core.Registry;
+//#endif
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -25,7 +29,11 @@ public class WorldEaterMineHelperUtil {
 
     public static boolean blockInWorldEaterMineHelperWhitelist(Block block) {
         String blockName = block.getName().getString();
-        String blockId = Registry.BLOCK.getKey(block).toString();
+        //#if MC >= 11903
+        String blockId = BuiltInRegistries.BLOCK.getKey(block).toString();
+        //#else
+        //$$ String blockId = Registry.BLOCK.getKey(block).toString();
+        //#endif
         return Configs.worldEaterMineHelperWhitelist.stream().anyMatch(s -> blockId.contains(s) || blockName.contains(s));
     }
 

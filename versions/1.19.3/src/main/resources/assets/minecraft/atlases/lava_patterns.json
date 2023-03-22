@@ -1,0 +1,16 @@
+{
+    "sources": [
+        {
+            "type": "single",
+            "resource": "ommc:block/lava_flow"
+        },
+        {
+            "type": "single",
+            "resource": "ommc:block/lava_still"
+        },
+        {
+            "type": "single",
+            "resource": "ommc:block/target"
+        }
+    ]
+}

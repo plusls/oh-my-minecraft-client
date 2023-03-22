@@ -1,0 +1,2 @@
+net.fabricmc.fabric.api.client.command.v1.ClientCommandManager net.fabricmc.fabric.api.client.command.v2.ClientCommandManager
+net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource

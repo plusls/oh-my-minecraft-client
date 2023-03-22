@@ -3,7 +3,11 @@ package com.plusls.ommc.mixin.feature.disableMoveDownInScaffolding;
 import com.plusls.ommc.config.Configs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
+//#if MC >= 11903
+import net.minecraft.core.registries.BuiltInRegistries;
+//#else
+//$$ import net.minecraft.core.Registry;
+//#endif
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.ScaffoldingBlock;
@@ -31,7 +35,11 @@ public class MixinScaffoldingBlock {
                     context.isDescending() && context.isAbove(Shapes.block(), pos, true)) {
                 assert Minecraft.getInstance().player != null;
                 Item item = Minecraft.getInstance().player.getMainHandItem().getItem();
-                String itemId = Registry.ITEM.getKey(item).toString();
+                //#if MC >= 11903
+                String itemId = BuiltInRegistries.ITEM.getKey(item).toString();
+                //#else
+                //$$ String itemId = Registry.ITEM.getKey(item).toString();
+                //#endif
                 String itemName = item.getDescription().getString();
                 if (Configs.moveDownInScaffoldingWhiteList.stream().anyMatch(s -> itemId.contains(s) || itemName.contains(s))) {
                     return;

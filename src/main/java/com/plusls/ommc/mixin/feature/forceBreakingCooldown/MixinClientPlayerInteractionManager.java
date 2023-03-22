@@ -22,10 +22,16 @@ public class MixinClientPlayerInteractionManager {
     private int destroyDelay;
 
     //#if MC > 11802
-    @Inject(method = "method_41930",
-            at = @At(value = "INVOKE",
+    @Inject(
+            method = "method_41930",
+            at = @At(
+                    value = "INVOKE",
                     target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;destroyBlock(Lnet/minecraft/core/BlockPos;)Z",
-                    ordinal = 0))
+                    remap = true,
+                    ordinal = 0
+            ),
+            remap = false
+    )
     private void addBreakingCooldown(BlockState blockState, BlockPos blockPos, Direction direction, int i, CallbackInfoReturnable<Packet<ServerGamePacketListener>> cir) {
         if (Configs.forceBreakingCooldown) {
             destroyDelay = 5;
